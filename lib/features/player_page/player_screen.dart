@@ -1,5 +1,6 @@
 import 'package:actpod_web/design_system/shadow.dart';
 import 'package:actpod_web/features/player_page/controllers/player_controller.dart';
+import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +27,16 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   @override
   void initState() {
     super.initState();
-    _playerController = PlayerController();
+    _playerController = PlayerController(ref);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initProviders();
+      _playerController!.getStoryInfo("67dc24ec69734f0001aa7d1c");
+    });
+  }
+
+  void initProviders() {
+    ref.watch(storyInfoProvider.notifier).state = null;
+    ref.watch(likesCountProvider.notifier).state = 0;
   }
 
   @override

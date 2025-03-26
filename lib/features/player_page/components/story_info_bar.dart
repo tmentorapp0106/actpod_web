@@ -1,4 +1,5 @@
 import 'package:actpod_web/features/player_page/components/user_info.dart';
+import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,7 @@ import '../../../components/channel_image.dart';
 class StoryInfoBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final storyInfo = ref.watch(storyInfoProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -20,7 +22,7 @@ class StoryInfoBar extends ConsumerWidget {
           children:[
             CenteredMarquee(
               maxWidth: 310.w,
-              text: "Story name",
+              text: storyInfo == null? "" : storyInfo.storyName,
               color: Colors.black,
               fontSize: 24.w
             ),
@@ -32,10 +34,10 @@ class StoryInfoBar extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ChannelImage("image url", "channel name", 20.w, 12.w),
+                  storyInfo == null? const SizedBox.shrink() : ChannelImage(storyInfo.channelImageUrl, storyInfo.channelName, 20.w, 12.w),
                   SizedBox(width: 5.w,),
                   Text(
-                    "Channel name",
+                    storyInfo == null? "" : storyInfo.channelName,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 12.w

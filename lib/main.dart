@@ -1,10 +1,13 @@
 import 'package:actpod_web/features/player_page/player_screen.dart';
 import 'package:actpod_web/router.dart';
+import 'package:actpod_web/services/env_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  await EnvService.load();
   runApp(const ProviderScope(child: MyApp()));
 }
 

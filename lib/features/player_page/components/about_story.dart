@@ -1,3 +1,4 @@
+import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
@@ -10,11 +11,12 @@ import '../../../utils/time_utils.dart';
 class AboutStory extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final storyInfo = ref.watch(storyInfoProvider);
     return Column(
       children: [
-        title(DateTime.now()),
+        title(storyInfo == null? DateTime.now() : storyInfo.storyUploadTime),
         SizedBox(height: 5.h,),
-        description("Description")
+        description(storyInfo == null? "" : storyInfo.storyDescription)
       ],
     );
   }
