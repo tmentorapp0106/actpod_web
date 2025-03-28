@@ -45,6 +45,10 @@ dependencies:
   flutter_dotenv: ^5.2.1
   flutter_sim_country_code: ^0.1.2
   dio: ^5.8.0+1
+  dropdown_button2: ^2.3.9
+  auto_size_text: ^3.0.0
+  audio_video_progress_bar: ^1.0.1
+  uuid: ^4.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'package:actpod_web/design_system/shadow.dart';
+import 'package:actpod_web/features/player_page/components/player_box.dart';
 import 'package:actpod_web/features/player_page/controllers/player_controller.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     _playerController = PlayerController(ref);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initProviders();
-      _playerController!.getStoryInfo("67dc24ec69734f0001aa7d1c");
+      _playerController!.getStoryInfo("67e412e34275cb000145e96d");
     });
   }
 
@@ -50,50 +51,58 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
         elevation: 0,
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20.h, bottom: 10.h, left: 20.w, right: 20.w),
-                    margin: EdgeInsets.symmetric(horizontal: 10.w),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: DesignShadow.shadow,
-                      borderRadius: BorderRadius.circular(15.w),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        StoryInfoBar(),
-                        SizedBox(height: 10.h),
-                        StoryImage(),
-                        SizedBox(height: 5.h),
-                        AboutStory(),
-                        SizedBox(height: 5.h),
-                        Divider(thickness: 1.5.w),
-                        Row(
+        child: SizedBox(
+          height: ScreenUtil().screenHeight,
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: 60.h), // Add bottom padding for the player
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10.h),
+                      Container(
+                        padding: EdgeInsets.only(top: 20.h, bottom: 10.h, left: 20.w, right: 20.w),
+                        margin: EdgeInsets.symmetric(horizontal: 10.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: DesignShadow.shadow,
+                          borderRadius: BorderRadius.circular(15.w),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            LikesButton(),
-                            SizedBox(width: 5.w),
-                            ListenToMessage(_playerController!),
-                            SizedBox(width: 5.w),
-                            SendMessageButton(_playerController!),
-                            const Spacer(),
+                            StoryInfoBar(),
+                            SizedBox(height: 10.h),
+                            StoryImage(),
+                            SizedBox(height: 5.h),
+                            AboutStory(),
+                            SizedBox(height: 5.h),
+                            Divider(thickness: 1.5.w),
+                            Row(
+                              children: [
+                                LikesButton(),
+                                SizedBox(width: 5.w),
+                                SendMessageButton(_playerController!),
+                                const Spacer(),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
-        ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 10.h,
+                child: PlayerBox(_playerController!),
+              ),
+            ],
+          ),
+        )
       ),
     );
   }

@@ -23,8 +23,8 @@ class ListenToMessage extends ConsumerWidget {
       },
       child: Row(
         children: [
-          SvgPicture.asset(
-            "assets/icons/listen_to_message.svg",
+          Image.asset(
+            "assets/icons/listen_to_message.png",
             width: 20.w,
             height: 20.w,
             fit: BoxFit.fitWidth,

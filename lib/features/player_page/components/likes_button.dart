@@ -1,3 +1,4 @@
+import 'package:actpod_web/components/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,12 @@ class LikesButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ActPodDialog();
+          }
+        );
       },
       child: Row(
         children: [
