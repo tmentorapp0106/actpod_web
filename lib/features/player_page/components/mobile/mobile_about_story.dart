@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../utils/time_utils.dart';
+import '../../../../utils/time_utils.dart';
 
-class AboutStory extends ConsumerWidget {
+class MobileAboutStory extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyInfo = ref.watch(storyInfoProvider);

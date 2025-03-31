@@ -7,12 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../providers.dart';
+import '../../providers.dart';
 
-class PlayerProgressBar extends ConsumerWidget {
+class MobilePlayerProgressBar extends ConsumerWidget {
   final PlayerController _playerController;
 
-  PlayerProgressBar(this._playerController);
+  MobilePlayerProgressBar(this._playerController);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

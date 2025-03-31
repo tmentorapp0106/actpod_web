@@ -1,4 +1,4 @@
-import 'package:actpod_web/features/player_page/components/user_info.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_user_info.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,10 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 
-import '../../../components/centered_marquee.dart';
-import '../../../components/channel_image.dart';
+import '../../../../components/centered_marquee.dart';
+import '../../../../components/channel_image.dart';
 
-class StoryInfoBar extends ConsumerWidget {
+class MobileStoryInfoBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyInfo = ref.watch(storyInfoProvider);
@@ -27,7 +27,7 @@ class StoryInfoBar extends ConsumerWidget {
               fontSize: 24.w
             ),
             SizedBox(height: 8.h,),
-            UserInfo(),
+            MobileUserInfo(),
             Marquee(
               animationDuration: const Duration(seconds: 10),
               directionMarguee: DirectionMarguee.oneDirection,

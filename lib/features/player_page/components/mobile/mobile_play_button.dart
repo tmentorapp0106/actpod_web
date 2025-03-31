@@ -3,14 +3,14 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../main.dart';
-import '../controllers/player_controller.dart';
-import '../providers.dart';
+import '../../../../main.dart';
+import '../../controllers/player_controller.dart';
+import '../../providers.dart';
 
-class PlayButton extends ConsumerWidget {
+class MobilePlayButton extends ConsumerWidget {
   final PlayerController playerController;
 
-  PlayButton(this.playerController);
+  MobilePlayButton(this.playerController);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

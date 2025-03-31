@@ -6,13 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../controllers/player_controller.dart';
+import '../../controllers/player_controller.dart';
 import 'dart:html' as html;
 
-class SendMessageButton extends ConsumerWidget {
+class MobileSendMessageButton extends ConsumerWidget {
   final PlayerController _playerController;
 
-  SendMessageButton(this._playerController);
+  MobileSendMessageButton.MobileSendMessageButton(this._playerController);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

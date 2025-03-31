@@ -1,5 +1,5 @@
-import 'package:actpod_web/features/player_page/components/play_button.dart';
-import 'package:actpod_web/features/player_page/components/player_progress_bar.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_play_button.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_player_progress_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../controllers/player_controller.dart';
-import '../providers.dart';
+import '../../controllers/player_controller.dart';
+import '../../providers.dart';
 
-class PlayerBox extends ConsumerWidget {
+class MobilePlayerBox extends ConsumerWidget {
   final PlayerController _playerController;
   final List<String> speedOptions = [
     "1.0X",
@@ -19,7 +19,7 @@ class PlayerBox extends ConsumerWidget {
     "1.5X"
   ];
 
-  PlayerBox(this._playerController);
+  MobilePlayerBox(this._playerController);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,7 +44,7 @@ class PlayerBox extends ConsumerWidget {
         ),
         child: Column(
           children: [
-            PlayerProgressBar(_playerController),
+            MobilePlayerProgressBar(_playerController),
             Stack(
               alignment: Alignment.center,
               children: [
@@ -54,7 +54,7 @@ class PlayerBox extends ConsumerWidget {
                     speedDropDown(ref),
                   ],
                 ),
-                PlayButton(_playerController), // stays centered in the stack
+                MobilePlayButton(_playerController), // stays centered in the stack
               ],
             ),
           ],
