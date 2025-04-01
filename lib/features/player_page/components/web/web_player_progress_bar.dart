@@ -9,10 +9,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../providers.dart';
 
-class MobilePlayerProgressBar extends ConsumerWidget {
+class WebPlayerProgressBar extends ConsumerWidget {
   final PlayerController _playerController;
 
-  MobilePlayerProgressBar(this._playerController);
+  WebPlayerProgressBar(this._playerController);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,26 +30,26 @@ class MobilePlayerProgressBar extends ConsumerWidget {
               },
               child: Image.asset(
                 "assets/icons/backward_15.png",
-                width: 32.w,
-                height: 32.w,
+                width: 8.w,
+                height: 8.w,
               )
             ),
             Text(
               TimeUtils.formatDuration(seekPosition, "HH:mm:ss"),
               style: TextStyle(
-                fontSize: 12.w
+                fontSize: 4.w
               ),
             )
           ],
         ),
         SizedBox(width: 5.w,),
         SizedBox(
-          width: 250.w,
-          height: 8.w,
+          width: 96.w,
           child: ProgressBar(
             progress: seekPosition,
-            thumbRadius: 5.w,
-            barHeight: 6.h,
+            thumbRadius: 2.w,
+            thumbGlowRadius: 4.w,
+            barHeight: 2.h,
             thumbColor: Colors.black,
             baseBarColor: Colors.grey,
             progressBarColor: Colors.black,
@@ -61,7 +61,7 @@ class MobilePlayerProgressBar extends ConsumerWidget {
             // timeLabelPadding: 4.h,
             timeLabelTextStyle: TextStyle(
               color: Colors.black,
-              fontSize: 12.sp
+              fontSize: 4.sp
             )
           )
         ),
@@ -74,14 +74,14 @@ class MobilePlayerProgressBar extends ConsumerWidget {
               },
               child: Image.asset(
                 "assets/icons/forward_15.png",
-                width: 32.w,
-                height: 32.w,
+                width: 8.w,
+                height: 8.w,
               )
             ),
             Text(
               TimeUtils.formatDuration(audioLength, "HH:mm:ss"),
               style: TextStyle(
-                fontSize: 12.w
+                fontSize: 4.w
               ),
             )
           ],

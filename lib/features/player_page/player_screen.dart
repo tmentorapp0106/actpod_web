@@ -1,7 +1,13 @@
 import 'package:actpod_web/design_system/shadow.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_download_box.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_box.dart';
+import 'package:actpod_web/features/player_page/components/web/web_about_story.dart';
+import 'package:actpod_web/features/player_page/components/web/web_download_box.dart';
+import 'package:actpod_web/features/player_page/components/web/web_likes_button.dart';
 import 'package:actpod_web/features/player_page/components/web/web_logo.dart';
+import 'package:actpod_web/features/player_page/components/web/web_player_box.dart';
+import 'package:actpod_web/features/player_page/components/web/web_send_message_button.dart';
+import 'package:actpod_web/features/player_page/components/web/web_story_image.dart';
 import 'package:actpod_web/features/player_page/controllers/player_controller.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +71,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               WebLogo(),
+              SizedBox(height: 4.h,),
               Container(
+                width: 140.w,
                 padding: EdgeInsets.only(top: 2.h, bottom: 2.h, left: 8.w, right: 8.w),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -76,13 +84,41 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    WebStoryInfoBar()
+                    WebStoryInfoBar(),
+                    SizedBox(height: 2.h,),
+                    WebStoryImage(),
+                    SizedBox(height: 2.h,),
+                    WebAboutStory(),
+                    SizedBox(height: 2.h),
+                    SizedBox(
+                      width: 104.w, 
+                      child: Divider(thickness: 0.4.w),
+                    ),
+                    SizedBox(
+                      width: 104.w, 
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          WebLikesButton(),
+                          SizedBox(width: 2.w),
+                          WebSendMessageButton(),
+                        ],
+                      )
+                    ),
                   ],
                 ),
               ),
+              SizedBox(height: 12.h,),
+              WebDownloadBox(),
             ],
           ),
-        )
+        ),
+        Positioned(
+          bottom: 10.h,
+          left: 0,
+          right: 0,
+          child: WebPlayerBox(_playerController!)
+        ),
       ],
     );
   }

@@ -9,7 +9,7 @@ class WebLogo extends StatelessWidget {
       children: [
         Image.asset(
           "assets/images/actpod_logo_web.png",
-          width: 60.w,
+          width: 52.w,
           fit: BoxFit.fitWidth,
         ),
       ],
