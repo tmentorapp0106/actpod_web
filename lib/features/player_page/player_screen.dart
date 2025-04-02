@@ -68,6 +68,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
         builder: (context) => LaunchDeepLinkDialog(),
       );
       if(goto != null && goto) {
+        await Future.delayed(const Duration(microseconds: 500));
         url = "https://actpod-488af.web.app/story/link/${widget.storyId}?openExternalBrowser=1";
         if (await canLaunchUrl(Uri.parse(url))) {
           await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
