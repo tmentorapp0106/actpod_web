@@ -24,7 +24,7 @@ class WebStoryInfoBar extends ConsumerWidget {
               maxWidth: 120.w,
               text: storyInfo == null? "" : storyInfo.storyName,
               color: Colors.black,
-              fontSize: 8.w
+              fontSize: 6.w
             ),
             SizedBox(height: 4.h,),
             WebUserInfo(),
@@ -35,7 +35,7 @@ class WebStoryInfoBar extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  storyInfo == null? const SizedBox.shrink() : ChannelImage(storyInfo.channelImageUrl, storyInfo.channelName, 8.w, 4.w),
+                  storyInfo == null? const SizedBox.shrink() : ChannelImage(storyInfo.channelImageUrl, storyInfo.channelName, 6.w, 3.w),
                   SizedBox(width: 2.w,),
                   Text(
                     storyInfo == null? "" : storyInfo.channelName,
