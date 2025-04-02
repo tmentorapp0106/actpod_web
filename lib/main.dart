@@ -10,7 +10,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await EnvService.load();
-  setUrlStrategy(const HashUrlStrategy());
+  setUrlStrategy(PathUrlStrategy());
   GoRouter.optionURLReflectsImperativeAPIs = true;
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -31,7 +31,10 @@ class MyApp extends StatelessWidget {
           ),
           title: 'ActPod',
           color: Colors.white,
-          routerConfig: myRouter
+          // routerConfig: myRouter,
+          routerDelegate: myRouter.routerDelegate,
+          routeInformationParser: myRouter.routeInformationParser,
+          routeInformationProvider: myRouter.routeInformationProvider,
         );
       }
     );
