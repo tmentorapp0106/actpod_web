@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:actpod_web/design_system/shadow.dart';
+import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_download_box.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_listen_count.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_box.dart';
 import 'package:actpod_web/features/player_page/components/web/web_about_story.dart';
 import 'package:actpod_web/features/player_page/components/web/web_download_box.dart';
@@ -11,6 +13,7 @@ import 'package:actpod_web/features/player_page/components/web/web_player_box.da
 import 'package:actpod_web/features/player_page/components/web/web_send_message_button.dart';
 import 'package:actpod_web/features/player_page/components/web/web_story_image.dart';
 import 'package:actpod_web/features/player_page/controllers/player_controller.dart';
+import 'package:actpod_web/features/player_page/controllers/stat_controller.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,45 +43,37 @@ class PlayerScreen extends ConsumerStatefulWidget {
 
 class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   PlayerController? _playerController;
+  StatController? _statController;
 
   @override
   void initState() {
     super.initState();
     _playerController = PlayerController(ref);
+    _statController = StatController(ref);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initProviders();
       _playerController!.getStoryInfo(widget.storyId);
+      _statController!.getLikesCount(widget.storyId);
       // "67e412e34275cb000145e96d"
-      // checkOpenDeepLink();
+      checkOpenDeepLink();
     });
   }
 
   Future<void> checkOpenDeepLink() async {
     String url;
-    if (kIsWeb) {
-      final userAgent = html.window.navigator.userAgent.toLowerCase();
-      if (userAgent.contains('iphone') || userAgent.contains('ipad')) {
-        url = 'https://apps.apple.com/tw/app/actpod/id6468426325'; // iOS App Store link
-      } else if (userAgent.contains('android')) {
-        url = 'https://play.google.com/store/apps/details?id=com.sharevoice&hl=zh_TW&pli=1'; // Android Play Store
-      } else {
-        url = 'https://actpod-488af.web.app/story/link/67e525ca69734f0001aa7d1d?openExternalBrowser=1'; // Fallback for desktop web
+    if(kIsWeb) {
+      bool? goto = await showDialog<bool>(
+        context: context,
+        builder: (context) => LaunchDeepLinkDialog(),
+      );
+      if(goto != null && goto) {
+        url = "https://actpod-488af.web.app/story/link/${widget.storyId}?openExternalBrowser=1";
+        if (await canLaunchUrl(Uri.parse(url))) {
+          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        } else {
+          debugPrint("Could not launch $url");
+        }
       }
-    } else {
-      if (Platform.isIOS) {
-        url = 'https://apps.apple.com/tw/app/actpod/id6468426325';
-      } else if (Platform.isAndroid) {
-        url = 'https://play.google.com/store/apps/details?id=com.sharevoice&hl=zh_TW&pli=1';
-      } else {
-        url = 'https://play.google.com/store/apps/details?id=com.sharevoice&hl=zh_TW&pli=1';
-      }
-    }
-
-    // Launch the URL
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } else {
-      debugPrint("Could not launch $url");
     }
   }
 
@@ -199,6 +194,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                           SizedBox(width: 5.w),
                           MobileSendMessageButton.MobileSendMessageButton(_playerController!),
                           const Spacer(),
+                          MobileListenCount()
                         ],
                       ),
                     ],
