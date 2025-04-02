@@ -47,7 +47,7 @@ class MobileAboutStory extends ConsumerWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3.w),
       constraints: BoxConstraints(
-        maxHeight: 160.h
+        maxHeight: 120.h
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

@@ -34,6 +34,7 @@ class GetOneStoryResItem {
   String endingUrl;
   String avatarUrl;
   String nickname;
+  int count;
 
   GetOneStoryResItem(
     this.storyId,
@@ -54,7 +55,8 @@ class GetOneStoryResItem {
     this.openingUrl,
     this.endingUrl,
     this.avatarUrl,
-    this.nickname
+    this.nickname,
+    this.count,
   );
 
   factory GetOneStoryResItem.fromJson(Map<String, dynamic> json) {
@@ -77,7 +79,8 @@ class GetOneStoryResItem {
       json["openingUrl"],
       json["endingUrl"],
       json["avatarUrl"],
-      json["nickname"]
+      json["nickname"],
+      json["count"]
     );
   }
 }
