@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:actpod_web/design_system/shadow.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_download_box.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_box.dart';
@@ -10,10 +12,13 @@ import 'package:actpod_web/features/player_page/components/web/web_send_message_
 import 'package:actpod_web/features/player_page/components/web/web_story_image.dart';
 import 'package:actpod_web/features/player_page/controllers/player_controller.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:html' as html;
 
 import '../../design_system/color.dart';
 import 'components/mobile/mobile_about_story.dart';
@@ -25,7 +30,9 @@ import 'components/mobile/mobile_story_info_bar.dart';
 import 'components/web/web_story_info_bar.dart';
 
 class PlayerScreen extends ConsumerStatefulWidget {
-  const PlayerScreen({Key? key}) : super(key: key);
+  final String storyId;
+
+  const PlayerScreen(this.storyId);
 
   @override
   _PlayerScreenState createState() => _PlayerScreenState();
@@ -40,8 +47,39 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     _playerController = PlayerController(ref);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initProviders();
-      _playerController!.getStoryInfo("67e412e34275cb000145e96d");
+      _playerController!.getStoryInfo(widget.storyId);
+      // "67e412e34275cb000145e96d"
+      // checkOpenDeepLink();
     });
+  }
+
+  Future<void> checkOpenDeepLink() async {
+    String url;
+    if (kIsWeb) {
+      final userAgent = html.window.navigator.userAgent.toLowerCase();
+      if (userAgent.contains('iphone') || userAgent.contains('ipad')) {
+        url = 'https://apps.apple.com/tw/app/actpod/id6468426325'; // iOS App Store link
+      } else if (userAgent.contains('android')) {
+        url = 'https://play.google.com/store/apps/details?id=com.sharevoice&hl=zh_TW&pli=1'; // Android Play Store
+      } else {
+        url = 'https://actpod-488af.web.app/story/link/67e525ca69734f0001aa7d1d?openExternalBrowser=1'; // Fallback for desktop web
+      }
+    } else {
+      if (Platform.isIOS) {
+        url = 'https://apps.apple.com/tw/app/actpod/id6468426325';
+      } else if (Platform.isAndroid) {
+        url = 'https://play.google.com/store/apps/details?id=com.sharevoice&hl=zh_TW&pli=1';
+      } else {
+        url = 'https://play.google.com/store/apps/details?id=com.sharevoice&hl=zh_TW&pli=1';
+      }
+    }
+
+    // Launch the URL
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint("Could not launch $url");
+    }
   }
 
   void initProviders() {
@@ -51,7 +89,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPhone = MediaQuery.of(context).size.width < 450;
+    bool isPhone = MediaQuery.of(context).size.width < 600;
     return Scaffold(
       backgroundColor: DesignColor.background,
       body: SafeArea(

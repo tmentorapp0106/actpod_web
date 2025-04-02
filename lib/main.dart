@@ -4,10 +4,14 @@ import 'package:actpod_web/services/env_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await EnvService.load();
+  usePathUrlStrategy();
+  GoRouter.optionURLReflectsImperativeAPIs = true;
   runApp(const ProviderScope(child: MyApp()));
 }
 
