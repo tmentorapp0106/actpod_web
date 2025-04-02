@@ -24,7 +24,6 @@ class ChannelImage extends StatelessWidget {
           child: Center(
             child: Text(
               name[0],
-              textScaleFactor: 1 / MediaQuery.of(context).textScaleFactor,
               style: TextStyle(
                 fontSize: fontSize
               ),

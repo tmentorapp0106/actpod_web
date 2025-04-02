@@ -23,7 +23,7 @@ class WebAboutStory extends ConsumerWidget {
   Widget title(DateTime uploadTime) {
     return Container(
       constraints: BoxConstraints(
-        minWidth: 104.w
+        minWidth: 120.w
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -51,8 +51,9 @@ class WebAboutStory extends ConsumerWidget {
   Widget description(String description) {
     return Container(
       constraints: BoxConstraints(
-        maxHeight: 160.h,
-        minWidth: 104.w
+        maxHeight: 120.h,
+        minWidth: 120.w,
+        maxWidth: 120.w
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

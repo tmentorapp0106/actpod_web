@@ -8,6 +8,7 @@ import 'package:actpod_web/features/player_page/components/mobile/mobile_player_
 import 'package:actpod_web/features/player_page/components/web/web_about_story.dart';
 import 'package:actpod_web/features/player_page/components/web/web_download_box.dart';
 import 'package:actpod_web/features/player_page/components/web/web_likes_button.dart';
+import 'package:actpod_web/features/player_page/components/web/web_listen_count.dart';
 import 'package:actpod_web/features/player_page/components/web/web_logo.dart';
 import 'package:actpod_web/features/player_page/components/web/web_player_box.dart';
 import 'package:actpod_web/features/player_page/components/web/web_send_message_button.dart';
@@ -124,17 +125,19 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     WebAboutStory(),
                     SizedBox(height: 2.h),
                     SizedBox(
-                      width: 104.w, 
+                      width: 120.w, 
                       child: Divider(thickness: 0.4.w),
                     ),
                     SizedBox(
-                      width: 104.w, 
+                      width: 120.w, 
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           WebLikesButton(),
                           SizedBox(width: 2.w),
                           WebSendMessageButton(),
+                          const Spacer(),
+                          WebListenCount()
                         ],
                       )
                     ),
@@ -143,6 +146,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               ),
               SizedBox(height: 12.h,),
               WebDownloadBox(),
+              SizedBox(height: 160.h,)
             ],
           ),
         ),
@@ -201,7 +205,8 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                   ),
                 ),
                 SizedBox(height: 12.h,),
-                MobileDownloadBox()
+                MobileDownloadBox(),
+                SizedBox(height: 100.h,)
               ],
             ),
           ),

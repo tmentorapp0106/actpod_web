@@ -46,13 +46,13 @@ class WebLikesButton extends ConsumerWidget {
           Icon(
             Icons.favorite_border_outlined,
             color: Colors.grey,
-            size: 8.w,
+            size: 6.w,
           ),
           Text(
             ref.watch(likesCountProvider).toString(),
             style: TextStyle(
               color: Colors.black,
-              fontSize: 6.w
+              fontSize: 4.w
             ),
           )
         ]

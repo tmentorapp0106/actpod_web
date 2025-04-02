@@ -46,14 +46,14 @@ class WebSendMessageButton extends ConsumerWidget {
         children: [
           Image.asset(
             "assets/icons/send_voice_message.png",
-            width: 8.w,
-            height: 8.w,
+            width: 6.w,
+            height: 6.w,
             fit: BoxFit.fitWidth,
           ),
           Text(
             "傳送留言",
             style: TextStyle(
-              fontSize: 6.w
+              fontSize: 4.w
             ),
           )
         ]

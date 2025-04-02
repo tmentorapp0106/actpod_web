@@ -12,13 +12,13 @@ class WebUserInfo extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        storyInfo == null? const SizedBox.shrink() : Avatar(storyInfo.userId, storyInfo.avatarUrl, 8.w),
+        storyInfo == null? const SizedBox.shrink() : Avatar(storyInfo.userId, storyInfo.avatarUrl, 6.w),
         SizedBox(width: 2.w,),
         Text(
           storyInfo == null? "" : storyInfo.nickname,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 4.w
+            fontSize: 3.w
           ),
         )
       ]
