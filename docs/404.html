@@ -3,7 +3,7 @@
 <head>
   <script type="text/javascript">
     // Redirect all 404 paths to index.html while preserving the path
-    const redirectTo = window.location.pathname;
+    let redirectTo = window.location.pathname.replace('assets/', '');
     window.location.replace('/index.html?path=' + redirectTo);
   </script>
   <base href="$FLUTTER_BASE_HREF">
