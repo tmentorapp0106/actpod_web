@@ -19,7 +19,6 @@
     const query = new URLSearchParams(window.location.search);
     const path = query.get("path");
     if (path) {
-      console.log("here")
       history.replaceState(null, '', path);
     }
   </script>

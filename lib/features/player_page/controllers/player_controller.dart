@@ -42,7 +42,7 @@ class PlayerController {
       return;
     }
 
-    // ListenStoryRes response = await storyApiManager.listenStory(storyInfo.storyId, Uuid().v4());
+    ListenStoryRes response = await storyApiManager.listenStory(storyInfo.storyId, Uuid().v4());
   }
 
   void onPaused() {
