@@ -17,8 +17,8 @@ class PlayerController {
   Future<void> getStoryInfo(String storyId) async {
     GetOneStoryRes response = await storyApiManager.getOneStory(storyId);
     if(response.code != "0000") {
-      print("here");
-        return;
+      print(response.code);
+      return;
     }
     _ref.watch(storyInfoProvider.notifier).state = response.story;
     if(response.story != null) {
