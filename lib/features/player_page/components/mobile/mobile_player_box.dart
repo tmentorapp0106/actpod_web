@@ -1,5 +1,7 @@
+import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_play_button.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_progress_bar.dart';
+import 'package:actpod_web/features/player_page/service/redirect.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -25,40 +27,75 @@ class MobilePlayerBox extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       width: ScreenUtil().screenWidth,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10.w),
-        padding: EdgeInsets.only(top: 8.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20.w),
-          border: Border.all(
-            color: Colors.grey
+      child: Column(
+        children: [
+          MobilePlayerProgressBar(_playerController),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              speedDropDown(ref),
+              backward(),
+              MobilePlayButton(_playerController),
+              forward(),
+              like(ref)
+            ],
+          )
+        ],
+      )
+    );
+  }
+
+  Widget like(WidgetRef ref) {
+    return SizedBox(
+      width: 65.w,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () {
+              RedirectService.toDownload();
+            },
+            child: Icon(
+              Icons.favorite,
+              color: DesignColor.primary50,
+              size: 24.w,
+            ),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 2,
+          SizedBox(width: 2.w,),
+          Text(
+            ref.watch(storyStateProvider) == null? "" : ref.watch(storyStateProvider)!.likeCount.toString(),
+            style: TextStyle(
+              color: DesignColor.neutral70,
+              fontSize: 14.w
             ),
-          ],
-        ),
-        child: Column(
-          children: [
-            MobilePlayerProgressBar(_playerController),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    speedDropDown(ref),
-                  ],
-                ),
-                MobilePlayButton(_playerController), // stays centered in the stack
-              ],
-            ),
-          ],
-        )
+          )
+        ]
+      )
+    );
+  }
+
+  Widget backward() {
+    return InkWell(
+      onTap: () {
+        _playerController.backward(const Duration(seconds: 15));
+      },
+      child: Image.asset(
+        "assets/icons/backward_15.png",
+        width: 32.w,
+        height: 32.w,
+      )
+    );
+  }
+
+  Widget forward() {
+    return InkWell(
+      onTap: () {
+        _playerController.forward(const Duration(seconds: 15));
+      },
+      child: Image.asset(
+        "assets/icons/forward_15.png",
+        width: 32.w,
+        height: 32.w,
       )
     );
   }

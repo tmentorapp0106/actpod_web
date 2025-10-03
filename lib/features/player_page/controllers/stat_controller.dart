@@ -13,6 +13,6 @@ class StatController {
     if(response.code != "0000") {
       return;
     }
-    _ref.watch(likesCountProvider.notifier).state = response.data.likeCount;
+    _ref.watch(storyStateProvider.notifier).state = response.data;
   }
 }

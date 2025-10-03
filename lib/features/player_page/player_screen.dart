@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/design_system/shadow.dart';
 import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
-import 'package:actpod_web/features/player_page/components/mobile/mobile_download_box.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_comment.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_listen_count.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_box.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_talk_to_creator.dart';
 import 'package:actpod_web/features/player_page/components/web/web_about_story.dart';
 import 'package:actpod_web/features/player_page/components/web/web_download_box.dart';
 import 'package:actpod_web/features/player_page/components/web/web_likes_button.dart';
@@ -22,11 +24,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:html' as html;
 
 import '../../design_system/color.dart';
 import 'components/mobile/mobile_about_story.dart';
-import 'components/mobile/mobile_likes_button.dart';
 import 'components/mobile/mobile_listen_to_message.dart';
 import 'components/mobile/mobile_send_message_button.dart';
 import 'components/mobile/mobile_story_image.dart';
@@ -55,7 +55,6 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
       initProviders();
       _playerController!.getStoryInfo(widget.storyId);
       _statController!.getLikesCount(widget.storyId);
-      // "67e412e34275cb000145e96d"
       checkOpenDeepLink();
     });
   }
@@ -81,18 +80,38 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
   void initProviders() {
     ref.watch(storyInfoProvider.notifier).state = null;
-    ref.watch(likesCountProvider.notifier).state = 0;
+    ref.watch(storyStateProvider.notifier).state = null;
   }
 
   @override
   Widget build(BuildContext context) {
     bool isPhone = MediaQuery.of(context).size.width < 600;
+    GetOneStoryResItem? storyInfo = ref.watch(storyInfoProvider);
+    Widget body;
+    if(storyInfo == null) {
+      body = const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if(storyInfo.storyId.isEmpty) {
+      body = Center(
+        child: Text(
+          "找不到故事",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16.w,
+            fontWeight: FontWeight.bold
+          ),
+        ),
+      );
+    } else {
+      body = isPhone? mobileScreen() : webScreen();
+    }
     return Scaffold(
       backgroundColor: DesignColor.background,
       body: SafeArea(
         child: SizedBox(
           height: ScreenUtil().screenHeight,
-          child: isPhone? mobileScreen() : webScreen()
+          child: body
         )
       ),
     );
@@ -119,7 +138,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    WebStoryInfoBar(),
+                    Expanded(child: WebStoryInfoBar()),
                     SizedBox(height: 2.h,),
                     WebStoryImage(),
                     SizedBox(height: 2.h,),
@@ -171,42 +190,38 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               children: [
                 Image.asset(
                   "assets/images/actpod_logo_web.png",
-                  width: 120.w,
+                  width: 72.w,
                   fit: BoxFit.fitWidth,
                 ),
-                SizedBox(height: 8.h,),
                 Container(
-                  padding: EdgeInsets.only(top: 20.h, bottom: 10.h, left: 20.w, right: 20.w),
+                  padding: EdgeInsets.only(top: 0.h, bottom: 8.h, left: 8.w, right: 8.w),
                   margin: EdgeInsets.symmetric(horizontal: 10.w),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: DesignShadow.shadow,
-                    borderRadius: BorderRadius.circular(15.w),
-                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       MobileStoryInfoBar(),
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 16.h),
                       MobileStoryImage(),
-                      SizedBox(height: 5.h),
+                      SizedBox(height: 16.h),
+                      MobileTalkToCreator(),
+                      SizedBox(height: 8.h),
                       MobileAboutStory(),
                       SizedBox(height: 5.h),
-                      Divider(thickness: 1.5.w),
-                      Row(
-                        children: [
-                          MobileLikesButton(),
-                          SizedBox(width: 5.w),
-                          MobileSendMessageButton.MobileSendMessageButton(_playerController!),
-                          const Spacer(),
-                          MobileListenCount()
-                        ],
-                      ),
+                      MobileComment(),
+                      // Divider(thickness: 1.5.w),
+                      // Row(
+                      //   children: [
+                      //     MobileLikesButton(),
+                      //     SizedBox(width: 5.w),
+                      //     MobileSendMessageButton.MobileSendMessageButton(_playerController!),
+                      //     const Spacer(),
+                      //     MobileListenCount()
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
                 SizedBox(height: 12.h,),
-                MobileDownloadBox(),
                 SizedBox(height: 100.h,)
               ],
             ),

@@ -10,12 +10,12 @@ class MobileStoryImage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final storyInfo = ref.watch(storyInfoProvider);
     return storyInfo == null? const SizedBox.shrink() : ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
+      borderRadius: BorderRadius.circular(8.w),
       child: Image.network( 
         storyInfo.storyImageUrl,
-        width: 200.w,
-        height: 200.w,
-        fit: BoxFit.fitWidth,
+        width: 340.w,
+        height: 340.w,
+        fit: BoxFit.fill,
       )
     );
   }

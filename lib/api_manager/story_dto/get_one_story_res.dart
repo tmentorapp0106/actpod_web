@@ -17,7 +17,11 @@ class GetOneStoryRes {
 class GetOneStoryResItem {
   String storyId;
   String userId;
+  String collaboratorId;
+  String collaboratorName;
+  String collaboratorAvatarUrl;
   String spaceId;
+  String spaceName;
   String channelId;
   String channelName;
   String channelImageUrl;
@@ -26,6 +30,7 @@ class GetOneStoryResItem {
   String storyName;
   String storyDescription;
   String storyImageUrl;
+  List<String> storyImageUrls;
   int storyLength;
   int totalLength;
   DateTime storyEditTime;
@@ -39,7 +44,11 @@ class GetOneStoryResItem {
   GetOneStoryResItem(
     this.storyId,
     this.userId,
+    this.collaboratorId,
+    this.collaboratorName,
+    this.collaboratorAvatarUrl,
     this.spaceId,
+    this.spaceName,
     this.channelId,
     this.channelName,
     this.channelImageUrl,
@@ -48,6 +57,7 @@ class GetOneStoryResItem {
     this.storyName,
     this.storyDescription,
     this.storyImageUrl,
+    this.storyImageUrls,
     this.storyLength,
     this.totalLength,
     this.storyEditTime,
@@ -63,7 +73,11 @@ class GetOneStoryResItem {
     return GetOneStoryResItem(
       json["storyId"],
       json["userId"],
+      json["collaboratorId"]?? "",
+      json["collaboratorName"]?? "",
+      json["collaboratorAvatarUrl"]?? "",
       json["spaceId"],
+      json["spaceName"]?? "",
       json["channelId"],
       json["channelName"],
       json["channelImageUrl"],
@@ -72,6 +86,10 @@ class GetOneStoryResItem {
       json["storyName"],
       json["storyDescription"],
       json["storyImageUrl"],
+      (json["storyImageUrls"] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList()
+          ?? [],
       json["storyLength"],
       json["totalLength"],
       DateTime.parse(json["storyEditTime"]),

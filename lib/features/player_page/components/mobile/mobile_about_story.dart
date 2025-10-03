@@ -1,3 +1,4 @@
+import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -14,14 +15,14 @@ class MobileAboutStory extends ConsumerWidget {
     final storyInfo = ref.watch(storyInfoProvider);
     return Column(
       children: [
-        title(storyInfo == null? DateTime.now() : storyInfo.storyUploadTime),
+        title(storyInfo == null? DateTime.now() : storyInfo.storyUploadTime, storyInfo == null? "" : storyInfo.spaceName),
         SizedBox(height: 5.h,),
         description(storyInfo == null? "" : storyInfo.storyDescription)
       ],
     );
   }
 
-  Widget title(DateTime uploadTime) {
+  Widget title(DateTime uploadTime, String spaceName) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -32,11 +33,25 @@ class MobileAboutStory extends ConsumerWidget {
               fontWeight: FontWeight.bold
           ),
         ),
-        SizedBox(width: 5.w,),
+        SizedBox(width: 8.w,),
         Text(
           TimeUtils.convertToFormat("yyyy/MM/dd", uploadTime),
           style: TextStyle(
             fontSize: 12.w
+          ),
+        ),
+        SizedBox(width: 8.w,),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+          decoration: BoxDecoration(
+            color: DesignColor.neutral100,
+            borderRadius: BorderRadius.circular(12)
+          ),
+          child: Text(
+            spaceName,
+            style: TextStyle(
+              fontSize: 12.w
+            ),
           ),
         )
       ],
@@ -46,9 +61,6 @@ class MobileAboutStory extends ConsumerWidget {
   Widget description(String description) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3.w),
-      constraints: BoxConstraints(
-        maxHeight: 120.h
-      ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Row(

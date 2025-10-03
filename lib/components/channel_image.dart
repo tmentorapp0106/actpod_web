@@ -37,7 +37,7 @@ class ChannelImage extends StatelessWidget {
         width: size,
         height: size,
         child: ClipRRect(
-            borderRadius: BorderRadius.circular(size / 2),
+            borderRadius: BorderRadius.circular(8.w),
             child: AspectRatio(
                 aspectRatio: 1 / 1,
                 child: Image.network(

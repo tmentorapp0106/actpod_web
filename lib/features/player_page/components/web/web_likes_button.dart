@@ -49,7 +49,7 @@ class WebLikesButton extends ConsumerWidget {
             size: 6.w,
           ),
           Text(
-            ref.watch(likesCountProvider).toString(),
+            ref.watch(storyStateProvider)?.likeCount.toString() ?? "0",
             style: TextStyle(
               color: Colors.black,
               fontSize: 4.w

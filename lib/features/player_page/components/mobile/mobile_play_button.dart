@@ -1,3 +1,4 @@
+import 'package:actpod_web/design_system/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +31,7 @@ class MobilePlayButton extends ConsumerWidget {
       child: Icon(
         playerState == "playing"? Icons.pause_rounded : Icons.play_arrow_rounded,
         size: 50.w,
-        color: Colors.black,
+        color: DesignColor.primary50,
       )
     );
   }
