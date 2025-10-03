@@ -25,7 +25,8 @@ class MobilePlayerBox extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
+    return Container(
+      color: Colors.white,
       width: ScreenUtil().screenWidth,
       child: Column(
         children: [

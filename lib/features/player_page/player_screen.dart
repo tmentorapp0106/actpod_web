@@ -208,20 +208,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                       MobileAboutStory(),
                       SizedBox(height: 5.h),
                       MobileComment(),
-                      // Divider(thickness: 1.5.w),
-                      // Row(
-                      //   children: [
-                      //     MobileLikesButton(),
-                      //     SizedBox(width: 5.w),
-                      //     MobileSendMessageButton.MobileSendMessageButton(_playerController!),
-                      //     const Spacer(),
-                      //     MobileListenCount()
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),
-                SizedBox(height: 12.h,),
                 SizedBox(height: 100.h,)
               ],
             ),

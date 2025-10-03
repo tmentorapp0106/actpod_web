@@ -2,6 +2,7 @@ import 'package:actpod_web/api_manager/comment_dto/get_story_stat_res.dart';
 import 'package:actpod_web/components/avatar.dart';
 import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
+import 'package:actpod_web/features/player_page/service/redirect.dart';
 import 'package:actpod_web/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +44,7 @@ class MobileComment extends ConsumerWidget {
         SizedBox(height: 8.h,),
         GestureDetector(
           onTap: () async {
+            await RedirectService.toDownload();
           },
           child: contentWidget
         )
