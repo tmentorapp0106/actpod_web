@@ -39,6 +39,7 @@ class GetOneStoryResItem {
   String endingUrl;
   String avatarUrl;
   String nickname;
+  bool isPremium;
   int count;
 
   GetOneStoryResItem(
@@ -66,6 +67,7 @@ class GetOneStoryResItem {
     this.endingUrl,
     this.avatarUrl,
     this.nickname,
+    this.isPremium,
     this.count,
   );
 
@@ -87,9 +89,9 @@ class GetOneStoryResItem {
       json["storyDescription"],
       json["storyImageUrl"],
       (json["storyImageUrls"] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList()
-          ?? [],
+        ?.map((e) => e.toString())
+        .toList()
+        ?? [],
       json["storyLength"],
       json["totalLength"],
       DateTime.parse(json["storyEditTime"]),
@@ -98,6 +100,7 @@ class GetOneStoryResItem {
       json["endingUrl"],
       json["avatarUrl"],
       json["nickname"],
+      json["isPremium"],
       json["count"]
     );
   }

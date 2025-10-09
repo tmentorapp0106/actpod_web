@@ -1,14 +1,17 @@
 import 'package:actpod_web/design_system/color.dart';
+import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_play_button.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_progress_bar.dart';
 import 'package:actpod_web/features/player_page/service/redirect.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../controllers/player_controller.dart';
 import '../../providers.dart';
@@ -38,7 +41,7 @@ class MobilePlayerBox extends ConsumerWidget {
               backward(),
               MobilePlayButton(_playerController),
               forward(),
-              like(ref)
+              like(ref, context)
             ],
           )
         ],
@@ -46,15 +49,30 @@ class MobilePlayerBox extends ConsumerWidget {
     );
   }
 
-  Widget like(WidgetRef ref) {
+  Widget like(WidgetRef ref, BuildContext context) {
     return SizedBox(
       width: 65.w,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: () {
-              RedirectService.toDownload();
+            onTap: () async {
+              String url;
+              if(kIsWeb) {
+                bool? goto = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => LaunchDeepLinkDialog(),
+                );
+                if(goto != null && goto) {
+                  await Future.delayed(const Duration(microseconds: 500));
+                  url = "https://actpod-488af.web.app/story/link/${ref.watch(storyStateProvider)?.storyId}?openExternalBrowser=1";
+                  if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                  } else {
+                    debugPrint("Could not launch $url");
+                  }
+                }
+              }
             },
             child: Icon(
               Icons.favorite,

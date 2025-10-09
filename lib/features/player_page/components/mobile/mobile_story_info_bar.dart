@@ -25,9 +25,9 @@ class MobileStoryInfoBar extends ConsumerWidget {
               Align(
                 alignment: Alignment.center, // centers across full width
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 280.w),
+                  constraints: BoxConstraints(maxWidth: 320.w),
                   child: CenteredMarquee(
-                    maxWidth: 280.w,
+                    maxWidth: 320.w,
                     text: storyInfo == null ? "" : storyInfo!.storyName,
                     color: Colors.black,
                     fontSize: 24.w,

@@ -1,12 +1,15 @@
 import 'package:actpod_web/api_manager/comment_dto/get_story_stat_res.dart';
 import 'package:actpod_web/components/avatar.dart';
 import 'package:actpod_web/design_system/color.dart';
+import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:actpod_web/features/player_page/service/redirect.dart';
 import 'package:actpod_web/utils/string_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MobileComment extends ConsumerWidget {
   @override
@@ -44,7 +47,22 @@ class MobileComment extends ConsumerWidget {
         SizedBox(height: 8.h,),
         GestureDetector(
           onTap: () async {
-            await RedirectService.toDownload();
+            String url;
+            if(kIsWeb) {
+              bool? goto = await showDialog<bool>(
+                context: context,
+                builder: (context) => LaunchDeepLinkDialog(),
+              );
+              if(goto != null && goto) {
+                await Future.delayed(const Duration(microseconds: 500));
+                url = "https://actpod-488af.web.app/story/link/${storyStat?.storyId}?openExternalBrowser=1";
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                } else {
+                  debugPrint("Could not launch $url");
+                }
+              }
+            }
           },
           child: contentWidget
         )

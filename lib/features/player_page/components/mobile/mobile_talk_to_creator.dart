@@ -1,10 +1,17 @@
 import 'package:actpod_web/design_system/color.dart';
+import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/service/redirect.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MobileTalkToCreator extends StatelessWidget {
+  final String? storyId;
+
+  MobileTalkToCreator({required this.storyId});
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -18,7 +25,22 @@ class MobileTalkToCreator extends StatelessWidget {
                 : null,
           ),
           onTap: () async {
-            RedirectService.toDownload();
+            String url;
+            if(kIsWeb) {
+              bool? goto = await showDialog<bool>(
+                context: context,
+                builder: (context) => LaunchDeepLinkDialog(),
+              );
+              if(goto != null && goto) {
+                await Future.delayed(const Duration(microseconds: 500));
+                url = "https://actpod-488af.web.app/story/link/${storyId}?openExternalBrowser=1";
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                } else {
+                  debugPrint("Could not launch $url");
+                }
+              }
+            }
           },
           child: Ink( // Ink paints decoration so ripple is clipped correctly
             decoration: BoxDecoration(

@@ -203,7 +203,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                       SizedBox(height: 16.h),
                       MobileStoryImage(),
                       SizedBox(height: 16.h),
-                      MobileTalkToCreator(),
+                      MobileTalkToCreator(storyId: ref.watch(storyStateProvider)?.storyId),
                       SizedBox(height: 8.h),
                       MobileAboutStory(),
                       SizedBox(height: 5.h),

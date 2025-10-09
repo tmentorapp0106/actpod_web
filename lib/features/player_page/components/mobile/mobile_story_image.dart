@@ -1,3 +1,4 @@
+import 'package:actpod_web/components/image_carousel.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -9,14 +10,6 @@ class MobileStoryImage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyInfo = ref.watch(storyInfoProvider);
-    return storyInfo == null? const SizedBox.shrink() : ClipRRect(
-      borderRadius: BorderRadius.circular(8.w),
-      child: Image.network( 
-        storyInfo.storyImageUrl,
-        width: 340.w,
-        height: 340.w,
-        fit: BoxFit.fill,
-      )
-    );
+    return storyInfo == null? const SizedBox.shrink() : NetworkImageCarousel(imageUrls: storyInfo.storyImageUrls);
   }
 }
