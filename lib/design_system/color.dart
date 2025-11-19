@@ -10,6 +10,12 @@ class DesignColor {
   static const primary500 = Color(0xFFf99a07);
   static const background = Colors.white;
 
+  static const secondary40 = Color(0xFF68b29b);
+  static const secondary50 = Color(0xFF4c9a80);
+  static const secondary60 = Color(0xFF42836d);
+  static const secondary70 = Color(0xFF36715d);
+  static const secondary500 = Color(0xFF4c9a80);
+
   static const white = Color(0xFFe4f1ed);
   static const neutral30 = Color(0xFFe7e7e7);
   static const neutral40 = Color(0xFFe4e4e4);

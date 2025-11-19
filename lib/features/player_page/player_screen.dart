@@ -4,7 +4,9 @@ import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/design_system/shadow.dart';
 import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_comment.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_instant_comment_button.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_listen_count.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_login_button.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_box.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_talk_to_creator.dart';
 import 'package:actpod_web/features/player_page/components/web/web_about_story.dart';
@@ -15,9 +17,11 @@ import 'package:actpod_web/features/player_page/components/web/web_logo.dart';
 import 'package:actpod_web/features/player_page/components/web/web_player_box.dart';
 import 'package:actpod_web/features/player_page/components/web/web_send_message_button.dart';
 import 'package:actpod_web/features/player_page/components/web/web_story_image.dart';
+import 'package:actpod_web/features/player_page/controllers/comment_controller.dart';
 import 'package:actpod_web/features/player_page/controllers/player_controller.dart';
 import 'package:actpod_web/features/player_page/controllers/stat_controller.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
+import 'package:actpod_web/utils/cookie_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -45,12 +49,16 @@ class PlayerScreen extends ConsumerStatefulWidget {
 class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   PlayerController? _playerController;
   StatController? _statController;
+  CommentController? _commentController;
+  final FocusNode _commentFocusNode = FocusNode();
+  final FocusNode _instantCommentFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _playerController = PlayerController(ref);
     _statController = StatController(ref);
+    _commentController = CommentController(ref: ref);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initProviders();
       _playerController!.getStoryInfo(widget.storyId);
@@ -104,7 +112,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
         ),
       );
     } else {
-      body = isPhone? mobileScreen() : webScreen();
+      body = isPhone? mobileScreen() : Center(
+        child: Text("此頁面僅支援手機瀏覽器觀看"),
+      );
     }
     return Scaffold(
       backgroundColor: DesignColor.background,
@@ -124,7 +134,11 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              WebLogo(),
+              Stack(
+                children: [
+                  WebLogo(),
+                ],
+              ),
               SizedBox(height: 4.h,),
               Container(
                 width: 140.w,
@@ -188,10 +202,22 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Image.asset(
-                  "assets/images/actpod_logo_web.png",
-                  width: 72.w,
-                  fit: BoxFit.fitWidth,
+                Stack(
+                  children: [
+                    Positioned(
+                      right: 12.w,
+                      bottom: 0,
+                      child: MobileLoginButton()
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        "assets/images/actpod_logo_web.png",
+                        width: 72.w,
+                        fit: BoxFit.fitWidth,
+                      )
+                    ),
+                  ],
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 0.h, bottom: 8.h, left: 8.w, right: 8.w),
@@ -203,11 +229,26 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                       SizedBox(height: 16.h),
                       MobileStoryImage(),
                       SizedBox(height: 16.h),
-                      MobileTalkToCreator(storyId: ref.watch(storyStateProvider)?.storyId),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MobileTalkToCreator(storyId: widget.storyId),
+                          SizedBox(width: 12.w,),
+                          InstantCommentButton(
+                            focusNode: _instantCommentFocusNode,
+                            commentController: _commentController!,
+                            storyId: widget.storyId,
+                            playerController: _playerController!,
+                          ),
+                        ],
+                      ),
                       SizedBox(height: 8.h),
                       MobileAboutStory(),
                       SizedBox(height: 5.h),
-                      MobileComment(),
+                      MobileComment(
+                        commentController: _commentController!,
+                        focusNode: _commentFocusNode,
+                      ),
                     ],
                   ),
                 ),

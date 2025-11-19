@@ -1,6 +1,8 @@
 import 'dart:core';
 import 'dart:developer' as developer;
 
+import 'package:actpod_web/exceptions/exceptions.dart';
+import 'package:actpod_web/utils/cookie_utils.dart';
 import 'package:dio/dio.dart' as pdio;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -21,39 +23,32 @@ abstract class AbstractApiManager {
     }
   }
 
-  // Future<dynamic> handelGetWithUserToken(String path) async {
-  //   pdio.Dio dio = new pdio.Dio();
-  //   if(UserService.getUserToken() == null || UserService.getUserToken() == "") {
-  //     throw TokenMissedException("User Token Missed");
-  //   }
-  //   dio.options.headers["userToken"] = UserService.getUserToken();
+  Future<dynamic> handelGetWithUserToken(String path) async {
+    pdio.Dio dio = new pdio.Dio();
+    if(CookieUtils.getCookie("userToken") == null || CookieUtils.getCookie("userToken") == "") {
+      throw TokenMissedException("User Token Missed");
+    }
+    dio.options.headers["userToken"] = CookieUtils.getCookie("userToken");
 
-  //   pdio.Response res;
-  //   try {
-  //     res = await dio.get(dotenv.env[systemName]! + path);
-  //   } on DioError catch (e) {
-  //     if (e.response != null) {
-  //       // Specific handling for 401 status code
-  //       if (e.response?.statusCode == 401) {
-  //         if(await refreshUserToken()) {
-  //           return await handelGetWithUserToken(path);
-  //         }
-  //       }
-  //     }
-  //     print(e);
-  //     rethrow;
-  //   } catch (e) {
-  //     print(e);
-  //     rethrow;
-  //   }
-  //   if(res.data["code"] == "0005") {
-  //     if(await refreshUserToken()) {
-  //       return await handelGetWithUserToken(path);
-  //     }
-  //   }
+    pdio.Response res;
+    try {
+      res = await dio.get(dotenv.env[systemName]! + path);
+    } on DioError catch (e) {
+      if (e.response != null) {
+        // Specific handling for 401 status code
+        if (e.response?.statusCode == 401) {
+          throw TokenExpiredException("User Token Expired");
+        }
+      }
+      print(e);
+      rethrow;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
 
-  //   return res;
-  // }
+    return res;
+  }
 
   Future<dynamic> handelPost(String path, dynamic body) async  {
     pdio.Dio dio = new pdio.Dio();
@@ -66,63 +61,35 @@ abstract class AbstractApiManager {
     }
   }
 
-  // Future<dynamic> handelPostWithUserToken(String path, dynamic body) async  {
-  //   pdio.Dio dio = new pdio.Dio();
-  //   if(UserService.getUserToken() == null || UserService.getUserToken() == "") {
-  //     throw TokenMissedException("User Token Missed");
-  //   }
-  //   dio.options.headers["userToken"] = UserService.getUserToken();
+  Future<dynamic> handelPostWithUserToken(String path, dynamic body) async  {
+    pdio.Dio dio = new pdio.Dio();
+    if(CookieUtils.getCookie("userToken") == null || CookieUtils.getCookie("userToken") == "") {
+      throw TokenMissedException("User Token Missed");
+    }
+    dio.options.headers["userToken"] = CookieUtils.getCookie("userToken");
 
-  //   pdio.Response res;
-  //   try {
-  //     res = await dio.post(dotenv.env[systemName]! + path, data: body);
-  //   } on DioError catch (e) {
-  //     if (e.response != null) {
-  //       // Specific handling for 401 status code
-  //       if (e.response?.statusCode == 401) {
-  //         if(await refreshUserToken()) {
-  //           if(body is FormData) {
-  //             FormData formData = FormData();
-  //             formData.fields.addAll(body.fields);
-  //             for (MapEntry mapFile in body.files) {
-  //               formData.files.add(MapEntry(
-  //                 mapFile.key,
-  //                 MultipartFile.fromFileSync(mapFile.value.filePath,
-  //                     filename: mapFile.value.filename)));
-  //             }
-  //             return await handelPostWithUserToken(path, formData);
-  //           } else {
-  //             return await handelPostWithUserToken(path, body);
-  //           }
-  //         }
-  //       }
-  //     }
-  //     print(e);
-  //     rethrow;
-  //   } catch (e) {
-  //     print(e);
-  //     throw e;
-  //   }
+    pdio.Response res;
+    try {
+      res = await dio.post(dotenv.env[systemName]! + path, data: body);
+    } on DioError catch (e) {
+      if (e.response != null) {
+        // Specific handling for 401 status code
+        if (e.response?.statusCode == 401) {
+          throw TokenExpiredException("User Token Expired");
+        }
+      }
+      print(e);
+      rethrow;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
 
-  //   if(res.data["code"] == "0005") {
-  //     if(await refreshUserToken()) {
-  //       if(body is FormData) {
-  //         FormData formData = FormData();
-  //         formData.fields.addAll(body.fields);
-  //         for (MapEntry mapFile in body.files) {
-  //           formData.files.add(MapEntry(
-  //               mapFile.key,
-  //               MultipartFile.fromFileSync(mapFile.value.filePath,
-  //               filename: mapFile.value.filename)));
-  //         }
-  //         return await handelPostWithUserToken(path, formData);
-  //       } else {
-  //         return await handelPostWithUserToken(path, body);
-  //       }
-  //     }
-  //   }
-  //   return res;
-  // }
+    if(res.data["code"] == "0005") {
+      throw TokenExpiredException("User Token Expired");
+    }
+    return res;
+  }
 
   // Future<dynamic> handelPatchWithUserToken(String path, dynamic body) async  {
   //   pdio.Dio dio = new pdio.Dio();

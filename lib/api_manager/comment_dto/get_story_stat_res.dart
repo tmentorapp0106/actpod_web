@@ -1,3 +1,5 @@
+import 'package:actpod_web/dto/comment_dto.dart';
+
 class GetStoryStatRes {
   String code;
   String message;
@@ -17,75 +19,43 @@ class GetStoryStatRes {
 class GetStoryStatResItem {
   String storyId;
   String userId;
+  int instantCommentCount;
   int commentCount;
   int likeCount;
   CommentInfoDto? showedComment;
 
-  GetStoryStatResItem(this.storyId, this.userId, this.commentCount, this.likeCount, this.showedComment);
+  GetStoryStatResItem(this.storyId, this.userId, this.instantCommentCount, this.commentCount, this.likeCount, this.showedComment);
 
   factory GetStoryStatResItem.fromJson(Map<String, dynamic> json) {
     return GetStoryStatResItem(
       json["storyId"],
       json["userId"],
+      json["instantCommentCount"],
       json["commentCount"],
       json["likeCount"],
       json["showedComment"] == null? null : CommentInfoDto.fromJson(json["showedComment"])
     );
   }
-}
 
-class CommentInfoDto {
-  String commentId;
-  String userId;
-  String content;
-  int replyCount;
-  int sendTiming;
-  DateTime commentTime;
-  String commentType;
-  String stickerUrl;
-  String avatarUrl;
-  String username;
-  String nickname;
-  String gender;
-  String email;
-  String selfDescription;
-  int podcoins;
+  static const Object _sentinel = Object();
 
-  CommentInfoDto(
-      this.commentId,
-      this.userId,
-      this.content,
-      this.replyCount,
-      this.sendTiming,
-      this.commentTime,
-      this.commentType,
-      this.stickerUrl,
-      this.avatarUrl,
-      this.username,
-      this.nickname,
-      this.gender,
-      this.email,
-      this.selfDescription,
-      this.podcoins
-      );
-
-  factory CommentInfoDto.fromJson(Map<String, dynamic> json) {
-    return CommentInfoDto(
-        json["commentInfo"]["commentId"],
-        json["commentInfo"]["userId"],
-        json["commentInfo"]["content"],
-        json["commentInfo"]["replyCount"],
-        json["commentInfo"]["sendTiming"],
-        DateTime.parse(json["commentInfo"]["commentTime"]),
-        json["commentInfo"]["commentType"],
-        json["commentInfo"]["stickerUrl"],
-        json["userInfo"]["avatarUrl"],
-        json["userInfo"]["username"],
-        json["userInfo"]["nickname"],
-        json["userInfo"]["gender"],
-        json["userInfo"]["email"],
-        json["userInfo"]["selfDescription"],
-      json["commentInfo"]["podcoins"]?? 0
+  GetStoryStatResItem copyWith({
+    String? storyId,
+    String? userId,
+    int? instantCommentCount,
+    int? commentCount,
+    int? likeCount,
+    Object? showedComment = _sentinel, // pass null to clear, omit to keep
+  }) {
+    return GetStoryStatResItem(
+      storyId ?? this.storyId,
+      userId ?? this.userId,
+      instantCommentCount ?? this.instantCommentCount,
+      commentCount ?? this.commentCount,
+      likeCount ?? this.likeCount,
+      showedComment == _sentinel
+          ? this.showedComment
+          : showedComment as CommentInfoDto?, // allows explicit null
     );
   }
 }

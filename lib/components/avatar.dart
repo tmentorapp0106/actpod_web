@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
-  final String userId;
+  final String? userId;
   final String? avatarUrl;
   final double size;
 

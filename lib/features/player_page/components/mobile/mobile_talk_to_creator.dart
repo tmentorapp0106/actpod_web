@@ -14,15 +14,16 @@ class MobileTalkToCreator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return Expanded(
+      child: Material(
         color: Colors.transparent, // need a Material ancestor for ripples
         child: InkWell(
           borderRadius: BorderRadius.circular(10.w),
           splashFactory: InkRipple.splashFactory,
           overlayColor: WidgetStateProperty.resolveWith(
-                (states) => states.contains(WidgetState.pressed)
-                ? DesignColor.primary500.withOpacity(0.10)
-                : null,
+            (states) => states.contains(WidgetState.pressed)
+            ? DesignColor.primary500.withOpacity(0.10)
+            : null,
           ),
           onTap: () async {
             String url;
@@ -72,6 +73,7 @@ class MobileTalkToCreator extends StatelessWidget {
             ),
           ),
         ),
-      );
+      )
+    );
   }
 }
