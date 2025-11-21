@@ -1,41 +1,32 @@
 import 'dart:convert';
+import 'package:web/web.dart';
 
 import 'package:actpod_web/dto/user_info_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPrefs {
   static SharedPreferences? prefs;
+  static const _keyUserInfo = 'userInfo';
 
-  static Future init() async {
-    prefs = await SharedPreferences.getInstance();
-  }
-
-  static String? getUserToken() {
-    return prefs?.getString("userToken");
-  }
-
-  static Future<bool?> setUserToken(String userToken) async {
-    return await prefs?.setString("userToken", userToken);
-  }
-
-  static Future<bool?> setUserInfo(UserInfoDto? userInfo) async {
-    return await prefs?.setString("userInfo", jsonEncode(userInfo?? {}));
+  static Future<void> setUserInfo(UserInfoDto? userInfo) async {
+    if (userInfo == null) {
+      window.localStorage.removeItem(_keyUserInfo);
+      return;
+    }
+    final jsonStr = jsonEncode(userInfo); 
+    window.localStorage.setItem(_keyUserInfo, jsonStr);
   }
 
   static UserInfoDto? getUserInfo() {
-    String? userInfoJsonStr = prefs?.getString("userInfo");
-    if(userInfoJsonStr == null || userInfoJsonStr == "") {
+    final userInfoJsonStr = window.localStorage.getItem(_keyUserInfo);
+    if (userInfoJsonStr == null || userInfoJsonStr.isEmpty) {
       return null;
     }
-
     return UserInfoDto.fromJson(jsonDecode(userInfoJsonStr));
   }
 
   static Future<bool?> cleanUser() async {
-    await prefs?.setString("userInfo", "");
-    await prefs?.setString("userToken", "");
-    await prefs?.setString("refreshToken", "");
-    await prefs?.setString("membership", "");
+    window.localStorage.removeItem(_keyUserInfo);
     return true;
   }
 }

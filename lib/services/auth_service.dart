@@ -1,6 +1,7 @@
 import 'package:actpod_web/api_manager/user_api_manager.dart';
 import 'package:actpod_web/api_manager/user_dto/create_login.dart';
 import 'package:actpod_web/api_manager/user_dto/get_user_info.dart';
+import 'package:actpod_web/dto/user_info_dto.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/utils/cookie_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
   final _auth = FirebaseAuth.instance;
 
-  Future<void> signInWithGoogle() async {
+  Future<UserInfoDto?> signInWithGoogle() async {
     final provider = GoogleAuthProvider()
       ..addScope('email'); // optional
 
@@ -31,12 +32,14 @@ class AuthService {
         throw(userInfoRes.message);
       } else {
         UserPrefs.setUserInfo(userInfoRes.userInfo);
+        return userInfoRes.userInfo;
       }
     } catch (_) {
     }
+    return null;
   }
 
-  Future<UserCredential?> signInWithApple() async {
+  Future<UserInfoDto?> signInWithApple() async {
     final provider = OAuthProvider('apple.com')
       ..addScope('name')..addScope('email');
 
@@ -57,6 +60,7 @@ class AuthService {
         throw(userInfoRes.message);
       } else {
         UserPrefs.setUserInfo(userInfoRes.userInfo);
+        return userInfoRes.userInfo;
       }
     } catch (e) {
       print(e);

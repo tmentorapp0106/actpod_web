@@ -1,5 +1,7 @@
 import 'package:actpod_web/api_manager/user_api_manager.dart';
+import 'package:actpod_web/dto/user_info_dto.dart';
 import 'package:actpod_web/features/login/provider.dart';
+import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/router.dart';
 import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/utils/cookie_utils.dart';
@@ -43,7 +45,8 @@ class HomeScreen extends ConsumerWidget {
               InkWell(
                 onTap: () async {
                   ref.watch(loginLoadingProvider.notifier).state = true;
-                  await AuthService().signInWithGoogle();
+                  UserInfoDto? userInfo = await AuthService().signInWithGoogle();
+                  ref.watch(userInfoProvider.notifier).state = userInfo;
                   ref.watch(loginLoadingProvider.notifier).state = false;
                 },
                 child: Text("google login"),
@@ -51,9 +54,7 @@ class HomeScreen extends ConsumerWidget {
               InkWell(
                 onTap: () async {
                   final cred = await AuthService().signInWithApple();
-                  final idToken = await cred?.user?.getIdToken();
-                  // await userApiManager.thirdPartyCreateUserOrLogin(idToken, "", "");
-                  // myRouter.go("/story");
+                  
                 },
                 child: Text("apple login"),
               )

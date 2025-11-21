@@ -2,25 +2,27 @@ import 'package:actpod_web/components/avatar.dart';
 import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/features/login/login_screen.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
+import 'package:actpod_web/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class MobileLoginButton extends StatelessWidget {
+class MobileLoginButton extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    return UserPrefs.getUserInfo() != null ? userInfo() : loginButton(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(userInfoProvider) != null ? userInfo(ref) : loginButton(context);
   }
 
-  Widget userInfo() {
+  Widget userInfo(WidgetRef ref) {
     return Padding(
       padding: EdgeInsets.only(right: 8.w, bottom: 2.h),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Avatar(null, UserPrefs.getUserInfo()?.avatarUrl, 20.w),
+          Avatar(null, ref.watch(userInfoProvider)?.avatarUrl, 20.w),
           SizedBox(width: 2.w,),
           Text(
-            UserPrefs.getUserInfo()?.nickname ?? "",
+            ref.watch(userInfoProvider)?.nickname ?? "",
             style: TextStyle(
               fontSize: 12.w,
               color: DesignColor.neutral90

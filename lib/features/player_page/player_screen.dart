@@ -5,7 +5,6 @@ import 'package:actpod_web/design_system/shadow.dart';
 import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_comment.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_instant_comment_button.dart';
-import 'package:actpod_web/features/player_page/components/mobile/mobile_listen_count.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_login_button.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_box.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_talk_to_creator.dart';
@@ -21,7 +20,8 @@ import 'package:actpod_web/features/player_page/controllers/comment_controller.d
 import 'package:actpod_web/features/player_page/controllers/player_controller.dart';
 import 'package:actpod_web/features/player_page/controllers/stat_controller.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
-import 'package:actpod_web/utils/cookie_utils.dart';
+import 'package:actpod_web/local_storage/user_info.dart';
+import 'package:actpod_web/providers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -87,6 +87,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   }
 
   void initProviders() {
+    ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
     ref.watch(storyInfoProvider.notifier).state = null;
     ref.watch(storyStateProvider.notifier).state = null;
   }

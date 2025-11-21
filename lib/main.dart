@@ -31,9 +31,9 @@ Future<void> main() async {
   setUrlStrategy(PathUrlStrategy());
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
-  await UserPrefs.init();
   UserPrefs.cleanUser();
-
+  CookieUtils.deleteCookie("userToken");
+  
   await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
   await FirebaseAuth.instance.authStateChanges().first;
   User? firebaseUser = FirebaseAuth.instance.currentUser;
@@ -56,7 +56,6 @@ Future<void> main() async {
       UserPrefs.setUserInfo(userInfoRes.userInfo);
     }
   }
-
   runApp(const ProviderScope(child: MyApp()));
 }
 
