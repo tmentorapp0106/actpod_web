@@ -59,6 +59,7 @@ dependencies:
   sign_in_with_apple: ^7.0.1
   shared_preferences: ^2.0.8
   fluttertoast: ^8.2.12
+  flutter_cors_image: ^0.3.13
 
 dev_dependencies:
   flutter_test:
