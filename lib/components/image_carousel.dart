@@ -54,7 +54,7 @@ class _NetworkImageCarouselState
                           return const Center(
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.orange, // 👈 change to whatever color you like
+                              color: DesignColor.primary50,
                             ),
                           );
                         },

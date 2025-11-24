@@ -1,6 +1,7 @@
 import 'package:actpod_web/api_manager/user_api_manager.dart';
 import 'package:actpod_web/api_manager/user_dto/create_login.dart';
 import 'package:actpod_web/api_manager/user_dto/get_user_info.dart';
+import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/features/player_page/player_screen.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/router.dart';
@@ -71,7 +72,11 @@ class MyApp extends StatelessWidget {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.white,
+              primary: DesignColor.primary50
+            ),
+            fontFamily: 'NotoSansTC',
           ),
           title: 'ActPod',
           color: Colors.white,
