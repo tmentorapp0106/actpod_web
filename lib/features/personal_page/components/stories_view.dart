@@ -65,7 +65,6 @@ class StoriesView extends ConsumerWidget {
             }
           ),
         ),
-        SizedBox(height: 80.h,),
       ]
     );
   }

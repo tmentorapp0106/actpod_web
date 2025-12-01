@@ -81,12 +81,9 @@ class _PersonalScreenState extends ConsumerState<PersonalScreen> with SingleTick
     }
     return Scaffold(
       backgroundColor: DesignColor.background,
-      body: SafeArea(
-        child: SizedBox(
-          height: ScreenUtil().screenHeight,
-          child: body
-        )
-      ),
+      body: SizedBox(
+        child: body
+      )
     );
   }
 
