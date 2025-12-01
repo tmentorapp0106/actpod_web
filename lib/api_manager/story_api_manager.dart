@@ -1,5 +1,7 @@
 import 'package:actpod_web/api_manager/abstractApiManager.dart';
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
+import 'package:actpod_web/api_manager/story_dto/get_story_count_res.dart';
+import 'package:actpod_web/api_manager/story_dto/get_user_stories_res.dart';
 import 'package:dio/dio.dart';
 
 import 'story_dto/listen_story_res.dart';
@@ -17,5 +19,16 @@ class StoryApiManager extends AbstractApiManager {
   Future<ListenStoryRes> listenStory(String storyId, String deviceId) async {
     Response response = await handelPost("/story/$storyId/device/$deviceId/listen", {});
     return ListenStoryRes.fromJson(response.data);
+  }
+
+  Future<GetStoriesByUserIdRes> getStoriesByUserId(String userId, {bool filterReviewStatus = true}) async {
+    String queryParam = "?filterReviewStatus=${filterReviewStatus.toString()}";
+    Response response = await handelGet("/story/user/$userId$queryParam");
+    return GetStoriesByUserIdRes.fromJson(response.data);
+  }
+
+  Future<GetStoryCountRes> getStoryCount(String userId) async {
+    Response response = await handelGet("/story/user/$userId/count");
+    return GetStoryCountRes.fromJson(response.data);
   }
 }

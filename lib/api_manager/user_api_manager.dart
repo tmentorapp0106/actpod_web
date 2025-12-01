@@ -24,4 +24,9 @@ class UserApiManager extends AbstractApiManager {
     Response response = await handelGetWithUserToken("");
     return GetUserInfoRes.fromJson(response.data);
   }
+
+  Future<GetUserInfoRes> getOthersUserInfo(String userId) async {
+    Response response = await handelGet("/$userId");
+    return GetUserInfoRes.fromJson(response.data);
+  }
 }
