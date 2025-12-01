@@ -70,7 +70,6 @@ class ChannelsView extends ConsumerWidget {
               }
             )
           ),
-          SizedBox(height: 80.h,),
         ]
     );
   }
