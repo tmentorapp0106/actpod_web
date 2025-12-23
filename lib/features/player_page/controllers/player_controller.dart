@@ -1,8 +1,11 @@
 import 'package:actpod_web/api_manager/story_api_manager.dart';
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/api_manager/story_dto/listen_story_res.dart';
+import 'package:actpod_web/api_manager/voice_message_api_manager.dart';
+import 'package:actpod_web/api_manager/voice_message_dto/get_interactive_content_res.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:actpod_web/services/play_service.dart';
+import 'package:actpod_web/services/toast_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:uuid/uuid.dart';
@@ -15,6 +18,13 @@ class PlayerController {
   PlayerController(this._ref);
 
   Future<void> getStoryInfo(String storyId) async {
+    GetInteractiveContentRes interactiveContentResponse = await voiceMessageApiManager.getInteractiveContent(storyId);
+    if(interactiveContentResponse.code != "0000") {
+      ToastService.showNoticeToast(interactiveContentResponse.message);
+      return;
+    }
+    _ref.watch(interactiveMessageInfoListProvider.notifier).state = interactiveContentResponse.data?.interactiveContentDto?.messageInfoList;
+
     GetOneStoryRes response = await storyApiManager.getOneStory(storyId);
     if(response.code != "0000") {
       print(response.code);
@@ -22,17 +32,31 @@ class PlayerController {
     }
     _ref.watch(storyInfoProvider.notifier).state = response.story;
     if(response.story != null) {
-      Duration? length = await _playService.prepareUrlAudio(
-        response.story!.storyUrl, 
+      await _playService.prepareUrlAudio(
+        response.story!.storyUrl,
+        interactiveContentResponse.data!.exist? interactiveContentResponse.data!.interactiveContentDto?.url : null,
         onCursorChange, 
         onComplete,
         onReady,
         onPaused,
-        onPlaying
+        onPlaying,
+        onIndexChange,
+        onDurationChange
       );
-      if(length != null) {
-        _ref.watch(audioLengthProvider.notifier).state = length;
-      }
+    }
+  }
+
+  Future<void> onIndexChange(int? index) async {
+    if(index == 1) {
+      _ref.watch(playContentProvider.notifier).state = PlayContent.interactiveContent;
+    } else {
+      _ref.watch(playContentProvider.notifier).state = PlayContent.story;
+    }
+  }
+
+  Future<void> onDurationChange(Duration? duration) async {
+    if(duration != null) {
+      _ref.watch(audioLengthProvider.notifier).state = duration;
     }
   }
 
@@ -56,6 +80,17 @@ class PlayerController {
 
   Future<void> onCursorChange(Duration duration) async {
     _ref.watch(audioPositionProvider.notifier).state = duration;
+    final messageInfoList = _ref.watch(interactiveMessageInfoListProvider);
+    if(messageInfoList == null) {
+      return;
+    }
+
+    for(int i = 0; i < messageInfoList.length; i++) {
+      if(duration.inMilliseconds >= messageInfoList[i].fromMilliSec && duration.inMilliseconds < messageInfoList[i].toMilliSec) {
+        _ref.watch(interactiveMessageInfoIndexProvider.notifier).state = i;
+        break;
+      }
+    }
   }
 
   void onComplete() {
@@ -87,5 +122,9 @@ class PlayerController {
 
   Future<void> pause() async {
     await _playService.pauseAudio();
+  }
+
+  Future<void> playIndex(int index) async {
+    await _playService.playIndex(index);
   }
 }

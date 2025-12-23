@@ -10,6 +10,9 @@ class MobileStoryImage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyInfo = ref.watch(storyInfoProvider);
-    return storyInfo == null? const SizedBox.shrink() : NetworkImageCarousel(imageUrls: storyInfo.storyImageUrls);
+    return Visibility(
+      visible: ref.watch(playContentProvider) == PlayContent.story,
+      child: storyInfo == null? const SizedBox.shrink() : NetworkImageCarousel(imageUrls: storyInfo.storyImageUrls)
+    );
   }
 }
