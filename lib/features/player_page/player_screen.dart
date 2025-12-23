@@ -4,7 +4,9 @@ import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/design_system/shadow.dart';
 import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_comment.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_content_switch.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_instant_comment_button.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_interactive_content.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_login_button.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_box.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_talk_to_creator.dart';
@@ -88,6 +90,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
   void initProviders() {
     ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
+    ref.watch(playContentProvider.notifier).state = PlayContent.story;
     ref.watch(storyInfoProvider.notifier).state = null;
     ref.watch(storyStateProvider.notifier).state = null;
   }
@@ -228,7 +231,13 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     children: [
                       MobileStoryInfoBar(),
                       SizedBox(height: 16.h),
-                      MobileStoryImage(),
+                      Stack(
+                        children: [
+                          MobileStoryImage(),
+                          MobileInteractiveContent(playerController: _playerController!),
+                          MobileContentSwitch(playerController: _playerController!),
+                        ],
+                      ),
                       SizedBox(height: 16.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
