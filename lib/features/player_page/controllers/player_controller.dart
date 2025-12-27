@@ -1,9 +1,11 @@
 import 'package:actpod_web/api_manager/story_api_manager.dart';
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/api_manager/story_dto/listen_story_res.dart';
+import 'package:actpod_web/api_manager/story_dto/signed_url_res.dart';
 import 'package:actpod_web/api_manager/voice_message_api_manager.dart';
 import 'package:actpod_web/api_manager/voice_message_dto/get_interactive_content_res.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
+import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/services/play_service.dart';
 import 'package:actpod_web/services/toast_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +26,7 @@ class PlayerController {
       return;
     }
     _ref.watch(interactiveMessageInfoListProvider.notifier).state = interactiveContentResponse.data?.interactiveContentDto?.messageInfoList;
+    _ref.watch(interactiveContentUrlProvider.notifier).state = interactiveContentResponse.data!.exist? interactiveContentResponse.data!.interactiveContentDto?.url : null;
 
     GetOneStoryRes response = await storyApiManager.getOneStory(storyId);
     if(response.code != "0000") {
@@ -32,18 +35,59 @@ class PlayerController {
     }
     _ref.watch(storyInfoProvider.notifier).state = response.story;
     if(response.story != null) {
-      await _playService.prepareUrlAudio(
-        response.story!.storyUrl,
-        interactiveContentResponse.data!.exist? interactiveContentResponse.data!.interactiveContentDto?.url : null,
-        onCursorChange, 
-        onComplete,
-        onReady,
-        onPaused,
-        onPlaying,
-        onIndexChange,
-        onDurationChange
-      );
+      if(response.story!.isPremium) {
+        if(!AuthService.isLoggedIn()) {
+          _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.unpaid;
+          return;
+        } else {
+          checkPaid(storyId);
+          return;
+        }
+      } else {
+        await _playService.prepareUrlAudio(
+          response.story!.storyUrl,
+          interactiveContentResponse.data!.exist? interactiveContentResponse.data!.interactiveContentDto?.url : null,
+          onCursorChange, 
+          onComplete,
+          onReady,
+          onPaused,
+          onPlaying,
+          onIndexChange,
+          onDurationChange
+        );
+      }
     }
+  }
+
+  Future<void> checkPaid(String storyId) async {
+    _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.preparing;
+    if(!AuthService.isLoggedIn()) {
+      _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.unpaid;
+      return;
+    }
+
+    SignedUrlRes signedRes = await storyApiManager.signedUrl(storyId);
+    if(signedRes.code == "0006") {
+      _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.unpaid;
+      return;
+    }
+    if(signedRes.code != "0000") {
+      _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.unpaid;
+      return;
+    }
+    GetOneStoryResItem? story = _ref.watch(storyInfoProvider);
+    story!.storyUrl = signedRes.url!;
+    await _playService.prepareUrlAudio(
+      signedRes.url!,
+      _ref.watch(interactiveContentUrlProvider),
+      onCursorChange, 
+      onComplete,
+      onReady,
+      onPaused,
+      onPlaying,
+      onIndexChange,
+      onDurationChange
+    );
   }
 
   Future<void> onIndexChange(int? index) async {
@@ -61,7 +105,7 @@ class PlayerController {
   }
 
   Future<void> onReady() async {
-    _ref.watch(playerStatusProvider.notifier).state = "ready";
+    _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.ready;
     GetOneStoryResItem? storyInfo = _ref.watch(storyInfoProvider);
     if(storyInfo == null) {
       return;
@@ -71,11 +115,11 @@ class PlayerController {
   }
 
   void onPaused() {
-    _ref.watch(playerStatusProvider.notifier).state = "paused";
+    _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.paused;
   }
 
   void onPlaying() {
-    _ref.watch(playerStatusProvider.notifier).state = "playing";
+    _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.playing;
   }
 
   Future<void> onCursorChange(Duration duration) async {
@@ -114,7 +158,7 @@ class PlayerController {
   }
 
   Future<void> play() async {
-    if(_ref.watch(playerStatusProvider) == "preparing") {
+    if(_ref.watch(playerStatusProvider) == PlayerStatus.preparing) {
       return;
     }
     await _playService.playAudio();

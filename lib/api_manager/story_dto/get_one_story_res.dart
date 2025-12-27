@@ -40,6 +40,7 @@ class GetOneStoryResItem {
   String avatarUrl;
   String nickname;
   bool isPremium;
+  int price;
   int count;
 
   GetOneStoryResItem(
@@ -68,6 +69,7 @@ class GetOneStoryResItem {
     this.avatarUrl,
     this.nickname,
     this.isPremium,
+    this.price,
     this.count,
   );
 
@@ -101,6 +103,7 @@ class GetOneStoryResItem {
       json["avatarUrl"],
       json["nickname"],
       json["isPremium"],
+      json["price"],
       json["count"]
     );
   }
