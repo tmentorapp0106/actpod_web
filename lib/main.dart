@@ -21,7 +21,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyC98t3s2itcyGLZW1CaZhl_HhblEwwOZBk",
-      authDomain: "share-voice-77cc4.firebaseapp.com",
+      authDomain: "backstage.actpodapp.com", // only for web
       projectId: "share-voice-77cc4",
       appId: "1:633262239415:web:a015a02dbabf75c523e732",
       messagingSenderId: "633262239415",
