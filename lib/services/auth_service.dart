@@ -66,4 +66,12 @@ class AuthService {
       print(e);
     }
   }
+
+  static bool isLoggedIn() {
+    String? userToken = CookieUtils.getCookie("userToken");
+    if(userToken != null && userToken != "") {
+      return true;
+    }
+    return false;
+  }
 }

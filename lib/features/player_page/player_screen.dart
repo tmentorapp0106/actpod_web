@@ -211,7 +211,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     Positioned(
                       right: 12.w,
                       bottom: 0,
-                      child: MobileLoginButton()
+                      child: MobileLoginButton(_playerController!),
                     ),
                     Align(
                       alignment: Alignment.center,

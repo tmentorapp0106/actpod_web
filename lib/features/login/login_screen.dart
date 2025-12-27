@@ -104,8 +104,14 @@ class LoginScreen extends ConsumerWidget{
         ),
         SizedBox(height: 10.h,),
         InkWell(
-          onTap: () {
-            // _handleAppleLogIn();
+          onTap: () async {
+            ref.watch(loginLoadingProvider.notifier).state = true;
+            UserInfoDto? userInfo = await AuthService().signInWithApple();
+            ref.watch(userInfoProvider.notifier).state = userInfo;
+            ref.watch(loginLoadingProvider.notifier).state = false;
+            if(context.mounted) {
+              Navigator.of(context).pop();
+            }
           },
           child: Container(
             width: 240.w,

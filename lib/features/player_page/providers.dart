@@ -11,16 +11,24 @@ enum PlayContent {
   story,
   interactiveContent,
 }
+enum PlayerStatus{
+  preparing,
+  ready,
+  playing,
+  paused,
+  unpaid,
+}
 
 final storyStateProvider = StateProvider<GetStoryStatResItem?>((ref) => null);
 final storyInfoProvider = StateProvider<GetOneStoryResItem?> ((ref) => null);
 final playerSpeedTextProvider = StateProvider<String>((ref) => "1.0X");
 final audioLengthProvider = StateProvider<Duration>((ref) => Duration.zero);
 final audioPositionProvider = StateProvider<Duration>((ref) => Duration.zero);
-final playerStatusProvider = StateProvider<String>((ref) => "preparing");// preparing, ready, playing, paused
+final playerStatusProvider = StateProvider<PlayerStatus>((ref) => PlayerStatus.preparing);
 final playContentProvider = StateProvider<PlayContent>((ref) => PlayContent.story);
 final interactiveMessageInfoListProvider = StateProvider<List<InteractiveMessageInfoDto>?>((ref) => null);
 final interactiveMessageInfoIndexProvider = StateProvider<int?>((ref) => null);
+final interactiveContentUrlProvider = StateProvider<String?>((ref) => null);
 
 final isReplyModeProvider = StateProvider.autoDispose<bool>((ref) => false);
 final replyListProvider = StateProvider<List<ReplyInfoDto>?>((ref) => null);

@@ -1,5 +1,6 @@
 import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
+import 'package:actpod_web/features/player_page/components/unlock_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -20,20 +21,25 @@ class MobilePlayButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final playerState = ref.watch(playerStatusProvider);
 
-    if(ref.watch(storyInfoProvider)?.isPremium != true) {
+    if(playerState != PlayerStatus.unpaid) {
       return InkWell(
         borderRadius: BorderRadius.circular(20.w),
         onTap: () async {
-          if(playerState == "preparing") {
+          if(playerState == PlayerStatus.preparing) {
             return;
-          } else if(playerState == "playing") {
+          } else if(playerState == PlayerStatus.playing) {
             playerController.pause();
           } else {
             playerController.play();
           }
         },
-        child: Icon(
-          playerState == "playing"? Icons.pause_rounded : Icons.play_arrow_rounded,
+        child: playerState == PlayerStatus.preparing? Center(
+          child: CircularProgressIndicator(
+              color: DesignColor.primary50,
+              strokeWidth: 2.w,
+            ),
+          ) : Icon(
+          playerState == PlayerStatus.playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
           size: 50.w,
           color: DesignColor.primary50,
         )
@@ -45,7 +51,7 @@ class MobilePlayButton extends ConsumerWidget {
           if(kIsWeb) {
             bool? goto = await showDialog<bool>(
               context: context,
-              builder: (context) => LaunchDeepLinkDialog()
+              builder: (context) => UnlockDialog()
             );
             if(goto != null && goto) {
               await Future.delayed(const Duration(microseconds: 500));
