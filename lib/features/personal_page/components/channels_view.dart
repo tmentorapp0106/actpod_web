@@ -1,9 +1,9 @@
+import 'package:actpod_web/const.dart';
 import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/dto/channel_dto.dart';
 import 'package:actpod_web/dto/user_info_dto.dart';
 import 'package:actpod_web/features/personal_page/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cors_image/flutter_cors_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -80,17 +80,17 @@ class ChannelsView extends ConsumerWidget {
       },
       child: Stack(
         children: [
-          CustomNetworkImage(
-            url: channel.channelImageUrl,
+          Image.network(
+            imgProxy + channel.channelImageUrl,
             fit: BoxFit.cover,
-            customLoadingBuilder: (context, child, event) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: DesignColor.primary50,
-                ),
-              );
-            },
+            // customLoadingBuilder: (context, child, event) {
+            //   return const Center(
+            //     child: CircularProgressIndicator(
+            //       strokeWidth: 2,
+            //       color: DesignColor.primary50,
+            //     ),
+            //   );
+            // },
           ),
           Container(
             width: 500.w,

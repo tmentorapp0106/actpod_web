@@ -7,7 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:html' as html;
+import 'package:web/web.dart' as web;
 
 class WebLikesButton extends ConsumerWidget {
   @override
@@ -16,7 +16,7 @@ class WebLikesButton extends ConsumerWidget {
       onTap: () async {
         String url;
         if (kIsWeb) {
-          final userAgent = html.window.navigator.userAgent.toLowerCase();
+          final userAgent = web.window.navigator.userAgent.toLowerCase();
           if (userAgent.contains('iphone') || userAgent.contains('ipad')) {
             url = 'https://apps.apple.com/tw/app/actpod/id6468426325'; // iOS App Store link
           } else if (userAgent.contains('android')) {
