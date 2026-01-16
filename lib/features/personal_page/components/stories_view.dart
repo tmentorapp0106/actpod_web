@@ -1,5 +1,6 @@
 import 'package:actpod_web/api_manager/story_dto/get_user_stories_res.dart';
 import 'package:actpod_web/components/channel_image.dart';
+import 'package:actpod_web/const.dart';
 import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/design_system/shadow.dart';
 import 'package:actpod_web/dto/user_info_dto.dart';
@@ -7,7 +8,6 @@ import 'package:actpod_web/features/personal_page/providers.dart';
 import 'package:actpod_web/router.dart';
 import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cors_image/flutter_cors_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -97,17 +97,17 @@ class StoriesView extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(16.w),
                       child: AspectRatio(
                         aspectRatio: 1 / 1,
-                        child: CustomNetworkImage(
-                          url: story.storyImageUrl,
+                        child: Image.network(
+                          imgProxy + story.storyImageUrl,
                           fit: BoxFit.cover,
-                          customLoadingBuilder: (context, child, event) {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: DesignColor.primary50,
-                              ),
-                            );
-                          },
+                          // customLoadingBuilder: (context, child, event) {
+                          //   return const Center(
+                          //     child: CircularProgressIndicator(
+                          //       strokeWidth: 2,
+                          //       color: DesignColor.primary50,
+                          //     ),
+                          //   );
+                          // },
                         )
                       )
                     )

@@ -76,7 +76,6 @@ class MyApp extends StatelessWidget {
               seedColor: Colors.white,
               primary: DesignColor.primary50
             ),
-            fontFamily: 'NotoSansTC',
           ),
           title: 'ActPod',
           color: Colors.white,
