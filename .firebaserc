@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "share-voice-77cc4"
-  }
+  },
+  "targets": {
+    "share-voice-77cc4": {
+      "hosting": {
+        "actpod-web": [
+          "actpod-web"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
