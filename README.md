@@ -16,5 +16,5 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 deploy command
-flutter build web --release
+flutter build web --release --wasm
 firebase deploy --only "hosting:actpod-web" -> "firebase hosting:sites:list" to see hosting list

@@ -1,4 +1,4 @@
-const functions = require("firebase-functions");
+const functions = require("firebase-functions/v1");
 const admin = require("firebase-admin");
 const fs = require("fs");
 const path = require("path");
@@ -8,11 +8,11 @@ admin.initializeApp();
 const indexPath = path.join(__dirname, "index.template.html");
 const indexTemplate = fs.readFileSync(indexPath, "utf8");
 
-exports.meta = functions.https.onRequest(async (req, res) => {
+exports.meta = functions.region("asia-east1").https.onRequest(async (req, res) => {
   try {
     // /story/6966ea... 取出 id
     const parts = req.path.split("/").filter(Boolean);
-    const storyId = parts[1]; // ["story", "{id}"]
+    const storyId = parts[1].split("?")[0]; // ["story", "{id}"]
 
     // 1) 取資料（你可換成 call 你自己的 API）
     const baseUrl = "https://apiv1.actpodapp.com";
@@ -34,7 +34,7 @@ exports.meta = functions.https.onRequest(async (req, res) => {
         data = await res.json();
     } catch (err) {
         console.error("Request failed:", err?.message ?? err);
-        process.exit(1);
+        throw err
     }
     const story = data?.data ?? {};
     const title = story?.storyName ?? "ActPod";
