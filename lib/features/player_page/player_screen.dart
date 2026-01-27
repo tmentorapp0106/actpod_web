@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
@@ -6,6 +7,7 @@ import 'package:actpod_web/features/player_page/components/launch_deep_link_dial
 import 'package:actpod_web/features/player_page/components/mobile/mobile_comment.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_content_switch.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_instant_comment_button.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobile_instant_comments.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_interactive_content.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_login_button.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_box.dart';
@@ -54,6 +56,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   CommentController? _commentController;
   final FocusNode _commentFocusNode = FocusNode();
   final FocusNode _instantCommentFocusNode = FocusNode();
+  Timer? _instantCommentTimer;
 
   @override
   void initState() {
@@ -66,6 +69,17 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
       _playerController!.getStoryInfo(widget.storyId);
       _statController!.getLikesCount(widget.storyId);
       checkOpenDeepLink();
+      initInstantComment();
+    });
+  }
+
+  void initInstantComment() async {
+    _commentController!.clearInstantQueue();
+    await _commentController!.getInstantComments(widget.storyId);
+    _instantCommentTimer?.cancel();
+    _instantCommentTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      _commentController!.fireInstantComment(context);
     });
   }
 
@@ -236,6 +250,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                           MobileStoryImage(),
                           MobileInteractiveContent(playerController: _playerController!),
                           MobileContentSwitch(playerController: _playerController!),
+                          MobileInstantComments()
                         ],
                       ),
                       SizedBox(height: 16.h),
