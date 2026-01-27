@@ -67,7 +67,7 @@ class MobileInstantComment extends ConsumerWidget {
                       Avatar(commentInfo.userId, commentInfo.avatarUrl, 18.w),
                       SizedBox(width: 8.w),
                       Text(
-                        StringUtils.shorten(commentInfo.nickname, 15),
+                        StringUtils.shorten(commentInfo.nickname, 8),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 12.w
