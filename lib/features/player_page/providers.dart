@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:actpod_web/api_manager/comment_dto/get_story_stat_res.dart';
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/dto/comment_dto.dart';
@@ -5,6 +7,7 @@ import 'package:actpod_web/dto/interactive_content_dto.dart';
 import 'package:actpod_web/dto/reply_dto.dart';
 import 'package:actpod_web/dto/user_info_dto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum PlayContent {
@@ -40,3 +43,14 @@ final instantSendingProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 final selectedDonateAmountProvider = StateProvider.autoDispose<int>((ref) => 0);
 final inputFocusProvider = StateProvider.autoDispose<bool>((ref) => false);
+
+class InstantCommentPosition {
+  double from;
+  double to;
+
+  InstantCommentPosition({required this.from, required this.to});
+}
+final instantCommentWaitingQueue = Queue<InstantCommentInfoDto>();
+final instantCommentPositionQueue = Queue<InstantCommentPosition>();
+final instantCommentWidgets = StateProvider<List<Widget>>((ref) => []);
+final List<InstantCommentInfoDto> instantCommentSendList = []; // send comment will add to queue when time goes by or when seeking.
