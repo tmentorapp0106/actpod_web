@@ -69,7 +69,10 @@ class LoginScreen extends ConsumerWidget{
             ref.watch(userInfoProvider.notifier).state = userInfo;
             ref.watch(loginLoadingProvider.notifier).state = false;
             if(context.mounted) {
-              Navigator.of(context).pop();
+              if (userInfo != null) {
+                ref.read(userInfoProvider.notifier).state = userInfo;
+                Navigator.of(context).pop(true);
+              }
             }
           },
           child: Container(
@@ -110,7 +113,10 @@ class LoginScreen extends ConsumerWidget{
             ref.watch(userInfoProvider.notifier).state = userInfo;
             ref.watch(loginLoadingProvider.notifier).state = false;
             if(context.mounted) {
-              Navigator.of(context).pop();
+              if (userInfo != null) {
+                ref.read(userInfoProvider.notifier).state = userInfo;
+                Navigator.of(context).pop(true);
+              }
             }
           },
           child: Container(
