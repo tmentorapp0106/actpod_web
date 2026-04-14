@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
+import 'package:actpod_web/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/design_system/shadow.dart';
-import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_comment.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_content_switch.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_instant_comment_button.dart';

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LaunchDeepLinkDialog extends StatelessWidget{
+  String content;
+
+  LaunchDeepLinkDialog({Key? key, this.content = '要使用 ActPod 收聽嗎？'}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

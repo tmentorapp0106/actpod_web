@@ -1,5 +1,6 @@
 import 'package:actpod_web/features/home_page/home_screen.dart';
 import 'package:actpod_web/features/live_page/screens/interactive_screen.dart';
+import 'package:actpod_web/features/live_page/screens/listen_only_screen.dart';
 import 'package:actpod_web/features/personal_page/personal_screen.dart';
 import 'package:actpod_web/features/player_page/player_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -23,9 +24,15 @@ final myRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: "/live/interactive/:roomId",
+      path: "/live/interactive/:roomId/:storyId",
       builder: (context, state) {
-        return InteractiveScreen(roomId: state.pathParameters["roomId"]!);
+        return InteractiveScreen(roomId: state.pathParameters["roomId"]!, storyId: state.pathParameters["storyId"]!);
+      },
+    ),
+    GoRoute(
+      path: "/live/listenOnly/:roomId/:storyId",
+      builder: (context, state) {
+        return ListenOnlyScreen(roomId: state.pathParameters["roomId"]!, storyId: state.pathParameters["storyId"]!);
       },
     ),
   ],

@@ -50,14 +50,6 @@ class _NetworkImageCarouselState
                       child: Image.network(
                         imgProxy + url,
                         fit: BoxFit.cover,
-                        // customLoadingBuilder: (context, child, event) {
-                        //   return const Center(
-                        //     child: CircularProgressIndicator(
-                        //       strokeWidth: 2,
-                        //       color: DesignColor.primary50,
-                        //     ),
-                        //   );
-                        // },
                       ),
                     ),
                   )
