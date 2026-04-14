@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html' as html;
+import 'package:web/web.dart' as web;
 
 import 'package:actpod_web/components/actpod_back_button.dart';
 import 'package:actpod_web/components/launch_deep_link_dialog.dart';
@@ -73,7 +73,7 @@ class _ListenOnlyScreenState extends ConsumerState<ListenOnlyScreen> {
       await checkLogin();
       bool openedDeepLink = await checkOpenDeepLink();
       if(openedDeepLink) {
-        html.window.location.href = 'about:blank';
+        web.window.location.href = 'about:blank';
         return;
       }
       final checkRoomRes = await roomController!.checkRoomInfo(widget.roomId);
