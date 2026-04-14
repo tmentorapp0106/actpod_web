@@ -6,8 +6,9 @@ class ChannelImage extends StatelessWidget {
   final String name;
   final double size;
   final double fontSize;
+  double? radius = 8.w;
 
-  ChannelImage(this.imageUrl, this.name, this.size, this.fontSize);
+  ChannelImage(this.imageUrl, this.name, this.size, this.fontSize, {this.radius});
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +38,12 @@ class ChannelImage extends StatelessWidget {
         width: size,
         height: size,
         child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.w),
+            borderRadius: BorderRadius.circular(radius?? 8.w),
             child: AspectRatio(
-                aspectRatio: 1 / 1,
-                child: Image.network(
-                  imageUrl,
-                )
+              aspectRatio: 1 / 1,
+              child: Image.network(
+                imageUrl,
+              )
             )
         )
     );

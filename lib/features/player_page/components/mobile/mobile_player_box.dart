@@ -1,5 +1,5 @@
+import 'package:actpod_web/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/design_system/color.dart';
-import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_play_button.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_player_progress_bar.dart';
 import 'package:actpod_web/features/player_page/service/redirect.dart';

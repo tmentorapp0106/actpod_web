@@ -9,6 +9,11 @@ class DesignColor {
   static const primary100 = Color(0xFFfff3c6);
   static const primary500 = Color(0xFFf99a07);
   static const background = Colors.white;
+  static const actpodPrimary50 = Color(0xFFfffbeb);
+  static const actpodPrimary400 = Color(0xFFffbc1f);
+  static const actpodPrimary100 = Color(0xFFfff3c6);
+  static const actpodPrimary500 = Color(0xFFf99a07);
+  static const actpodPrimary950 = Color(0xFF4E3312);
 
   static const secondary40 = Color(0xFF68b29b);
   static const secondary50 = Color(0xFF4c9a80);

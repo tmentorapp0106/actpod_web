@@ -1,5 +1,5 @@
+import 'package:actpod_web/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/design_system/color.dart';
-import 'package:actpod_web/features/player_page/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/features/player_page/service/redirect.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
