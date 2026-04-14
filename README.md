@@ -18,3 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 deploy command
 flutter build web --release --wasm --pwa-strategy=none
 firebase deploy --only "hosting:actpod-web" -> "firebase hosting:sites:list" to see hosting list
+
+deploy function
+cd function
+firebase deploy --only functions

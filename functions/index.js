@@ -12,7 +12,14 @@ exports.meta = functions.region("asia-east1").https.onRequest(async (req, res) =
   try {
     // /story/6966ea... 取出 id
     const parts = req.path.split("/").filter(Boolean);
-    const storyId = parts[1].split("?")[0]; // ["story", "{id}"]
+    let storyId;
+    if (parts[0] === "live") {
+      storyId = parts[3];
+    } else {
+      storyId = parts[1];
+    }
+
+    storyId = storyId?.split("?")[0];
 
     // 1) 取資料（你可換成 call 你自己的 API）
     const baseUrl = "https://apiv1.actpodapp.com";
@@ -36,10 +43,20 @@ exports.meta = functions.region("asia-east1").https.onRequest(async (req, res) =
         console.error("Request failed:", err?.message ?? err);
         throw err
     }
-    const story = data?.data ?? {};
-    const title = story?.storyName ?? "ActPod";
-    const desc  = story?.storyDescription ?? "聽見更多互動";
-    const image = story?.storyImageUrl ?? "";
+
+    let story;
+    let title, desc, image;
+    if (parts[0] === "live") {
+      story = data?.data ?? {};
+      title = "直播：" + (story?.storyName ?? "ActPod");
+      desc = story?.storyDescription ?? "聽見更多互動";
+      image = story?.storyImageUrl ?? "";
+    } else {
+      story = data?.data ?? {};
+      title = story?.storyName ?? "ActPod";
+      desc = story?.storyDescription ?? "聽見更多互動";
+      image = story?.storyImageUrl ?? "";
+    }
 
     // 2) 替換 OG meta（你也可以用更嚴謹的 HTML parser）
     let html = indexTemplate
