@@ -123,6 +123,9 @@ class _ListenOnlyScreenState extends ConsumerState<ListenOnlyScreen> {
     web.window.onbeforeunload = ((web.Event event) {
       _dispose();
     }).toJS;
+    web.window.onpagehide = ((web.PageTransitionEvent event) {
+      _dispose();
+    }).toJS;
   }
 
   Future<bool> checkOpenDeepLink() async {
