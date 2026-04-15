@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:web/web.dart' as web;
+import 'dart:js_interop';
 
 import 'package:actpod_web/components/actpod_back_button.dart';
 import 'package:actpod_web/components/launch_deep_link_dialog.dart';
@@ -50,6 +51,7 @@ class _ListenOnlyScreenState extends ConsumerState<ListenOnlyScreen> {
   final WsService _wsService = WsService(wsBaseUrl: dotenv.env["WS_SERVER_URL"]?? "");
   final StreamController<void> thumbReactionStream = StreamController<void>.broadcast();
   final StreamController<RoomActionDto> roomStream = StreamController<RoomActionDto>.broadcast();
+  StreamSubscription<web.Event>? _beforeUnloadSub;
   CoinsController? coinsController;
   RoomController? roomController;
   MessageController? messageController;
@@ -60,6 +62,7 @@ class _ListenOnlyScreenState extends ConsumerState<ListenOnlyScreen> {
   @override
   void initState() {
     super.initState();
+    initWebCloseListener();
     coinsController = CoinsController(ref);
     roomController = RoomController(ref, roomStream, null, null, playService);
     playerController = PlayerController(ref, playService);
@@ -114,6 +117,12 @@ class _ListenOnlyScreenState extends ConsumerState<ListenOnlyScreen> {
         break;
       }
     }
+  }
+
+  void initWebCloseListener() {
+    web.window.onbeforeunload = ((web.Event event) {
+      _dispose();
+    }).toJS;
   }
 
   Future<bool> checkOpenDeepLink() async {

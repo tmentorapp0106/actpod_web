@@ -49,7 +49,6 @@ class RoomController {
     _roomActionSub = roomActionStream.stream.listen((roomAction) async {
       if(roomAction.action == RoomAction.open) {
         _roomId = roomAction.params![0];
-        checkRoomInfo(_roomId!);
         GetRoomChatsRes chatsRes = await liveApiManager.getRoomChats(_roomId!);
         if(chatsRes.code != "0000") {
           return;
@@ -122,6 +121,12 @@ class RoomController {
       return;
     }
     ref.watch(roomMembersProvider.notifier).state = membersRes.members;
+
+    GetRoomChatsRes chatsRes = await liveApiManager.getRoomChats(roomId);
+    if(chatsRes.code != "0000") {
+      return;
+    }
+    ref.watch(chatMessagesProvider.notifier).state = chatsRes.chats;
   }
 
 	Future<CheckRoomRes> checkRoomInfo(String roomId) async {

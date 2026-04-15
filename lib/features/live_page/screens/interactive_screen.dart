@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:web/web.dart' as web;
+import 'dart:js_interop';
 
 import 'package:actpod_web/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/design_system/color.dart';
@@ -66,6 +67,7 @@ class _InteractiveScreenState extends ConsumerState<InteractiveScreen> {
   @override
   void initState() {
     super.initState();
+    initWebCloseListener();
     coinsController = CoinsController(ref);
     roomController = RoomController(ref, roomStream, micPermissionRoomStream, livekitStream, playService);
     playerController = PlayerController(ref, playService);
@@ -122,6 +124,12 @@ class _InteractiveScreenState extends ConsumerState<InteractiveScreen> {
         }
       });
     });
+  }
+
+  void initWebCloseListener() {
+    web.window.onbeforeunload = ((web.Event event) {
+      _dispose();
+    }).toJS;
   }
 
   Future<bool> checkOpenDeepLink() async {
