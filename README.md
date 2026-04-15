@@ -22,3 +22,4 @@ firebase deploy --only "hosting:actpod-web" -> "firebase hosting:sites:list" to 
 deploy function
 cd function
 firebase deploy --only functions
+if change the route, please check firebase.json to rewrite the config.
