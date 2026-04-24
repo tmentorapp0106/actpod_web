@@ -1,5 +1,6 @@
 import 'package:actpod_web/api_manager/abstractApiManager.dart';
 import 'package:actpod_web/api_manager/channel_dto/get_usr_channels_res.dart';
+import 'package:actpod_web/api_manager/purchase_dto/get_podcast_stoer.dart';
 import 'package:dio/dio.dart';
 
 final channelApiManager = ChannelApiManager(systemName: "CHANNEL_SERVER_URL");
@@ -10,7 +11,12 @@ class ChannelApiManager extends AbstractApiManager {
 
 
   Future<GetUserChannelsRes> getUserChannels(String userId) async {
-    Response response = await handelGet("/user/$userId");
+    Response response = await handelGet("/channel/user/$userId");
     return GetUserChannelsRes.fromJson(response.data);
+  }
+
+  Future<GetPodcastStoreRes> getPodcastStore(String userId) async {
+    Response response = await handelGet("/podcastStore/user/$userId");
+    return GetPodcastStoreRes.fromJson(response.data);
   }
 }
