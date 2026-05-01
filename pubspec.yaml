@@ -62,6 +62,7 @@ dependencies:
   web_socket_channel: ^3.0.3
   livekit_client: ^2.6.5
   permission_handler: ^12.0.1
+  readmore: ^3.0.0
 
 dev_dependencies:
   flutter_test:

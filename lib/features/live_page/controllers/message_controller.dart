@@ -81,12 +81,10 @@ class MessageController {
           final playerStatus = message.params[0];
           final position = int.tryParse(message.params[1]);
           String? backgroundMusicUrl;
-          String? backgroundMusicVolume;
           if(message.params.length > 2) {
             backgroundMusicUrl = message.params[2];
-            backgroundMusicVolume = message.params[3];
           }
-          handlePlayer(playerStatus, position?? 0, backgroundMusicUrl, backgroundMusicVolume);
+          handlePlayer(playerStatus, position?? 0, backgroundMusicUrl);
           return;
         case "sendChat":
           handleChatMessage(message);
@@ -130,11 +128,7 @@ class MessageController {
           handleInviteMic(message.params[0]);
           return;
         case "playBackgroundMusic":
-          String volumeStr = "1";
-          if(message.params.length > 1) {
-            volumeStr = message.params[1];
-          }
-          handlePlayBackgroundMusic(message.params[0], volumeStr);
+          handlePlayBackgroundMusic(message.params[0]);
           return;
         case "stopBackgroundMusic":
           handleStopBackgroundMusic();
@@ -233,7 +227,7 @@ class MessageController {
     playService.seekPosition(position?? 0);
   }
 
-  Future<void> handlePlayer(String playerStatus, int position, String? backgroundMusicUrl, String? backgroundMusicVolumeStr) async {
+  Future<void> handlePlayer(String playerStatus, int position, String? backgroundMusicUrl) async {
     if(!initialedPosition) {
       await playService.seekPosition(position);
       initialedPosition = true;
@@ -248,7 +242,7 @@ class MessageController {
       }
 
       if(backgroundMusicUrl != null) {
-        roomActionStream.add(RoomActionDto(action: RoomAction.playBackgroundMusic, params: [backgroundMusicUrl, backgroundMusicVolumeStr!]));
+        roomActionStream.add(RoomActionDto(action: RoomAction.playBackgroundMusic, params: [backgroundMusicUrl]));
       }
     }
 
@@ -339,8 +333,8 @@ class MessageController {
     }
   }
 
-  Future<void> handlePlayBackgroundMusic(String url, String volumeStr) async {
-    roomActionStream.add(RoomActionDto(action: RoomAction.playBackgroundMusic, params: [url, volumeStr]));
+  Future<void> handlePlayBackgroundMusic(String url) async {
+    roomActionStream.add(RoomActionDto(action: RoomAction.playBackgroundMusic, params: [url]));
   }
 
   Future<void> handleStopBackgroundMusic() async {

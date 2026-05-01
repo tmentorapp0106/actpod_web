@@ -15,4 +15,11 @@ class LinkUtils {
         mode: LaunchMode.inAppBrowserView
     );
   }
+
+  static Future<void> openLink(String link) async {
+    await launchUrl(
+        Uri.parse(link),
+        mode: LaunchMode.inAppBrowserView
+    );
+  }
 }

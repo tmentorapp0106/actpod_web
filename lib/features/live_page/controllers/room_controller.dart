@@ -38,7 +38,6 @@ class RoomController {
   StreamSubscription<ConnectionState>? _connectionSub;
   StreamSubscription<Map<String, bool>>? _speakingMapSub;
   final AudioPlayer _backgroundAudioPlayer = AudioPlayer();
-  bool _alreadyFirstSetBackgroundVolume = false;
 
   RoomController(this.ref, this.roomActionStream, this.micPermissionStream, this.livekitStream, this.playService);
 
@@ -55,7 +54,7 @@ class RoomController {
         }
         ref.watch(chatMessagesProvider.notifier).state = chatsRes.chats;
       } else if(roomAction.action == RoomAction.playBackgroundMusic) {
-        playBackgroundAudio(roomAction.params![0], double.parse(roomAction.params![1]));
+        playBackgroundAudio(roomAction.params![0]);
       } else if(roomAction.action == RoomAction.stopBackgroundMusic) {
         pauseBackgroundAudio();
       }
@@ -92,10 +91,6 @@ class RoomController {
     _connectionSub = liveKitService.connectionStateStream.listen((state) async {
       if (state == ConnectionState.connected) {
         ref.watch(livekitConnectionStateProvider.notifier).state = state;
-        if(_alreadyFirstSetBackgroundVolume) {
-          return;
-        }
-        _alreadyFirstSetBackgroundVolume = true;
         GetRoomPlayerRes response = await liveApiManager.getRoomPlayer(_roomId!);
         if(response.code != "0000") {
           return;
@@ -103,7 +98,6 @@ class RoomController {
       } else if (state == ConnectionState.connecting) {
         ref.watch(livekitConnectionStateProvider.notifier).state = state;
       } else if (state == ConnectionState.disconnected) {
-        _alreadyFirstSetBackgroundVolume = false;
         ref.watch(livekitConnectionStateProvider.notifier).state = state;
       }
     });
@@ -163,12 +157,7 @@ class RoomController {
     ref.watch(stickersProvider.notifier).state = response.stickers;
   }
 
-  Future<void> playBackgroundAudio(String url, double volume) async {
-    if(ref.watch(livekitConnectionStateProvider) == ConnectionState.connected) {
-      liveKitService.setParticipantAudioVolume(identity: "bgm-bot-$_roomId", volume: volume);
-      return;
-    }
-
+  Future<void> playBackgroundAudio(String url) async {
     if(url == "" || url.isEmpty) {
       _backgroundAudioPlayer.pause();
       return;
@@ -176,7 +165,6 @@ class RoomController {
     try {
       await _backgroundAudioPlayer.setUrl(url);
       await _backgroundAudioPlayer.setLoopMode(LoopMode.all);
-      await _backgroundAudioPlayer.setVolume(volume);
       _backgroundAudioPlayer.play();
     } catch(e) {
       ToastService.showNoticeToast("無法播放");
