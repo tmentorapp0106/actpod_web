@@ -37,12 +37,12 @@ final myRouter = GoRouter(
         return ListenOnlyScreen(roomId: state.pathParameters["roomId"]!, storyId: state.pathParameters["storyId"]!);
       },
     ),
-    GoRoute(
-      path: "/merchant",
-      builder: (context, state) {
-        return const TapPayCheckoutPage();
-      },
-    ),
+    // GoRoute(
+    //   path: "/merchant",
+    //   builder: (context, state) {
+    //     return const TapPayCheckoutPage();
+    //   },
+    // ),
     GoRoute(
       path: "/podcast_store/:userId",
       builder: (context, state) {
