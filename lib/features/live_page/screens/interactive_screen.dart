@@ -78,12 +78,12 @@ class _InteractiveScreenState extends ConsumerState<InteractiveScreen> {
       roomController!.getRoomInfo(widget.roomId);
       playerController!.initPlayer(widget.storyId);
       roomController!.getStickers();
-      await checkLogin();
       bool openedDeepLink = await checkOpenDeepLink();
       if(openedDeepLink) {
         web.window.location.href = 'about:blank';
         return;
       }
+      await checkLogin();
       final checkRoomRes = await roomController!.checkRoomInfo(widget.roomId);
       if(checkRoomRes == CheckRoomRes.error) {
         ToastService.showNoticeToast("房間已關閉");

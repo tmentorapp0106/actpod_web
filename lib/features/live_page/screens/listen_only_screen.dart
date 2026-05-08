@@ -51,7 +51,6 @@ class _ListenOnlyScreenState extends ConsumerState<ListenOnlyScreen> {
   final WsService _wsService = WsService(wsBaseUrl: dotenv.env["WS_SERVER_URL"]?? "");
   final StreamController<void> thumbReactionStream = StreamController<void>.broadcast();
   final StreamController<RoomActionDto> roomStream = StreamController<RoomActionDto>.broadcast();
-  StreamSubscription<web.Event>? _beforeUnloadSub;
   CoinsController? coinsController;
   RoomController? roomController;
   MessageController? messageController;
@@ -73,12 +72,12 @@ class _ListenOnlyScreenState extends ConsumerState<ListenOnlyScreen> {
       roomController!.getRoomInfo(widget.roomId);
       playerController!.initPlayer(widget.storyId);
       roomController!.getStickers();
-      await checkLogin();
       bool openedDeepLink = await checkOpenDeepLink();
       if(openedDeepLink) {
         web.window.location.href = 'about:blank';
         return;
       }
+      await checkLogin();
       final checkRoomRes = await roomController!.checkRoomInfo(widget.roomId);
       if(checkRoomRes == CheckRoomRes.error) {
         ToastService.showNoticeToast("房間已關閉");

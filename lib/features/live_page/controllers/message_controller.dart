@@ -43,7 +43,7 @@ class MessageController {
   MessageController(this.ref, this.wsService, this.playService, this.roomActionStream, this.thumbReactionStream, this.livekitStream, this.micPermissionStream, this.micActionStream);
 
   Future<void> initWebsocket(String userId) async {
-    await wsService.connect(path: "/live/ws?userId=$userId");
+    await wsService.connect(path: "/live/ws?userId=$userId&isWeb=true");
 
     _connSub = wsService.connected.listen((isConnected) {
       if (!isConnected) return;
