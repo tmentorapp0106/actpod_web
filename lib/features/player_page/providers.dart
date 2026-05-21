@@ -54,3 +54,10 @@ final instantCommentWaitingQueue = Queue<InstantCommentInfoDto>();
 final instantCommentPositionQueue = Queue<InstantCommentPosition>();
 final instantCommentWidgets = StateProvider<List<Widget>>((ref) => []);
 final List<InstantCommentInfoDto> instantCommentSendList = []; // send comment will add to queue when time goes by or when seeking.
+
+enum CollectStatus {
+  notLogin,
+  collected,
+  notCollected
+}
+final isCollectedProvider = StateProvider<CollectStatus?>((ref) => null);
