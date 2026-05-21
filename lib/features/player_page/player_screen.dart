@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/design_system/shadow.dart';
+import 'package:actpod_web/features/player_page/components/mobile/mobiel_collect_button.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_comment.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_content_switch.dart';
 import 'package:actpod_web/features/player_page/components/mobile/mobile_instant_comment_button.dart';
@@ -20,6 +21,7 @@ import 'package:actpod_web/features/player_page/components/web/web_logo.dart';
 import 'package:actpod_web/features/player_page/components/web/web_player_box.dart';
 import 'package:actpod_web/features/player_page/components/web/web_send_message_button.dart';
 import 'package:actpod_web/features/player_page/components/web/web_story_image.dart';
+import 'package:actpod_web/features/player_page/controllers/collection_controller.dart';
 import 'package:actpod_web/features/player_page/controllers/comment_controller.dart';
 import 'package:actpod_web/features/player_page/controllers/player_controller.dart';
 import 'package:actpod_web/features/player_page/controllers/stat_controller.dart';
@@ -54,6 +56,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   PlayerController? _playerController;
   StatController? _statController;
   CommentController? _commentController;
+  CollectionController? _collectionController;
   final FocusNode _commentFocusNode = FocusNode();
   final FocusNode _instantCommentFocusNode = FocusNode();
   Timer? _instantCommentTimer;
@@ -64,12 +67,14 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     _playerController = PlayerController(ref);
     _statController = StatController(ref);
     _commentController = CommentController(ref: ref);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _collectionController = CollectionController(ref);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       initProviders();
-      _playerController!.getStoryInfo(widget.storyId);
-      _statController!.getLikesCount(widget.storyId);
       checkOpenDeepLink();
       initInstantComment();
+      _statController!.getLikesCount(widget.storyId);
+      await _playerController!.getStoryInfo(widget.storyId);
+      _collectionController!.checkCollected(ref.read(storyInfoProvider)?.channelId?? "");
     });
   }
 
@@ -107,6 +112,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     ref.watch(playContentProvider.notifier).state = PlayContent.story;
     ref.watch(storyInfoProvider.notifier).state = null;
     ref.watch(storyStateProvider.notifier).state = null;
+    ref.watch(isCollectedProvider.notifier).state = null;
   }
 
   @override
@@ -243,7 +249,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      MobileStoryInfoBar(),
+                      MobileStoryInfoBar(_collectionController!),
                       SizedBox(height: 16.h),
                       Stack(
                         children: [

@@ -1,3 +1,4 @@
+import 'package:actpod_web/features/explore_page/main_page.dart';
 import 'package:actpod_web/features/home_page/home_screen.dart';
 import 'package:actpod_web/features/live_page/screens/interactive_screen.dart';
 import 'package:actpod_web/features/live_page/screens/listen_only_screen.dart';
@@ -35,6 +36,12 @@ final myRouter = GoRouter(
       path: "/live/listenOnly/:roomId/:storyId",
       builder: (context, state) {
         return ListenOnlyScreen(roomId: state.pathParameters["roomId"]!, storyId: state.pathParameters["storyId"]!);
+      },
+    ),
+    GoRoute(
+      path: "/explore",
+      builder: (context, state) {
+        return const ExplorePage();
       },
     ),
     // GoRoute(

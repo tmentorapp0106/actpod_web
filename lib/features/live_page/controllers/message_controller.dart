@@ -63,7 +63,7 @@ class MessageController {
           return;
 
         case "playPodcast":
-          handlePlayPodcast();
+          handlePlayPodcast(message);
         return;
         case "pausePodcast":
           playService.pauseAudio();
@@ -208,7 +208,7 @@ class MessageController {
     }
   }
 
-  Future<void> handlePlayPodcast() async {
+  Future<void> handlePlayPodcast(WsMessageDto msg) async {
     roomActionStream.add(RoomActionDto(action: RoomAction.stopBackgroundMusic));
     const maxRetries = 5;
     int retryCount = 0;
@@ -219,6 +219,8 @@ class MessageController {
       retryCount++;
     }
 
+    int position = int.parse(msg.params[0]);
+    await playService.seekPosition(position);
     playService.playAudio();
   }
 
