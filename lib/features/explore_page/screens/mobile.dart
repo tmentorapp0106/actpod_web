@@ -1,10 +1,10 @@
-import 'package:actpod_web/const.dart';
 import 'package:actpod_web/features/explore_page/components/mobile/podcoin_card.dart';
 import 'package:actpod_web/features/explore_page/components/mobile/search_box.dart';
 import 'package:actpod_web/features/explore_page/components/mobile/story_card.dart';
-import 'package:actpod_web/features/explore_page/dto/story_info_dto.dart';
+import 'package:actpod_web/features/explore_page/components/shared/package_card.dart';
+import 'package:actpod_web/features/explore_page/components/shared/recommendation_switch.dart';
+import 'package:actpod_web/features/explore_page/dto/package_info_dto.dart';
 import 'package:actpod_web/features/explore_page/providers.dart';
-import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,6 +25,7 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
   Widget build(BuildContext context) {
     final stories = ref.watch(storiesProvider);
     final purchasedEpisodes = ref.watch(storiesProvider);
+    final recommendationMode = ref.watch(exploreRecommendationModeProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
@@ -47,13 +48,9 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
           const SearchBox(),
-
           const SizedBox(height: 8),
-
           const PodCoinBalanceCard(),
-
           const SizedBox(height: 4),
-
           _SegmentTabs(
             selectedIndex: selectedTab,
             onChanged: (index) {
@@ -62,24 +59,44 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
               });
             },
           ),
-
           const SizedBox(height: 18),
-
           if (selectedTab == 0) ...[
-            if (stories == null)
-              const Padding(
-                padding: EdgeInsets.only(top: 80),
-                child: Center(
-                  child: CircularProgressIndicator(),
+            const _SectionTitle(title: "推薦內容"),
+            const SizedBox(height: 10),
+            RecommendationSwitch(
+              selectedMode: recommendationMode,
+              onChanged: (mode) {
+                ref.watch(exploreRecommendationModeProvider.notifier).state =
+                    mode;
+              },
+            ),
+            const SizedBox(height: 14),
+            if (recommendationMode == ExploreRecommendationMode.episode) ...[
+              if (stories == null)
+                const Padding(
+                  padding: EdgeInsets.only(top: 80),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              else
+                ...stories.map(
+                  (story) => Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: MobileStoryCard(story: story),
+                  ),
                 ),
-              )
-            else
-              ...stories.map(
-                (story) => Padding(
-                  padding: const EdgeInsets.only(bottom: 14),
-                  child: MobileStoryCard(story: story),
+            ] else ...[
+              ...mockPackageList.map(
+                (package) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: PackageCard(
+                    package: package,
+                    compact: true,
+                  ),
                 ),
               ),
+            ],
           ] else ...[
             if (purchasedEpisodes == null)
               const Padding(
@@ -121,8 +138,6 @@ class _SectionTitle extends StatelessWidget {
     );
   }
 }
-
-
 
 class _SegmentTabs extends StatelessWidget {
   final int selectedIndex;
@@ -205,121 +220,6 @@ class _SegmentTabItem extends StatelessWidget {
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-
-
-class _PurchasedEpisodeCard extends StatelessWidget {
-  final StoryInfoDto item;
-
-  const _PurchasedEpisodeCard({
-    required this.item,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 96,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFFEDEDED)),
-      ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: Image.network(
-              imgProxy + item.storyImageUrl,
-              width: 70,
-              height: 70,
-              fit: BoxFit.cover,
-            ),
-          ),
-
-          const SizedBox(width: 12),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.storyName,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    height: 1.2,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  item.channelName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.black54,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  TimeUtils.formatDuration(Duration(milliseconds: item.totalLength), "HH:mm:ss"),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.black38,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 10),
-
-          _PlayCircleButton(
-            onTap: () {},
-            size: 40,
-            iconSize: 24,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PlayCircleButton extends StatelessWidget {
-  final VoidCallback onTap;
-  final double size;
-  final double iconSize;
-
-  const _PlayCircleButton({
-    required this.onTap,
-    this.size = 46,
-    this.iconSize = 28,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFFFFBC1F),
-      shape: const CircleBorder(),
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: SizedBox(
-          width: size,
-          height: size,
-          child: Icon(
-            Icons.play_arrow_rounded,
-            color: Colors.white,
-            size: iconSize,
-          ),
-        ),
       ),
     );
   }
