@@ -10,7 +10,7 @@ class RecommendationSwitch extends StatelessWidget {
     super.key,
     required this.selectedMode,
     required this.onChanged,
-    this.height = 44,
+    this.height = 36,
   });
 
   @override
@@ -70,7 +70,7 @@ class _SwitchItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: selected ? Colors.white : Colors.black54,
-              fontSize: 15,
+              fontSize: 14,
               fontWeight: FontWeight.w800,
             ),
           ),

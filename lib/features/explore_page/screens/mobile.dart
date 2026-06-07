@@ -47,8 +47,8 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
-          const SearchBox(),
-          const SizedBox(height: 8),
+          // const SearchBox(),
+          // const SizedBox(height: 8),
           const PodCoinBalanceCard(),
           const SizedBox(height: 4),
           _SegmentTabs(
@@ -59,10 +59,8 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
               });
             },
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 8),
           if (selectedTab == 0) ...[
-            const _SectionTitle(title: "推薦內容"),
-            const SizedBox(height: 10),
             RecommendationSwitch(
               selectedMode: recommendationMode,
               onChanged: (mode) {
@@ -70,7 +68,7 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
                     mode;
               },
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 8),
             if (recommendationMode == ExploreRecommendationMode.episode) ...[
               if (stories == null)
                 const Padding(
@@ -119,26 +117,6 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  final String title;
-
-  const _SectionTitle({
-    required this.title,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w900,
-        color: Colors.black87,
-      ),
-    );
-  }
-}
-
 class _SegmentTabs extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onChanged;
@@ -167,13 +145,15 @@ class _SegmentTabs extends StatelessWidget {
               text: "推薦內容",
               selected: selectedIndex == 0,
               onTap: () => onChanged(0),
+              fontSize: 18,
             ),
           ),
           Expanded(
             child: _SegmentTabItem(
-              text: "已購買的付費Podcast`",
+              text: "已購買的付費Podcast",
               selected: selectedIndex == 1,
               onTap: () => onChanged(1),
+              fontSize: 14,
             ),
           ),
         ],
@@ -186,11 +166,13 @@ class _SegmentTabItem extends StatelessWidget {
   final String text;
   final bool selected;
   final VoidCallback onTap;
+  final double fontSize;
 
   const _SegmentTabItem({
     required this.text,
     required this.selected,
     required this.onTap,
+    required this.fontSize,
   });
 
   @override
@@ -204,7 +186,7 @@ class _SegmentTabItem extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: fontSize,
                 fontWeight: FontWeight.w900,
                 color: selected ? Colors.black87 : Colors.grey,
               ),
