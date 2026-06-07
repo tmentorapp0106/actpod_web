@@ -12,7 +12,7 @@ final myRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => HomeScreen(),
+      builder: (context, state) => const ExplorePage(),
     ),
     GoRoute(
       path: "/story/:storyId",

@@ -4,7 +4,6 @@ import 'package:actpod_web/features/explore_page/components/desktop/story_card.d
 import 'package:actpod_web/features/explore_page/components/desktop/top_nav_bar.dart';
 import 'package:actpod_web/features/explore_page/components/shared/package_card.dart';
 import 'package:actpod_web/features/explore_page/components/shared/recommendation_switch.dart';
-import 'package:actpod_web/features/explore_page/dto/package_info_dto.dart';
 import 'package:actpod_web/features/explore_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +16,7 @@ class ExploreDesktopScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stories = ref.watch(storiesProvider);
+    final packages = ref.watch(packagesProvider);
     final purchasedEpisodes = ref.watch(storiesProvider);
     final recommendationMode = ref.watch(exploreRecommendationModeProvider);
 
@@ -70,12 +70,19 @@ class ExploreDesktopScreen extends ConsumerWidget {
                                 ),
                               ),
                           ] else ...[
-                            ...mockPackageList.map(
-                              (package) => Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: PackageCard(package: package),
+                            if (stories == null)
+                              const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               ),
-                            ),
+                            if (packages != null)
+                              ...packages.map(
+                                (package) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: PackageCard(package: package),
+                                ),
+                              ),
                           ],
                         ],
                       ),

@@ -3,7 +3,6 @@ import 'package:actpod_web/features/explore_page/components/mobile/search_box.da
 import 'package:actpod_web/features/explore_page/components/mobile/story_card.dart';
 import 'package:actpod_web/features/explore_page/components/shared/package_card.dart';
 import 'package:actpod_web/features/explore_page/components/shared/recommendation_switch.dart';
-import 'package:actpod_web/features/explore_page/dto/package_info_dto.dart';
 import 'package:actpod_web/features/explore_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +23,7 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
   @override
   Widget build(BuildContext context) {
     final stories = ref.watch(storiesProvider);
+    final packages = ref.watch(packagesProvider);
     final purchasedEpisodes = ref.watch(storiesProvider);
     final recommendationMode = ref.watch(exploreRecommendationModeProvider);
 
@@ -85,15 +85,22 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
                   ),
                 ),
             ] else ...[
-              ...mockPackageList.map(
-                (package) => Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: PackageCard(
-                    package: package,
-                    compact: true,
+              if (stories == null)
+                const Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
                   ),
                 ),
-              ),
+              if (packages != null)
+                ...packages.map(
+                  (package) => Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: PackageCard(
+                      package: package,
+                      compact: true,
+                    ),
+                  ),
+                ),
             ],
           ] else ...[
             if (purchasedEpisodes == null)

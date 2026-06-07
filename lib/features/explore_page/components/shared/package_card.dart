@@ -1,10 +1,10 @@
 import 'package:actpod_web/components/avatar.dart';
 import 'package:actpod_web/components/podcoin.dart';
-import 'package:actpod_web/features/explore_page/dto/package_info_dto.dart';
+import 'package:actpod_web/dto/package_dto.dart';
 import 'package:flutter/material.dart';
 
 class PackageCard extends StatelessWidget {
-  final PackageInfoDto package;
+  final PackageInfoItem package;
   final bool compact;
 
   const PackageCard({
@@ -40,7 +40,7 @@ class PackageCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(7),
             child: Image.network(
-              package.coverUrl,
+              package.packageImageUrl,
               width: coverSize,
               height: coverSize,
               fit: BoxFit.cover,
@@ -61,7 +61,7 @@ class PackageCard extends StatelessWidget {
                       Expanded(
                         child: SelectionArea(
                           child: Text(
-                            package.title,
+                            package.packageName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -84,12 +84,12 @@ class PackageCard extends StatelessWidget {
                   SizedBox(height: compact ? 4 : 6),
                   Row(
                     children: [
-                      Avatar(null, package.hostAvatarUrl, compact ? 14 : 18),
+                      Avatar(null, package.avatarUrl, compact ? 14 : 18),
                       const SizedBox(width: 5),
                       Expanded(
                         child: SelectionArea(
                           child: Text(
-                            package.hostName,
+                            package.nickname,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -103,20 +103,20 @@ class PackageCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: compact ? 6 : 8),
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: compact ? 6 : 10,
-                    runSpacing: 4,
-                    children: [
-                      _MetaPill(text: "共 ${package.episodeCount} 集"),
-                      _MetaPill(text: "總長約 ${package.totalMinutes} 分鐘"),
-                      _PriceLabel(podcoins: package.podcoins),
-                    ],
-                  ),
+                  // Wrap(
+                  //   crossAxisAlignment: WrapCrossAlignment.center,
+                  //   spacing: compact ? 6 : 10,
+                  //   runSpacing: 4,
+                  //   children: [
+                  //     _MetaPill(text: "共 ${package.episodeCount} 集"),
+                  //     _MetaPill(text: "總長約 ${package.totalMinutes} 分鐘"),
+                  //     _PriceLabel(podcoins: package.podcoins),
+                  //   ],
+                  // ),
                   SizedBox(height: compact ? 6 : 10),
                   SelectionArea(
                     child: Text(
-                      package.description,
+                      package.packageDescription,
                       maxLines: compact ? 2 : 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -128,13 +128,14 @@ class PackageCard extends StatelessWidget {
                     )
                   ),
                   SizedBox(height: compact ? 6 : 10),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: package.tags.map((tag) {
-                      return _TagPill(text: tag);
-                    }).toList(),
-                  ),
+                  _TagPill(text: package.spaceName)
+                  // Wrap(
+                  //   spacing: 6,
+                  //   runSpacing: 6,
+                  //   children: package.tags.map((tag) {
+                  //     return _TagPill(text: tag);
+                  //   }).toList(),
+                  // ),
                 ],
               ),
             ),

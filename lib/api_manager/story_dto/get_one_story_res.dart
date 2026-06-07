@@ -1,3 +1,5 @@
+import 'package:actpod_web/dto/package_dto.dart';
+
 class GetOneStoryRes {
   String code;
   String message;
@@ -40,7 +42,7 @@ class GetOneStoryResItem {
   String avatarUrl;
   String nickname;
   bool isPremium;
-  int price;
+  List<PackagePriceItem> packagePrices;
   int count;
 
   GetOneStoryResItem(
@@ -69,7 +71,7 @@ class GetOneStoryResItem {
     this.avatarUrl,
     this.nickname,
     this.isPremium,
-    this.price,
+    this.packagePrices,
     this.count,
   );
 
@@ -103,7 +105,10 @@ class GetOneStoryResItem {
       json["avatarUrl"],
       json["nickname"],
       json["isPremium"],
-      json["price"],
+      (json["packagePrices"] as List<dynamic>?)
+          ?.map((e) => PackagePriceItem.fromJson(e))
+          .toList() ??
+          [],
       json["count"]
     );
   }
