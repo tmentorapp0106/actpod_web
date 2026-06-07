@@ -1,3 +1,5 @@
+import 'package:actpod_web/api_manager/purchase_dto/get_user_purses.dart';
+import 'package:actpod_web/api_manager/purchase_system_api_manager.dart';
 import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/dto/user_info_dto.dart';
 import 'package:actpod_web/features/login/provider.dart';
@@ -66,11 +68,15 @@ class LoginScreen extends ConsumerWidget{
           onTap: ref.watch(loginLoadingProvider)? null : () async {
             ref.watch(loginLoadingProvider.notifier).state = true;
             UserInfoDto? userInfo = await AuthService().signInWithGoogle();
+            GetUserPursesRes pursesRes = await purchaseApiManager.getUserPurses();
             ref.watch(userInfoProvider.notifier).state = userInfo;
             ref.watch(loginLoadingProvider.notifier).state = false;
             if(context.mounted) {
               if (userInfo != null) {
-                ref.read(userInfoProvider.notifier).state = userInfo;
+                if(pursesRes.code == "0000") {
+                  ref.watch(userPodCoinsProvider.notifier).state = pursesRes.purses?.coinsPurse.podCoins?? 0;
+                }
+                ref.watch(userInfoProvider.notifier).state = userInfo;
                 Navigator.of(context).pop(true);
               }
             }
@@ -110,10 +116,14 @@ class LoginScreen extends ConsumerWidget{
           onTap: () async {
             ref.watch(loginLoadingProvider.notifier).state = true;
             UserInfoDto? userInfo = await AuthService().signInWithApple();
+            GetUserPursesRes pursesRes = await purchaseApiManager.getUserPurses();
             ref.watch(userInfoProvider.notifier).state = userInfo;
             ref.watch(loginLoadingProvider.notifier).state = false;
             if(context.mounted) {
               if (userInfo != null) {
+                if(pursesRes.code == "0000") {
+                  ref.watch(userPodCoinsProvider.notifier).state = pursesRes.purses?.coinsPurse.podCoins?? 0;
+                }
                 ref.read(userInfoProvider.notifier).state = userInfo;
                 Navigator.of(context).pop(true);
               }
