@@ -64,15 +64,17 @@ class _SwitchItem extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(999),
         child: Center(
-          child: Text(
-            text,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: selected ? Colors.white : Colors.black54,
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-            ),
+          child: SelectionArea(
+            child: Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: selected ? Colors.white : Colors.black54,
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+              ),
+            )
           ),
         ),
       ),

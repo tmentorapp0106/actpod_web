@@ -113,7 +113,7 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
+        SelectableText(
           title,
           style: const TextStyle(
             fontSize: 30,

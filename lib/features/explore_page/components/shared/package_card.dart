@@ -59,16 +59,18 @@ class PackageCard extends StatelessWidget {
                       const _PackageBadge(),
                       const SizedBox(width: 6),
                       Expanded(
-                        child: Text(
-                          package.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: compact ? 16 : 20,
-                            height: 1.15,
-                            fontWeight: FontWeight.w900,
-                          ),
+                        child: SelectionArea(
+                          child: Text(
+                            package.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: compact ? 16 : 20,
+                              height: 1.15,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          )
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -85,15 +87,17 @@ class PackageCard extends StatelessWidget {
                       Avatar(null, package.hostAvatarUrl, compact ? 14 : 18),
                       const SizedBox(width: 5),
                       Expanded(
-                        child: Text(
-                          package.hostName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: compact ? 11 : 13,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        child: SelectionArea(
+                          child: Text(
+                            package.hostName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: compact ? 11 : 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
                         ),
                       ),
                     ],
@@ -110,16 +114,18 @@ class PackageCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: compact ? 6 : 10),
-                  Text(
-                    package.description,
-                    maxLines: compact ? 2 : 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: compact ? 11 : 13,
-                      height: 1.35,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  SelectionArea(
+                    child: Text(
+                      package.description,
+                      maxLines: compact ? 2 : 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: compact ? 11 : 13,
+                        height: 1.35,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
                   ),
                   SizedBox(height: compact ? 6 : 10),
                   Wrap(
@@ -150,7 +156,7 @@ class _PackageBadge extends StatelessWidget {
         color: const Color(0xFFFFBC1F),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: const Text(
+      child: const SelectableText(
         "套裝",
         style: TextStyle(
           color: Colors.white,
@@ -178,7 +184,7 @@ class _MetaPill extends StatelessWidget {
         color: const Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(999),
       ),
-      child: Text(
+      child: SelectableText(
         text,
         style: const TextStyle(
           color: Color(0xFF3F3F3F),
@@ -202,7 +208,7 @@ class _PriceLabel extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
+        SelectableText(
           podcoins.toString(),
           style: const TextStyle(
             color: Color(0xFFFF9900),
@@ -214,7 +220,7 @@ class _PriceLabel extends StatelessWidget {
         const SizedBox(width: 3),
         PodCoin(size: 14),
         const SizedBox(width: 2),
-        const Text(
+        const SelectableText(
           "Podcoins",
           style: TextStyle(
             color: Colors.black54,
@@ -242,7 +248,7 @@ class _TagPill extends StatelessWidget {
         color: const Color(0xFFF6F6F6),
         borderRadius: BorderRadius.circular(999),
       ),
-      child: Text(
+      child: SelectableText(
         text,
         style: const TextStyle(
           color: Color(0xFF555555),

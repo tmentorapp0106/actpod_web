@@ -25,7 +25,7 @@ class PurchasedEpisodesPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          const SelectableText(
             "已購買的付費 Podcast",
             style: TextStyle(
               fontSize: 16,
@@ -47,7 +47,7 @@ class PurchasedEpisodesPanel extends StatelessWidget {
             const SizedBox(
               height: 120,
               child: Center(
-                child: Text(
+                child: SelectableText(
                   "尚未購買任何付費 Podcast",
                   style: TextStyle(
                     fontSize: 14,
@@ -102,26 +102,30 @@ class _PurchasedEpisodeTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.storyName,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    SelectionArea(
+                      child: Text(
+                        item.storyName,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      )
                     ),
                     const SizedBox(height: 5),
-                    Text(
-                      item.channelName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
-                      ),
+                    SelectionArea(
+                      child: Text(
+                        item.channelName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                      )
                     ),
-                    Text(
+                    SelectableText(
                       TimeUtils.formatDuration(
                         Duration(milliseconds: item.totalLength),
                         "HH:mm:ss",
