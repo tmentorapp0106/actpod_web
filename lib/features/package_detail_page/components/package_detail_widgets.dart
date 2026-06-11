@@ -1,3 +1,5 @@
+import 'package:actpod_web/api_manager/purchase_dto/create_credit_card_payment.dart';
+import 'package:actpod_web/api_manager/purchase_system_api_manager.dart';
 import 'package:actpod_web/components/avatar.dart';
 import 'package:actpod_web/components/podcoin.dart';
 import 'package:actpod_web/dto/package_dto.dart';
@@ -7,6 +9,8 @@ import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 const packageAccent = Color(0xFFFFA300);
 const packageSoft = Color(0xFFFFFAEF);
@@ -130,6 +134,34 @@ class PackageInfoCard extends StatelessWidget {
     this.compact = false,
   });
 
+  void submitNewebPayForm({
+  required String gatewayUrl,
+  required String merchantID,
+  required String tradeInfo,
+  required String tradeSha,
+  required String version,
+}) {
+  final form = html.FormElement()
+    ..method = 'POST'
+    ..action = gatewayUrl;
+
+  void addInput(String name, String value) {
+    final input = html.InputElement()
+      ..type = 'hidden'
+      ..name = name
+      ..value = value;
+    form.children.add(input);
+  }
+
+  addInput('MerchantID', merchantID);
+  addInput('TradeInfo', tradeInfo);
+  addInput('TradeSha', tradeSha);
+  addInput('Version', version);
+
+  html.document.body!.append(form);
+  form.submit();
+}
+
   @override
   Widget build(BuildContext context) {
     final currentPrice = currentPackagePrice(package);
@@ -222,7 +254,7 @@ class PackageInfoCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                currentPrice?.podcoins.toString() ?? "--",
+                currentPrice?.twd.toString() ?? "--",
                 style: TextStyle(
                   color: packageAccent,
                   fontSize: compact ? 38 : 58,
@@ -234,7 +266,7 @@ class PackageInfoCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(bottom: compact ? 6 : 10),
                 child: const Text(
-                  "Podcoins",
+                  "台幣",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
@@ -246,19 +278,21 @@ class PackageInfoCard extends StatelessWidget {
           const SizedBox(height: 18),
           PackagePrimaryButton(
             text: "購買套裝",
-            onPressed: () {
-              ToastService.showNoticeToast("套裝購買功能尚未開放");
+            onPressed: () async {
+              CreateCreditCardPaymentRes response = await purchaseApiManager.createCreditCardPayment(package.packagePrices[0].twd, "test_package", "eason.hung@actpodapp.com");
+              if(response.code != "0000") {
+                return;
+              }
+              submitNewebPayForm(
+                gatewayUrl: response.creditCardPayment!.gatewayURL,
+                merchantID: response.creditCardPayment!.merchantID,
+                tradeInfo: response.creditCardPayment!.tradeInfo,
+                tradeSha: response.creditCardPayment!.tradeSha,
+                version: response.creditCardPayment!.version
+              );
             },
           ),
           const SizedBox(height: 8),
-          PackageOutlineButton(
-            text: "收藏套裝",
-            onPressed: () {
-              ToastService.showNoticeToast("套裝收藏功能尚未開放");
-            },
-          ),
-          const SizedBox(height: 16),
-          PackageTags(package: package),
         ],
       ),
     );
@@ -350,8 +384,6 @@ class PackageTags extends StatelessWidget {
   Widget build(BuildContext context) {
     final tags = [
       if (package.spaceName.isNotEmpty) package.spaceName,
-      if (package.packageType.isNotEmpty) package.packageType,
-      "精選套裝",
     ];
 
     return Wrap(
@@ -484,7 +516,7 @@ class PackageStoryRow extends StatelessWidget {
           story.locked ? null : () => context.push("/story/${story.storyId}"),
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: compact ? 6 : 10),
+        padding: EdgeInsets.symmetric(vertical: compact ? 6 : 10, horizontal: 8),
         decoration: const BoxDecoration(
           border: Border(
             bottom: BorderSide(color: Color(0xFFEAEAEA)),
@@ -671,7 +703,7 @@ class PodCoinSummaryCard extends ConsumerWidget {
             height: compact ? 34 : 44,
             child: ElevatedButton.icon(
               onPressed: () {
-                ToastService.showNoticeToast("儲值功能尚未開放");
+                ToastService.showNoticeToast("網頁儲值功能尚未開放");
               },
               icon: Icon(Icons.add_circle, size: compact ? 17 : 20),
               label: Text(

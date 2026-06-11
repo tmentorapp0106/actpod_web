@@ -1,14 +1,17 @@
 import 'package:actpod_web/components/avatar.dart';
 import 'package:actpod_web/components/podcoin.dart';
 import 'package:actpod_web/dto/user_info_dto.dart';
+import 'package:actpod_web/features/explore_page/controllers/story_controller.dart';
 import 'package:actpod_web/features/login/login_screen.dart';
 import 'package:actpod_web/providers.dart';
+import 'package:actpod_web/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PodCoinCard extends ConsumerWidget {
+  final StoryController storyController;
 
-  const PodCoinCard();
+  const PodCoinCard({required this.storyController});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,13 +31,16 @@ class PodCoinCard extends ConsumerWidget {
             width: 180,
             height: 44,
             child: ElevatedButton.icon(
-              onPressed: () {
-                showDialog(
+              onPressed: () async {
+                await showDialog(
                   context: context,
                   builder: (context) {
                     return LoginScreen();
                   }
                 );
+                if(AuthService.isLoggedIn()) {
+                  storyController.getPurchasedStories();
+                }
               },
               icon: const Icon(Icons.login, size: 20),
               label: const Text(

@@ -4,20 +4,24 @@ import 'package:actpod_web/features/explore_page/components/desktop/story_card.d
 import 'package:actpod_web/features/explore_page/components/desktop/top_nav_bar.dart';
 import 'package:actpod_web/features/explore_page/components/shared/package_card.dart';
 import 'package:actpod_web/features/explore_page/components/shared/recommendation_switch.dart';
+import 'package:actpod_web/features/explore_page/controllers/story_controller.dart';
 import 'package:actpod_web/features/explore_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExploreDesktopScreen extends ConsumerWidget {
+  final StoryController storyController;
+
   const ExploreDesktopScreen({
     super.key,
+    required this.storyController,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stories = ref.watch(storiesProvider);
     final packages = ref.watch(packagesProvider);
-    final purchasedEpisodes = ref.watch(storiesProvider);
+    final purchasedEpisodes = ref.watch(purchasedStoriesProvider);
     final recommendationMode = ref.watch(exploreRecommendationModeProvider);
 
     return Scaffold(
@@ -33,12 +37,10 @@ class ExploreDesktopScreen extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: ListView(
-                        padding: const EdgeInsets.fromLTRB(28, 12, 16, 50),
+                        padding: const EdgeInsets.fromLTRB(28, 20, 16, 50),
                         children: [
-                          // const CategoryFilterRow(),
-                          // const SizedBox(height: 18),
-                          const _SectionTitle(title: "推薦內容"),
-                          const SizedBox(height: 12),
+                          // const _SectionTitle(title: "推薦內容"),
+                          // const SizedBox(height: 12),
                           SizedBox(
                             width: 390,
                             child: RecommendationSwitch(
@@ -92,7 +94,7 @@ class ExploreDesktopScreen extends ConsumerWidget {
                       child: ListView(
                         padding: const EdgeInsets.fromLTRB(0, 24, 28, 110),
                         children: [
-                          const PodCoinCard(),
+                          PodCoinCard(storyController: storyController),
                           const SizedBox(height: 18),
                           PurchasedEpisodesPanel(items: purchasedEpisodes),
                         ],

@@ -53,7 +53,7 @@ class StoriesView extends ConsumerWidget {
     );
   }
 
-  Widget storiesView(WidgetRef ref, List<GetStoriesByUserIdResItem> storyList, UserInfoDto? otherUserInfo) {
+  Widget storiesView(WidgetRef ref, List<StoryItem> storyList, UserInfoDto? otherUserInfo) {
     return Column(
       children:[
         Expanded(
@@ -69,7 +69,7 @@ class StoriesView extends ConsumerWidget {
     );
   }
 
-  Widget storyWidget(BuildContext context, WidgetRef ref, GetStoriesByUserIdResItem story, int index) {
+  Widget storyWidget(BuildContext context, WidgetRef ref, StoryItem story, int index) {
     return InkWell(
       onTap: () {
         myRouter.push('/story/${story.storyId}');

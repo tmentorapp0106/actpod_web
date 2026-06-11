@@ -34,28 +34,32 @@ class TopNavBar extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Container(
+          const SizedBox(
             width: 280,
             height: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF8F8F8),
-              borderRadius: BorderRadius.circular(999),
-              border: Border.all(color: const Color(0xFFEDEDED)),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Row(
-              children: const [
-                Icon(Icons.search, size: 18, color: Colors.grey),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "搜尋節目、單集、創作者",
-                    style: TextStyle(color: Colors.grey, fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          )
+          // Container(
+          //   width: 280,
+          //   height: 40,
+          //   decoration: BoxDecoration(
+          //     color: const Color(0xFFF8F8F8),
+          //     borderRadius: BorderRadius.circular(999),
+          //     border: Border.all(color: const Color(0xFFEDEDED)),
+          //   ),
+          //   padding: const EdgeInsets.symmetric(horizontal: 14),
+          //   child: Row(
+          //     children: const [
+          //       Icon(Icons.search, size: 18, color: Colors.grey),
+          //       SizedBox(width: 8),
+          //       Expanded(
+          //         child: Text(
+          //           "搜尋節目、單集、創作者",
+          //           style: TextStyle(color: Colors.grey, fontSize: 13),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

@@ -1,15 +1,19 @@
 import 'package:actpod_web/features/explore_page/components/mobile/podcoin_card.dart';
+import 'package:actpod_web/features/explore_page/components/mobile/purchased_card.dart';
 import 'package:actpod_web/features/explore_page/components/mobile/search_box.dart';
 import 'package:actpod_web/features/explore_page/components/mobile/story_card.dart';
 import 'package:actpod_web/features/explore_page/components/shared/package_card.dart';
 import 'package:actpod_web/features/explore_page/components/shared/recommendation_switch.dart';
+import 'package:actpod_web/features/explore_page/controllers/story_controller.dart';
 import 'package:actpod_web/features/explore_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExploreMobileScreen extends ConsumerStatefulWidget {
+  final StoryController storyController;
   const ExploreMobileScreen({
     super.key,
+    required this.storyController
   });
 
   @override
@@ -24,7 +28,7 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
   Widget build(BuildContext context) {
     final stories = ref.watch(storiesProvider);
     final packages = ref.watch(packagesProvider);
-    final purchasedEpisodes = ref.watch(storiesProvider);
+    final purchasedEpisodes = ref.watch(purchasedStoriesProvider);
     final recommendationMode = ref.watch(exploreRecommendationModeProvider);
 
     return Scaffold(
@@ -49,7 +53,7 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
         children: [
           // const SearchBox(),
           // const SizedBox(height: 8),
-          const PodCoinBalanceCard(),
+          PodCoinBalanceCard(storyController: widget.storyController,),
           const SizedBox(height: 4),
           _SegmentTabs(
             selectedIndex: selectedTab,
@@ -114,7 +118,7 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
               ...purchasedEpisodes.map(
                 (episode) => Padding(
                   padding: const EdgeInsets.only(bottom: 14),
-                  child: MobileStoryCard(story: episode),
+                  child: MobilePurchasedCard(story: episode),
                 ),
               ),
           ],

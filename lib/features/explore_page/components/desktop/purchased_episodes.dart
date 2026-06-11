@@ -1,10 +1,11 @@
+import 'package:actpod_web/api_manager/story_dto/get_user_stories_res.dart';
 import 'package:actpod_web/const.dart';
 import 'package:actpod_web/features/explore_page/dto/story_info_dto.dart';
 import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
 
 class PurchasedEpisodesPanel extends StatelessWidget {
-  final List<StoryInfoDto>? items;
+  final List<StoryItem>? items;
 
   const PurchasedEpisodesPanel({
     super.key,
@@ -73,7 +74,7 @@ class PurchasedEpisodesPanel extends StatelessWidget {
 }
 
 class _PurchasedEpisodeTile extends StatelessWidget {
-  final StoryInfoDto item;
+  final StoryItem item;
 
   const _PurchasedEpisodeTile({required this.item});
 

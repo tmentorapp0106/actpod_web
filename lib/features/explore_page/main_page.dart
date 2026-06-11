@@ -41,7 +41,7 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
         ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
         userController?.getUserPurses();
       }
-      storyController?.getRecommendation();
+      storyController?.init();
       packageController?.getPackages();
     });
   }
@@ -54,10 +54,10 @@ class _ExplorePageState extends ConsumerState<ExplorePage> {
         final isDesktop = constraints.maxWidth >= AppBreakpoints.tablet;
 
         if (isDesktop) {
-          return const ExploreDesktopScreen();
+          return ExploreDesktopScreen(storyController: storyController!,);
         }
 
-        return const ExploreMobileScreen();
+        return ExploreMobileScreen(storyController: storyController!,);
       },
     );
   }

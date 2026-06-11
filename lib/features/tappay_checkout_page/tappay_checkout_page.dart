@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:js_interop';
 
-import 'package:actpod_web/api_manager/purchase_dto/purchase_web_podcoin.dart';
 import 'package:actpod_web/api_manager/purchase_system_api_manager.dart';
 import 'package:actpod_web/services/toast_service.dart';
 import 'package:flutter/material.dart';
@@ -175,10 +174,10 @@ class _TapPayCheckoutPageState extends State<TapPayCheckoutPage> {
                   onPressed: () async {
                     final result = await bridge.getPrime();
                     if(result["status"] == 0) {
-                      PurchaseWebPodcoinRes res = await purchaseApiManager.purchaseWebPodcoin(result["prime"], "wpc_001");
-                      if(res.code == "0000") {
-                        ToastService.showSuccessToast("Purchase successful!");
-                      }
+                      // PurchaseWebPodcoinRes res = await purchaseApiManager.purchaseWebPodcoin(result["prime"], "wpc_001");
+                      // if(res.code == "0000") {
+                      //   ToastService.showSuccessToast("Purchase successful!");
+                      // }
                     }
                   },
                   child: const Text('Get Prime'),

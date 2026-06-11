@@ -1,7 +1,7 @@
 class GetStoriesByUserIdRes {
   String code;
   String message;
-  List<GetStoriesByUserIdResItem>? storyList;
+  List<StoryItem>? storyList;
 
   GetStoriesByUserIdRes(this.code, this.message, this.storyList);
 
@@ -9,12 +9,12 @@ class GetStoriesByUserIdRes {
     return GetStoriesByUserIdRes(
       json["code"],
       json["message"],
-      json["data"]?.map<GetStoriesByUserIdResItem>((json) => GetStoriesByUserIdResItem.fromJson(json)).toList()
+      json["data"]?.map<StoryItem>((json) => StoryItem.fromJson(json)).toList()
     );
   }
 }
 
-class GetStoriesByUserIdResItem {
+class StoryItem {
   String username;
   String collaboratorName;
   String storyId;
@@ -45,7 +45,7 @@ class GetStoriesByUserIdResItem {
   DateTime releaseTime;
 
 
-  GetStoriesByUserIdResItem(
+  StoryItem(
       this.username,
       this.collaboratorName,
       this.storyId,
@@ -76,8 +76,8 @@ class GetStoriesByUserIdResItem {
       this.releaseTime
     );
 
-  factory GetStoriesByUserIdResItem.fromJson(Map<String, dynamic> json) {
-    return GetStoriesByUserIdResItem(
+  factory StoryItem.fromJson(Map<String, dynamic> json) {
+    return StoryItem(
       json["userName"],
       json["collaboratorName"]?? "",
       json["storyId"],

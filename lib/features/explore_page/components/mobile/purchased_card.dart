@@ -1,13 +1,12 @@
 import 'package:actpod_web/api_manager/story_dto/get_user_stories_res.dart';
 import 'package:actpod_web/components/avatar.dart';
-import 'package:actpod_web/features/explore_page/dto/story_info_dto.dart';
 import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
 
-class MobileStoryCard extends StatelessWidget {
-  final StoryInfoDto story;
+class MobilePurchasedCard extends StatelessWidget {
+  final StoryItem story;
 
-  const MobileStoryCard({
+  const MobilePurchasedCard({
     required this.story,
   });
 
@@ -105,7 +104,7 @@ class MobileStoryCard extends StatelessWidget {
 
 
 class _ChannelHeaderMini extends StatelessWidget {
-  final StoryInfoDto story;
+  final StoryItem story;
 
   const _ChannelHeaderMini({
     required this.story,
