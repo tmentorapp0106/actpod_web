@@ -5,6 +5,7 @@ import 'package:actpod_web/components/podcoin.dart';
 import 'package:actpod_web/dto/package_dto.dart';
 import 'package:actpod_web/features/login/login_screen.dart';
 import 'package:actpod_web/features/package_detail_page/controllers/package_detail_controller.dart';
+import 'package:actpod_web/features/package_detail_page/providers.dart';
 import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/services/toast_service.dart';
@@ -12,7 +13,7 @@ import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-// ignore: avoid_web_libraries_in_flutter
+// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:html' as html;
 
 const packageAccent = Color(0xFFFFA300);
@@ -113,37 +114,41 @@ class PackageInfoCard extends ConsumerWidget {
   });
 
   void submitNewebPayForm({
-  required String gatewayUrl,
-  required String merchantID,
-  required String tradeInfo,
-  required String tradeSha,
-  required String version,
-}) {
-  final form = html.FormElement()
-    ..method = 'POST'
-    ..action = gatewayUrl;
+    required String gatewayUrl,
+    required String merchantID,
+    required String tradeInfo,
+    required String tradeSha,
+    required String version,
+  }) {
+    final form = html.FormElement()
+      ..method = 'POST'
+      ..action = gatewayUrl;
 
-  void addInput(String name, String value) {
-    final input = html.InputElement()
-      ..type = 'hidden'
-      ..name = name
-      ..value = value;
-    form.children.add(input);
+    void addInput(String name, String value) {
+      final input = html.InputElement()
+        ..type = 'hidden'
+        ..name = name
+        ..value = value;
+      form.children.add(input);
+    }
+
+    addInput('MerchantID', merchantID);
+    addInput('TradeInfo', tradeInfo);
+    addInput('TradeSha', tradeSha);
+    addInput('Version', version);
+
+    html.document.body!.append(form);
+    form.submit();
   }
-
-  addInput('MerchantID', merchantID);
-  addInput('TradeInfo', tradeInfo);
-  addInput('TradeSha', tradeSha);
-  addInput('Version', version);
-
-  html.document.body!.append(form);
-  form.submit();
-}
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final twd = package.packagePrice?.twd;
-    final priceText = twd == null || twd == -1 ? "--" : twd.toString();
+    final purchased = ref.watch(packagePurchasedProvider);
+    final isNotForSale = twd == null || twd < 0;
+    final isPurchaseLoading = purchased == null;
+    final canPurchase = !isNotForSale && purchased == false;
+    final priceText = isNotForSale ? "--" : twd.toString();
 
     return Container(
       padding: EdgeInsets.all(compact ? 14 : 24),
@@ -234,37 +239,38 @@ class PackageInfoCard extends ConsumerWidget {
           ),
           const SizedBox(height: 18),
           PackagePrimaryButton(
-            text: "購買套裝",
-            onPressed: () async {
-              if(package.packagePrice == null || package.packagePrice!.twd < 0) {
-                return;
-              }
-
-              if(!AuthService.isLoggedIn()) {
-                bool? loggedIn = await showDialog<bool>(
-                  context: context,
-                  barrierDismissible: false, // prevent tap outside to close
-                  builder: (context) {
-                    return LoginScreen();
-                  },
-                );
-                if(loggedIn != null && loggedIn) {
-                  
-                }
-                return;
-              }
-              CreateCreditCardPaymentRes response = await purchaseApiManager.createCreditCardPayment(package.packagePrice!.twd, "test_package", "eason.hung@actpodapp.com");
-              if(response.code != "0000") {
-                return;
-              }
-              submitNewebPayForm(
-                gatewayUrl: response.creditCardPayment!.gatewayURL,
-                merchantID: response.creditCardPayment!.merchantID,
-                tradeInfo: response.creditCardPayment!.tradeInfo,
-                tradeSha: response.creditCardPayment!.tradeSha,
-                version: response.creditCardPayment!.version
-              );
-            },
+            text: isNotForSale ? "尚未開賣" : "購買套裝",
+            loading: !isNotForSale && isPurchaseLoading,
+            onPressed: canPurchase
+                ? () async {
+                    if (!AuthService.isLoggedIn()) {
+                      bool? loggedIn = await showDialog<bool>(
+                        context: context,
+                        barrierDismissible:
+                            false, // prevent tap outside to close
+                        builder: (context) {
+                          return const LoginScreen();
+                        },
+                      );
+                      if (loggedIn != null && loggedIn) {}
+                      return;
+                    }
+                    CreateCreditCardPaymentRes response =
+                        await purchaseApiManager.createCreditCardPayment(
+                            package.packagePrice!.twd,
+                            "test_package",
+                            "eason.hung@actpodapp.com");
+                    if (response.code != "0000") {
+                      return;
+                    }
+                    submitNewebPayForm(
+                        gatewayUrl: response.creditCardPayment!.gatewayURL,
+                        merchantID: response.creditCardPayment!.merchantID,
+                        tradeInfo: response.creditCardPayment!.tradeInfo,
+                        tradeSha: response.creditCardPayment!.tradeSha,
+                        version: response.creditCardPayment!.version);
+                  }
+                : null,
           ),
           const SizedBox(height: 8),
         ],
@@ -275,36 +281,51 @@ class PackageInfoCard extends ConsumerWidget {
 
 class PackagePrimaryButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool loading;
 
   const PackagePrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,
+    this.loading = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final disabled = onPressed == null;
+
     return SizedBox(
       width: double.infinity,
       height: 44,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: packageAccent,
+          backgroundColor: disabled ? const Color(0xFFD8D8D8) : packageAccent,
           foregroundColor: Colors.white,
+          disabledBackgroundColor: const Color(0xFFD8D8D8),
+          disabledForegroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(999),
           ),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
+        child: loading
+            ? const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.4,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
       ),
     );
   }
@@ -356,8 +377,7 @@ class PackageTags extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tags = [
-    ];
+    final tags = [];
 
     return Wrap(
       spacing: 8,
@@ -489,7 +509,8 @@ class PackageStoryRow extends StatelessWidget {
           story.locked ? null : () => context.push("/story/${story.storyId}"),
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: compact ? 6 : 10, horizontal: 8),
+        padding:
+            EdgeInsets.symmetric(vertical: compact ? 6 : 10, horizontal: 8),
         decoration: const BoxDecoration(
           border: Border(
             bottom: BorderSide(color: Color(0xFFEAEAEA)),
