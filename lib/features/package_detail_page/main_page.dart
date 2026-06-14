@@ -38,6 +38,7 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
         ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
         userController.getUserPurses();
       }
+      packageDetailController.checkPurchased(widget.packageId);
       packageDetailController.getPackageInfo(widget.packageId);
     });
   }
@@ -57,10 +58,10 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
         final isDesktop = constraints.maxWidth >= AppBreakpoints.tablet;
 
         if (isDesktop) {
-          return const PackageDetailDesktopScreen();
+          return PackageDetailDesktopScreen(packageDetailController: packageDetailController,);
         }
 
-        return const PackageDetailMobileScreen();
+        return PackageDetailMobileScreen(packageDetailController: packageDetailController);
       },
     );
   }

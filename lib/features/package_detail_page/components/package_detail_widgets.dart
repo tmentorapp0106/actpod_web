@@ -3,7 +3,10 @@ import 'package:actpod_web/api_manager/purchase_system_api_manager.dart';
 import 'package:actpod_web/components/avatar.dart';
 import 'package:actpod_web/components/podcoin.dart';
 import 'package:actpod_web/dto/package_dto.dart';
+import 'package:actpod_web/features/login/login_screen.dart';
+import 'package:actpod_web/features/package_detail_page/controllers/package_detail_controller.dart';
 import 'package:actpod_web/providers.dart';
+import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/services/toast_service.dart';
 import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
@@ -97,13 +100,15 @@ class PackageBadge extends StatelessWidget {
   }
 }
 
-class PackageInfoCard extends StatelessWidget {
+class PackageInfoCard extends ConsumerWidget {
   final PackageInfoWithStoriesItem package;
   final bool compact;
+  final PackageDetailController packageDetailController;
 
   const PackageInfoCard({
     super.key,
     required this.package,
+    required this.packageDetailController,
     this.compact = false,
   });
 
@@ -136,7 +141,7 @@ class PackageInfoCard extends StatelessWidget {
 }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final twd = package.packagePrice?.twd;
     final priceText = twd == null || twd == -1 ? "--" : twd.toString();
 
@@ -231,17 +236,34 @@ class PackageInfoCard extends StatelessWidget {
           PackagePrimaryButton(
             text: "購買套裝",
             onPressed: () async {
-              // CreateCreditCardPaymentRes response = await purchaseApiManager.createCreditCardPayment(package.packagePrices[0].twd, "test_package", "eason.hung@actpodapp.com");
-              // if(response.code != "0000") {
-              //   return;
-              // }
-              // submitNewebPayForm(
-              //   gatewayUrl: response.creditCardPayment!.gatewayURL,
-              //   merchantID: response.creditCardPayment!.merchantID,
-              //   tradeInfo: response.creditCardPayment!.tradeInfo,
-              //   tradeSha: response.creditCardPayment!.tradeSha,
-              //   version: response.creditCardPayment!.version
-              // );
+              if(package.packagePrice == null || package.packagePrice!.twd < 0) {
+                return;
+              }
+
+              if(!AuthService.isLoggedIn()) {
+                bool? loggedIn = await showDialog<bool>(
+                  context: context,
+                  barrierDismissible: false, // prevent tap outside to close
+                  builder: (context) {
+                    return LoginScreen();
+                  },
+                );
+                if(loggedIn != null && loggedIn) {
+                  
+                }
+                return;
+              }
+              CreateCreditCardPaymentRes response = await purchaseApiManager.createCreditCardPayment(package.packagePrice!.twd, "test_package", "eason.hung@actpodapp.com");
+              if(response.code != "0000") {
+                return;
+              }
+              submitNewebPayForm(
+                gatewayUrl: response.creditCardPayment!.gatewayURL,
+                merchantID: response.creditCardPayment!.merchantID,
+                tradeInfo: response.creditCardPayment!.tradeInfo,
+                tradeSha: response.creditCardPayment!.tradeSha,
+                version: response.creditCardPayment!.version
+              );
             },
           ),
           const SizedBox(height: 8),

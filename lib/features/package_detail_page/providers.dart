@@ -7,3 +7,4 @@ final packageDetailLoadingProvider =
     StateProvider.autoDispose<bool>((ref) => false);
 final packageDetailErrorProvider =
     StateProvider.autoDispose<String?>((ref) => null);
+final packagePurchasedProvider = StateProvider.autoDispose<bool?>((ref) => null);

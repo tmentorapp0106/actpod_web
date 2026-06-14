@@ -1,12 +1,16 @@
 import 'package:actpod_web/features/package_detail_page/components/package_detail_widgets.dart';
+import 'package:actpod_web/features/package_detail_page/controllers/package_detail_controller.dart';
 import 'package:actpod_web/features/package_detail_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class PackageDetailDesktopScreen extends ConsumerWidget {
+  final PackageDetailController packageDetailController;
+
   const PackageDetailDesktopScreen({
     super.key,
+    required this.packageDetailController
   });
 
   @override
@@ -54,7 +58,7 @@ class PackageDetailDesktopScreen extends ConsumerWidget {
                       child: ListView(
                         padding: const EdgeInsets.fromLTRB(20, 28, 42, 52),
                         children: [
-                          PackageInfoCard(package: package),
+                          PackageInfoCard(package: package, packageDetailController: packageDetailController,),
                           const SizedBox(height: 24),
                           const PodCoinSummaryCard(),
                         ],

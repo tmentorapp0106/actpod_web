@@ -1,4 +1,5 @@
 import 'package:actpod_web/features/package_detail_page/components/package_detail_widgets.dart';
+import 'package:actpod_web/features/package_detail_page/controllers/package_detail_controller.dart';
 import 'package:actpod_web/features/package_detail_page/providers.dart';
 import 'package:actpod_web/services/toast_service.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class PackageDetailMobileScreen extends ConsumerWidget {
+  final PackageDetailController packageDetailController;
+  
   const PackageDetailMobileScreen({
     super.key,
+    required this.packageDetailController
   });
 
   @override
@@ -70,6 +74,7 @@ class PackageDetailMobileScreen extends ConsumerWidget {
           const SizedBox(height: 10),
           PackageInfoCard(
             package: package,
+            packageDetailController: packageDetailController,
             compact: true,
           ),
           const SizedBox(height: 14),

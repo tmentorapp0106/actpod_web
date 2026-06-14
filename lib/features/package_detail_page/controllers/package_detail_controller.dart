@@ -1,6 +1,8 @@
 import 'package:actpod_web/api_manager/story_api_manager.dart';
+import 'package:actpod_web/api_manager/story_dto/check_purchase_res.dart';
 import 'package:actpod_web/api_manager/story_dto/get_package_info_res.dart';
 import 'package:actpod_web/features/package_detail_page/providers.dart';
+import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/services/toast_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,5 +30,14 @@ class PackageDetailController {
     } finally {
       ref.watch(packageDetailLoadingProvider.notifier).state = false;
     }
+  }
+
+  Future<void> checkPurchased(String packageId) async {
+    if(!AuthService.isLoggedIn()) {
+      ref.watch(packagePurchasedProvider.notifier).state = false;
+      return;
+    }
+    CheckPurchaseRes response = await storyApiManager.checkPurchased("", packageId);
+    ref.watch(packagePurchasedProvider.notifier).state = response.purchased;
   }
 }

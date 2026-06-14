@@ -1,5 +1,6 @@
 import 'package:actpod_web/api_manager/abstractApiManager.dart';
 import 'package:actpod_web/api_manager/purchase_dto/get_purchased_stories.dart';
+import 'package:actpod_web/api_manager/story_dto/check_purchase_res.dart';
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/api_manager/story_dto/get_package_info_res.dart';
 import 'package:actpod_web/api_manager/story_dto/get_packages_res.dart';
@@ -58,5 +59,14 @@ class StoryApiManager extends AbstractApiManager {
   Future<GetPurchasedStoriesRes> getPurchasedStories() async {
     Response response = await handelGetWithUserToken("/story/purchased");
     return GetPurchasedStoriesRes.fromJson(response.data);
+  }
+
+  Future<CheckPurchaseRes> checkPurchased(String storyId, String packageId) async {
+    var data = {
+      "storyId": storyId,
+      "packageId": packageId,
+    };
+    Response response = await handelPostWithUserToken("/story/premium/record/exist", data);
+    return CheckPurchaseRes.fromJson(response.data);
   }
 }
