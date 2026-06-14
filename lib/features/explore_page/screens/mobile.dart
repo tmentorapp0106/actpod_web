@@ -113,6 +113,20 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
                   child: CircularProgressIndicator(),
                 ),
               )
+            else if (purchasedEpisodes.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(top: 80),
+                child: Center(
+                  child: Text(
+                    "尚未購買任何付費 Podcast",
+                    style: TextStyle(
+                      color: Color(0xFF6F6F6F),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              )
             else
               ...purchasedEpisodes.map(
                 (episode) => Padding(

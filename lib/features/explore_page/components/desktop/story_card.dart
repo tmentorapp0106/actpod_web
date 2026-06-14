@@ -1,5 +1,6 @@
 import 'package:actpod_web/const.dart';
 import 'package:actpod_web/features/explore_page/dto/story_info_dto.dart';
+import 'package:actpod_web/router.dart';
 import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -38,124 +39,128 @@ class StoryCardDesktop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 248,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFFEDEDED)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(8),
-      child: Stack(
-        children: [
-          Row(
-            children: [
-              _CoverImage(
-                imageUrl: imgProxy + story.storyImageUrl,
-                size: 192,
-                duration: story.totalLength,
-              ),
+    return InkWell(
+      onTap: () {
+        myRouter.push("/story/${story.storyId}");
+      },
+      child: Container(
+        height: 248,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFFEDEDED)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Stack(
+          children: [
+            Row(
+              children: [
+                _CoverImage(
+                  imageUrl: imgProxy + story.storyImageUrl,
+                  size: 192,
+                  duration: story.totalLength,
+                ),
 
-              const SizedBox(width: 16),
+                const SizedBox(width: 16),
 
-              Expanded(
-                child: Padding(
-                  // 右邊預留播放按鈕空間，避免文字或 metrics 被蓋住
-                  padding: const EdgeInsets.only(right: 72),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _ChannelUserInfo(
-                        channelImageUrl: story.channelImageUrl,
-                        channelName: story.channelName,
-                        avatarUrl: story.userAvatarUrl,
-                        nickname: story.channelName,
-                      ),
+                Expanded(
+                  child: Padding(
+                    // 右邊預留播放按鈕空間，避免文字或 metrics 被蓋住
+                    padding: const EdgeInsets.only(right: 72),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _ChannelUserInfo(
+                          channelImageUrl: story.channelImageUrl,
+                          channelName: story.channelName,
+                          avatarUrl: story.userAvatarUrl,
+                          nickname: story.channelName,
+                        ),
 
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 8),
 
-                      SelectionArea(
-                        child: Text(
-                          story.storyName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            height: 1.2,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        )
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      SelectionArea(
-                        child: Text(
-                          story.storyDescription,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.black54,
-                          ),
-                        )
-                      ),
-
-                      const Spacer(),
-
-                      Row(
-                        children: [
-                          _CategoryPill(text: story.spaceName),
-                          const SizedBox(width: 8),
-                          SelectableText(
-                            TimeUtils.convertToFormat("yyyy/MM/dd", story.releaseTime),
+                        SelectionArea(
+                          child: Text(
+                            story.storyName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              fontSize: 13,
+                              fontSize: 20,
+                              height: 1.2,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          )
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        SelectionArea(
+                          child: Text(
+                            story.storyDescription,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 14,
                               color: Colors.black54,
                             ),
-                          ),
-                        ],
-                      ),
+                          )
+                        ),
 
-                      const SizedBox(height: 8,),
+                        const Spacer(),
 
-                      Row(
-                        children: [
-                          const SizedBox(width: 4),
-                          _Metric(
-                            icon: Icons.chat_bubble_outline,
-                            value: "${story.commentCount}",
-                          ),
-                          const SizedBox(width: 8),
-                          _Metric(
-                            icon: Icons.favorite_border,
-                            value: "${story.likesCount}",
-                          ),
-                        ],
-                      ),
-                    ],
+                        Row(
+                          children: [
+                            _CategoryPill(text: story.spaceName),
+                            const SizedBox(width: 8),
+                            SelectableText(
+                              TimeUtils.convertToFormat("yyyy/MM/dd", story.releaseTime),
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 8,),
+
+                        Row(
+                          children: [
+                            const SizedBox(width: 4),
+                            _Metric(
+                              icon: Icons.chat_bubble_outline,
+                              value: "${story.commentCount}",
+                            ),
+                            const SizedBox(width: 8),
+                            _Metric(
+                              icon: Icons.favorite_border,
+                              value: "${story.likesCount}",
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: _PlayCircleButton(
-              onTap: () {},
+              ],
             ),
-          ),
-        ],
-      ),
+
+            const Positioned(
+              right: 0,
+              bottom: 0,
+              child: _PlayCircleButton(
+              ),
+            ),
+          ],
+        ),
+      )
     );
   }
 }
@@ -362,12 +367,10 @@ class _Metric extends StatelessWidget {
 }
 
 class _PlayCircleButton extends StatelessWidget {
-  final VoidCallback onTap;
   final double size;
   final double iconSize;
 
   const _PlayCircleButton({
-    required this.onTap,
     this.size = 52,
     this.iconSize = 30,
   });
@@ -375,7 +378,6 @@ class _PlayCircleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
       borderRadius: BorderRadius.circular(999),
       child: Container(
         width: size,

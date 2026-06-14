@@ -1,6 +1,7 @@
 import 'package:actpod_web/api_manager/story_dto/get_user_stories_res.dart';
 import 'package:actpod_web/components/avatar.dart';
 import 'package:actpod_web/features/explore_page/dto/story_info_dto.dart';
+import 'package:actpod_web/router.dart';
 import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -13,92 +14,96 @@ class MobileStoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 160,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFFEDEDED)),
-      ),
-      child: Stack(
-        children: [
-          Row(
-            children: [
-              _CoverImage(
-                imageUrl: story.storyImageUrl,
-                size: 122,
-                duration: story.totalLength,
-              ),
+    return InkWell(
+      onTap: () {
+        myRouter.push("/story/${story.storyId}");
+      },
+      child: Container(
+        height: 160,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFFEDEDED)),
+        ),
+        child: Stack(
+          children: [
+            Row(
+              children: [
+                _CoverImage(
+                  imageUrl: story.storyImageUrl,
+                  size: 122,
+                  duration: story.totalLength,
+                ),
 
-              const SizedBox(width: 12),
+                const SizedBox(width: 12),
 
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        story.storyName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          height: 1,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-
-                      const SizedBox(height: 6),
-
-                      _ChannelHeaderMini(story: story),
-
-                      const Spacer(),
-
-                      Text(
-                        story.storyDescription,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.black54,
-                        ),
-                      ),
-
-                      const SizedBox(height: 7),
-
-                      Row(
-                        children: [
-                          _CategoryPill(text: story.spaceName),
-                          const SizedBox(width: 8),
-                          Text(
-                            TimeUtils.convertToFormat("yyyy/MM/dd", story.releaseTime),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.black45,
-                            ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          story.storyName,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            height: 1,
+                            fontWeight: FontWeight.w700,
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        _ChannelHeaderMini(story: story),
+
+                        const Spacer(),
+
+                        Text(
+                          story.storyDescription,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.black54,
+                          ),
+                        ),
+
+                        const SizedBox(height: 7),
+
+                        Row(
+                          children: [
+                            _CategoryPill(text: story.spaceName),
+                            const SizedBox(width: 8),
+                            Text(
+                              TimeUtils.convertToFormat("yyyy/MM/dd", story.releaseTime),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black45,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: _PlayCircleButton(
-              onTap: () {},
-              size: 24,
-              iconSize: 16,
+              ],
             ),
-          ),
-        ],
-      ),
+
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: _PlayCircleButton(
+                size: 24,
+                iconSize: 16,
+              ),
+            ),
+          ],
+        ),
+      )
     );
   }
 }
@@ -245,12 +250,10 @@ class _CategoryPill extends StatelessWidget {
 }
 
 class _PlayCircleButton extends StatelessWidget {
-  final VoidCallback onTap;
   final double size;
   final double iconSize;
 
   const _PlayCircleButton({
-    required this.onTap,
     this.size = 46,
     this.iconSize = 28,
   });
@@ -261,7 +264,6 @@ class _PlayCircleButton extends StatelessWidget {
       color: const Color(0xFFFFBC1F),
       shape: const CircleBorder(),
       child: InkWell(
-        onTap: onTap,
         customBorder: const CircleBorder(),
         child: SizedBox(
           width: size,
