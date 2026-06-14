@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class TopNavBar extends StatelessWidget {
-  const TopNavBar();
+  const TopNavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 58,
+      height: 46,
       decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(
@@ -18,20 +18,14 @@ class TopNavBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image.asset(
-                "assets/images/actpod_logo_web.png",
-                height: 34,
-                fit: BoxFit.fitHeight
-              ),
+              Image.asset("assets/images/actpod_logo_web.png",
+                  height: 24, fit: BoxFit.fitHeight),
             ],
           ),
           const Spacer(),
-          Text(
+          const Text(
             "精選 Podcast",
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w800
-            ),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
           ),
           const Spacer(),
           const SizedBox(

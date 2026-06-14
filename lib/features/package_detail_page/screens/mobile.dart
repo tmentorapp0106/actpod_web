@@ -42,7 +42,7 @@ class PackageDetailMobileScreen extends ConsumerWidget {
               context.go("/explore");
             }
           },
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87),
         ),
         title: const Text(
           "套裝詳情",

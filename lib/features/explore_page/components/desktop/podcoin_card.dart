@@ -6,9 +6,13 @@ import 'package:actpod_web/features/explore_page/providers.dart';
 import 'package:actpod_web/features/login/login_screen.dart';
 import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/services/auth_service.dart';
-import 'package:actpod_web/services/toast_service.dart';
+import 'package:actpod_web/utils/link_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+const _googlePlayUrl =
+    "https://play.google.com/store/apps/details?id=com.sharevoice&hl=zh_TW";
+const _appStoreUrl = "https://apps.apple.com/tw/app/actpod/id6468426325";
 
 class PodCoinCard extends ConsumerWidget {
   final StoryController storyController;
@@ -44,6 +48,44 @@ class PodCoinCard extends ConsumerWidget {
     ref.read(userInfoProvider.notifier).state = null;
     ref.read(userPodCoinsProvider.notifier).state = 0;
     ref.read(purchasedStoriesProvider.notifier).state = [];
+  }
+
+  Future<void> _showEditDownloadDialog(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            "請下載 ActPod 編輯",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _StoreDownloadButton(
+                imagePath: "assets/images/google_download.png",
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  LinkUtils.openLink(_googlePlayUrl);
+                },
+              ),
+              const SizedBox(height: 10),
+              _StoreDownloadButton(
+                imagePath: "assets/images/apple_download.png",
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  LinkUtils.openLink(_appStoreUrl);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -174,7 +216,7 @@ class PodCoinCard extends ConsumerWidget {
             height: 32,
             child: OutlinedButton.icon(
               onPressed: () {
-                ToastService.showNoticeToast("請下載 ActPod 編輯");
+                _showEditDownloadDialog(context);
               },
               icon: const Icon(Icons.edit, size: 20),
               label: const Text(
@@ -218,6 +260,44 @@ class PodCoinCard extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _StoreDownloadButton extends StatelessWidget {
+  final String imagePath;
+  final VoidCallback onPressed;
+
+  const _StoreDownloadButton({
+    required this.imagePath,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 46,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.black87,
+          side: BorderSide.none,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              imagePath,
+              height: 34,
+              fit: BoxFit.contain,
+            ),
+          ],
+        ),
       ),
     );
   }

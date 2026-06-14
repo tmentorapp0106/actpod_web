@@ -1,6 +1,5 @@
 import 'package:actpod_web/features/explore_page/components/mobile/podcoin_card.dart';
 import 'package:actpod_web/features/explore_page/components/mobile/purchased_card.dart';
-import 'package:actpod_web/features/explore_page/components/mobile/search_box.dart';
 import 'package:actpod_web/features/explore_page/components/mobile/story_card.dart';
 import 'package:actpod_web/features/explore_page/components/shared/package_card.dart';
 import 'package:actpod_web/features/explore_page/components/shared/recommendation_switch.dart';
@@ -11,10 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExploreMobileScreen extends ConsumerStatefulWidget {
   final StoryController storyController;
-  const ExploreMobileScreen({
-    super.key,
-    required this.storyController
-  });
+  const ExploreMobileScreen({super.key, required this.storyController});
 
   @override
   ConsumerState<ExploreMobileScreen> createState() =>
@@ -34,6 +30,7 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
       appBar: AppBar(
+        toolbarHeight: 46,
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -42,7 +39,7 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
           children: [
             Image.asset(
               "assets/images/actpod_logo_web.png",
-              height: 32,
+              height: 24,
               fit: BoxFit.fitHeight,
             ),
           ],
@@ -53,7 +50,9 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
         children: [
           // const SearchBox(),
           // const SizedBox(height: 8),
-          PodCoinBalanceCard(storyController: widget.storyController,),
+          PodCoinBalanceCard(
+            storyController: widget.storyController,
+          ),
           const SizedBox(height: 4),
           _SegmentTabs(
             selectedIndex: selectedTab,
