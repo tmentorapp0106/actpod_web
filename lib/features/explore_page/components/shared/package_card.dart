@@ -130,8 +130,6 @@ class PackageCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: compact ? 6 : 10),
-                    _TagPill(text: package.spaceName)
                     // Wrap(
                     //   spacing: 6,
                     //   runSpacing: 6,

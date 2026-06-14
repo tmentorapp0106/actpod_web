@@ -16,33 +16,6 @@ const packageAccent = Color(0xFFFFA300);
 const packageSoft = Color(0xFFFFFAEF);
 const packageBorder = Color(0xFFFFD78A);
 
-PackagePriceItem? currentPackagePrice(PackageInfoItem package) {
-  if (package.packagePrices.isEmpty) {
-    return null;
-  }
-
-  return package.packagePrices.firstWhere(
-    (price) => price.isActive,
-    orElse: () => package.packagePrices.first,
-  );
-}
-
-int? originalPackagePrice(PackageInfoItem package) {
-  final current = currentPackagePrice(package);
-  if (current == null || package.packagePrices.length < 2) {
-    return null;
-  }
-
-  final highest = package.packagePrices
-      .map((price) => price.podcoins)
-      .reduce((value, element) => value > element ? value : element);
-  if (highest <= current.podcoins) {
-    return null;
-  }
-
-  return highest;
-}
-
 class PackageCover extends StatelessWidget {
   final String imageUrl;
   final double height;
@@ -164,8 +137,8 @@ class PackageInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentPrice = currentPackagePrice(package);
-    final originalPrice = originalPackagePrice(package);
+    final twd = package.packagePrice?.twd;
+    final priceText = twd == null || twd == -1 ? "--" : twd.toString();
 
     return Container(
       padding: EdgeInsets.all(compact ? 14 : 24),
@@ -222,27 +195,6 @@ class PackageInfoCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: compact ? 16 : 24),
-          if (originalPrice != null) ...[
-            Text.rich(
-              TextSpan(
-                children: [
-                  const TextSpan(text: "原價 "),
-                  TextSpan(
-                    text: originalPrice.toString(),
-                    style: const TextStyle(
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                ],
-              ),
-              style: const TextStyle(
-                color: Color(0xFF8F8F8F),
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 4),
-          ],
           const Text(
             "套裝價",
             style: TextStyle(
@@ -254,7 +206,7 @@ class PackageInfoCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                currentPrice?.twd.toString() ?? "--",
+                priceText,
                 style: TextStyle(
                   color: packageAccent,
                   fontSize: compact ? 38 : 58,
@@ -279,17 +231,17 @@ class PackageInfoCard extends StatelessWidget {
           PackagePrimaryButton(
             text: "購買套裝",
             onPressed: () async {
-              CreateCreditCardPaymentRes response = await purchaseApiManager.createCreditCardPayment(package.packagePrices[0].twd, "test_package", "eason.hung@actpodapp.com");
-              if(response.code != "0000") {
-                return;
-              }
-              submitNewebPayForm(
-                gatewayUrl: response.creditCardPayment!.gatewayURL,
-                merchantID: response.creditCardPayment!.merchantID,
-                tradeInfo: response.creditCardPayment!.tradeInfo,
-                tradeSha: response.creditCardPayment!.tradeSha,
-                version: response.creditCardPayment!.version
-              );
+              // CreateCreditCardPaymentRes response = await purchaseApiManager.createCreditCardPayment(package.packagePrices[0].twd, "test_package", "eason.hung@actpodapp.com");
+              // if(response.code != "0000") {
+              //   return;
+              // }
+              // submitNewebPayForm(
+              //   gatewayUrl: response.creditCardPayment!.gatewayURL,
+              //   merchantID: response.creditCardPayment!.merchantID,
+              //   tradeInfo: response.creditCardPayment!.tradeInfo,
+              //   tradeSha: response.creditCardPayment!.tradeSha,
+              //   version: response.creditCardPayment!.version
+              // );
             },
           ),
           const SizedBox(height: 8),
@@ -383,7 +335,6 @@ class PackageTags extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tags = [
-      if (package.spaceName.isNotEmpty) package.spaceName,
     ];
 
     return Wrap(
@@ -445,8 +396,8 @@ class PackageDescriptionSection extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 14),
-        PackageTags(package: package),
+        // const SizedBox(height: 14),
+        // PackageTags(package: package),
       ],
     );
   }

@@ -33,6 +33,8 @@ class StoryController {
         return;
       }
       ref.watch(purchasedStoriesProvider.notifier).state = purchasedResponse.stories;
+    } else {
+      ref.watch(purchasedStoriesProvider.notifier).state = [];
     }
   }
 

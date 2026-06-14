@@ -6,17 +6,11 @@ class PackageInfoItem {
   String packageName;
   String packageDescription;
   String packageImageUrl;
-  String channelId;
-  String spaceId;
-  String packageType;
-  List<PackagePriceItem> packagePrices;
+  PackagePriceItem? packagePrice;
   DateTime createTime;
   DateTime updateTime;
   String nickname;
   String avatarUrl;
-  String channelName;
-  String channelImageUrl;
-  String spaceName;
 
   PackageInfoItem(
     this.packageId,
@@ -24,17 +18,11 @@ class PackageInfoItem {
     this.packageName,
     this.packageDescription,
     this.packageImageUrl,
-    this.channelId,
-    this.spaceId,
-    this.packageType,
-    this.packagePrices,
+    this.packagePrice,
     this.createTime,
     this.updateTime,
     this.nickname,
     this.avatarUrl,
-    this.channelName,
-    this.channelImageUrl,
-    this.spaceName,
   );
 
   factory PackageInfoItem.fromJson(Map<String, dynamic> json) {
@@ -44,20 +32,11 @@ class PackageInfoItem {
       json["packageName"],
       json["packageDescription"],
       json["packageImageUrl"],
-      json["channelId"],
-      json["spaceId"],
-      json["packageType"],
-      (json["packagePrices"] as List<dynamic>?)
-              ?.map((e) => PackagePriceItem.fromJson(e))
-              .toList() ??
-          [],
+      json["price"] != null? PackagePriceItem.fromJson(json["price"]) : null,
       DateTime.parse(json["createTime"]),
       DateTime.parse(json["updateTime"]),
       json["nickname"] ?? "",
       json["avatarUrl"] ?? "",
-      json["channelName"] ?? "",
-      json["channelImageUrl"] ?? "",
-      json["spaceName"] ?? "",
     );
   }
 }
@@ -81,7 +60,7 @@ class PackagePriceItem {
 
   factory PackagePriceItem.fromJson(Map<String, dynamic> json) {
     return PackagePriceItem(
-      json["packagePriceId"],
+      json["priceId"],
       json["priceType"],
       json["lable"],
       json["podcoins"],
@@ -100,17 +79,11 @@ class PackageInfoWithStoriesItem extends PackageInfoItem {
     super.packageName,
     super.packageDescription,
     super.packageImageUrl,
-    super.channelId,
-    super.spaceId,
-    super.packageType,
     super.packagePrices,
     super.createTime,
     super.updateTime,
     super.nickname,
     super.avatarUrl,
-    super.channelName,
-    super.channelImageUrl,
-    super.spaceName,
     this.stories,
   );
 
@@ -121,20 +94,11 @@ class PackageInfoWithStoriesItem extends PackageInfoItem {
       json["packageName"],
       json["packageDescription"],
       json["packageImageUrl"],
-      json["channelId"],
-      json["spaceId"],
-      json["packageType"],
-      (json["packagePrices"] as List<dynamic>?)
-              ?.map((e) => PackagePriceItem.fromJson(e))
-              .toList() ??
-          [],
+      PackagePriceItem.fromJson(json["price"]),
       DateTime.parse(json["createTime"]),
       DateTime.parse(json["updateTime"]),
       json["nickname"] ?? "",
       json["avatarUrl"] ?? "",
-      json["channelName"] ?? "",
-      json["channelImageUrl"] ?? "",
-      json["spaceName"] ?? "",
       (json["stories"] as List<dynamic>?)
               ?.map((e) => PackageStoryInfoItem.fromJson(e))
               .toList() ??
