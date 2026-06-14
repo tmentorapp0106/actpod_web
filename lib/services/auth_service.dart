@@ -44,7 +44,7 @@ class AuthService {
       ..addScope('name')..addScope('email');
 
     try {
-      final userCredential = await FirebaseAuth.instance.signInWithPopup(provider);
+      final userCredential = await _auth.signInWithPopup(provider);
       CreateNewUserRes res = await userApiManager.thirdPartyCreateUserOrLogin(
         await userCredential.user?.getIdToken(), 
         userCredential.user?.email, 
@@ -65,6 +65,7 @@ class AuthService {
     } catch (e) {
       print(e);
     }
+    return null;
   }
 
   static bool isLoggedIn() {
@@ -73,5 +74,11 @@ class AuthService {
       return true;
     }
     return false;
+  }
+
+  static Future<void> logout() async {
+    await UserPrefs.cleanUser();
+    await FirebaseAuth.instance.signOut();
+    CookieUtils.deleteCookie("userToken");
   }
 }
