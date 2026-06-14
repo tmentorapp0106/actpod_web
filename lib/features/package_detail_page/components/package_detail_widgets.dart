@@ -252,6 +252,8 @@ class PackageInfoCard extends ConsumerWidget {
                     CreateCreditCardPaymentRes response =
                         await purchaseApiManager.createCreditCardPayment(
                             package.packagePrice!.twd,
+                            "package",
+                            package.packageId,
                             package.packageName,
                             UserPrefs.getUserInfo()!.email
                           );

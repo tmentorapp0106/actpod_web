@@ -18,10 +18,12 @@ class PurchaseSystemApi extends AbstractApiManager {
     return GetUserPursesRes.fromJson(response.data);
   }
 
-  Future<CreateCreditCardPaymentRes> createCreditCardPayment(int amount, String itemDesc, String email) async {
+  Future<CreateCreditCardPaymentRes> createCreditCardPayment(int amount, String itemType, String itemId, String itemDesc, String email) async {
     var data = {
       "amt": amount,
       "itemDesc": itemDesc,
+      "itemType": itemType,
+      "itemId": itemId,
       "email": email
     };
     Response response = await handelPostWithUserToken("/transaction/creditCard/payment", data);
