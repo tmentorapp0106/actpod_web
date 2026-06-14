@@ -2,6 +2,7 @@ import 'package:actpod_web/features/explore_page/main_page.dart';
 import 'package:actpod_web/features/live_page/screens/interactive_screen.dart';
 import 'package:actpod_web/features/live_page/screens/listen_only_screen.dart';
 import 'package:actpod_web/features/package_detail_page/main_page.dart';
+import 'package:actpod_web/features/package_purchase_success/main_page.dart';
 import 'package:actpod_web/features/personal_page/personal_screen.dart';
 import 'package:actpod_web/features/player_page/player_screen.dart';
 import 'package:actpod_web/features/podcast_store_page/podcast_store_page.dart';
@@ -51,6 +52,14 @@ final myRouter = GoRouter(
       path: "/package/:packageId",
       builder: (context, state) {
         return PackageDetailPage(
+          packageId: state.pathParameters["packageId"]!,
+        );
+      },
+    ),
+    GoRoute(
+      path: "/package_purchase_success/:packageId",
+      builder: (context, state) {
+        return PackagePurchaseSuccessPage(
           packageId: state.pathParameters["packageId"]!,
         );
       },
