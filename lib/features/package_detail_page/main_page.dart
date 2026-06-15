@@ -47,6 +47,7 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
   void didUpdateWidget(covariant PackageDetailPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.packageId != widget.packageId) {
+      packageDetailController.checkPurchased(widget.packageId);
       packageDetailController.getPackageInfo(widget.packageId);
     }
   }
@@ -58,10 +59,13 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
         final isDesktop = constraints.maxWidth >= AppBreakpoints.tablet;
 
         if (isDesktop) {
-          return PackageDetailDesktopScreen(packageDetailController: packageDetailController,);
+          return PackageDetailDesktopScreen(
+            packageDetailController: packageDetailController,
+          );
         }
 
-        return PackageDetailMobileScreen(packageDetailController: packageDetailController);
+        return PackageDetailMobileScreen(
+            packageDetailController: packageDetailController);
       },
     );
   }

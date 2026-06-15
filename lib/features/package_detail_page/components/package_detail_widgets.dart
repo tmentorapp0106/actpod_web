@@ -154,7 +154,15 @@ class PackageInfoCard extends ConsumerWidget {
     final isNotForSale = twd == null || twd < 0;
     final isPurchaseLoading = purchased == null;
     final canPurchase = !isNotForSale && purchased == false;
+    final canStartListening = purchased == true && package.stories.isNotEmpty;
     final priceText = isNotForSale ? "--" : twd.toString();
+    final buttonText = purchased == true
+        ? package.stories.isEmpty
+            ? "目前沒有單集"
+            : "開始收聽第一集"
+        : isNotForSale
+            ? "尚未開賣"
+            : "購買套裝";
 
     return Container(
       padding: EdgeInsets.all(compact ? 14 : 24),
@@ -198,89 +206,94 @@ class PackageInfoCard extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: compact ? 16 : 24),
-          const Text(
-            "套裝價",
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                priceText,
-                style: TextStyle(
-                  color: packageAccent,
-                  fontSize: compact ? 38 : 58,
-                  height: 1,
-                  fontWeight: FontWeight.w900,
-                ),
+          if (purchased != true) ...[
+            SizedBox(height: compact ? 16 : 24),
+            const Text(
+              "套裝價",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
               ),
-              const SizedBox(width: 8),
-              Padding(
-                padding: EdgeInsets.only(bottom: compact ? 6 : 10),
-                child: const Text(
-                  "台幣",
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  priceText,
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
+                    color: packageAccent,
+                    fontSize: compact ? 38 : 58,
+                    height: 1,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 8),
+                Padding(
+                  padding: EdgeInsets.only(bottom: compact ? 6 : 10),
+                  child: const Text(
+                    "台幣",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
           const SizedBox(height: 18),
           PackagePrimaryButton(
-            text: isNotForSale ? "尚未開賣" : "購買套裝",
+            text: buttonText,
             loading: !isNotForSale && isPurchaseLoading,
-            onPressed: canPurchase
-                ? () async {
-                    if (!AuthService.isLoggedIn()) {
-                      bool? loggedIn = await showDialog<bool>(
-                        context: context,
-                        barrierDismissible:
-                            false, // prevent tap outside to close
-                        builder: (context) {
-                          return const LoginScreen();
-                        },
-                      );
-                      if (loggedIn != null && loggedIn) {}
-                      return;
-                    }
-                    final invoiceEmail = await showDialog<String>(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) {
-                        return InvoiceEmailDialog(
-                          initialEmail: UserPrefs.getUserInfo()?.email ?? "",
+            onPressed: canStartListening
+                ? () => context.push("/story/${package.stories.first.storyId}")
+                : canPurchase
+                    ? () async {
+                        if (!AuthService.isLoggedIn()) {
+                          bool? loggedIn = await showDialog<bool>(
+                            context: context,
+                            barrierDismissible:
+                                false, // prevent tap outside to close
+                            builder: (context) {
+                              return const LoginScreen();
+                            },
+                          );
+                          if (loggedIn != null && loggedIn) {}
+                          return;
+                        }
+                        final invoiceEmail = await showDialog<String>(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return InvoiceEmailDialog(
+                              initialEmail:
+                                  UserPrefs.getUserInfo()?.email ?? "",
+                            );
+                          },
                         );
-                      },
-                    );
 
-                    if (invoiceEmail == null) {
-                      return;
-                    }
+                        if (invoiceEmail == null) {
+                          return;
+                        }
 
-                    CreateCreditCardPaymentRes response =
-                        await purchaseApiManager.createCreditCardPayment(
-                            package.packagePrice!.twd,
-                            "package",
-                            package.packageId,
-                            package.packageName,
-                            invoiceEmail);
-                    if (response.code != "0000") {
-                      return;
-                    }
-                    submitNewebPayForm(
-                        gatewayUrl: response.creditCardPayment!.gatewayURL,
-                        merchantID: response.creditCardPayment!.merchantID,
-                        tradeInfo: response.creditCardPayment!.tradeInfo,
-                        tradeSha: response.creditCardPayment!.tradeSha,
-                        version: response.creditCardPayment!.version);
-                  }
-                : null,
+                        CreateCreditCardPaymentRes response =
+                            await purchaseApiManager.createCreditCardPayment(
+                                package.packagePrice!.twd,
+                                "package",
+                                package.packageId,
+                                package.packageName,
+                                invoiceEmail);
+                        if (response.code != "0000") {
+                          return;
+                        }
+                        submitNewebPayForm(
+                            gatewayUrl: response.creditCardPayment!.gatewayURL,
+                            merchantID: response.creditCardPayment!.merchantID,
+                            tradeInfo: response.creditCardPayment!.tradeInfo,
+                            tradeSha: response.creditCardPayment!.tradeSha,
+                            version: response.creditCardPayment!.version);
+                      }
+                    : null,
           ),
           const SizedBox(height: 8),
         ],
@@ -618,7 +631,7 @@ class PackageDescriptionSection extends StatelessWidget {
   }
 }
 
-class PackageStoriesSection extends StatelessWidget {
+class PackageStoriesSection extends ConsumerWidget {
   final PackageInfoWithStoriesItem package;
   final bool compact;
 
@@ -629,7 +642,9 @@ class PackageStoriesSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final purchased = ref.watch(packagePurchasedProvider) == true;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -653,6 +668,7 @@ class PackageStoriesSection extends StatelessWidget {
           ...package.stories.map(
             (story) => PackageStoryRow(
               story: story,
+              purchased: purchased,
               compact: compact,
             ),
           ),
@@ -663,13 +679,53 @@ class PackageStoriesSection extends StatelessWidget {
 
 class PackageStoryRow extends StatelessWidget {
   final PackageStoryInfoItem story;
+  final bool purchased;
   final bool compact;
 
   const PackageStoryRow({
     super.key,
     required this.story,
+    required this.purchased,
     this.compact = false,
   });
+
+  Future<void> _showNotPurchasedAlert(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            "尚未購買",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          content: const Text(
+            "請先購買套裝後再收聽此單集。",
+            style: TextStyle(
+              fontSize: 15,
+              height: 1.5,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                "確認",
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -678,8 +734,9 @@ class PackageStoryRow extends StatelessWidget {
         : story.channelImageUrl;
 
     return InkWell(
-      onTap:
-          story.locked ? null : () => context.push("/story/${story.storyId}"),
+      onTap: purchased
+          ? () => context.push("/story/${story.storyId}")
+          : () => _showNotPurchasedAlert(context),
       borderRadius: BorderRadius.circular(8),
       child: Container(
         padding:
@@ -760,7 +817,7 @@ class PackageStoryRow extends StatelessWidget {
               ),
             ),
             SizedBox(width: compact ? 8 : 14),
-            if (story.locked)
+            if (!purchased)
               Icon(
                 Icons.lock_outline,
                 color: Colors.grey,

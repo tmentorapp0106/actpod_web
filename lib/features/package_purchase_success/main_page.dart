@@ -3,8 +3,16 @@ import 'package:actpod_web/dto/package_dto.dart';
 import 'package:actpod_web/features/explore_page/main_page.dart';
 import 'package:actpod_web/features/package_purchase_success/controllers/package_purchase_success_controller.dart';
 import 'package:actpod_web/features/package_purchase_success/providers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:web/web.dart' as web;
+
+const _appStoreUrl = "https://apps.apple.com/tw/app/actpod/id6468426325";
+const _googlePlayUrl =
+    "https://play.google.com/store/apps/details?id=com.sharevoice&hl=zh_TW";
 
 class PackagePurchaseSuccessPage extends ConsumerStatefulWidget {
   final String packageId;
@@ -89,6 +97,7 @@ class _PackagePurchaseSuccessView extends ConsumerWidget {
                       constraints:
                           BoxConstraints(maxWidth: isDesktop ? 520 : 420),
                       child: _buildContent(
+                        context,
                         package,
                         loading,
                         error,
@@ -105,6 +114,7 @@ class _PackagePurchaseSuccessView extends ConsumerWidget {
   }
 
   Widget _buildContent(
+    BuildContext context,
     PackageInfoWithStoriesItem? package,
     bool loading,
     String? error,
@@ -164,7 +174,7 @@ class _PackagePurchaseSuccessView extends ConsumerWidget {
           width: double.infinity,
           height: 52,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: _openDownloadPage,
             style: ElevatedButton.styleFrom(
               backgroundColor: DesignColor.primary50,
               foregroundColor: DesignColor.neutral950,
@@ -184,7 +194,7 @@ class _PackagePurchaseSuccessView extends ConsumerWidget {
         ),
         const SizedBox(height: 18),
         TextButton(
-          onPressed: () {},
+          onPressed: () => context.go("/package/${package.packageId}"),
           style: TextButton.styleFrom(
             foregroundColor: DesignColor.neutral600,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -198,6 +208,36 @@ class _PackagePurchaseSuccessView extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  String _downloadUrlForDevice() {
+    if (!kIsWeb) {
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        return _appStoreUrl;
+      }
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        return _googlePlayUrl;
+      }
+
+      return _googlePlayUrl;
+    }
+
+    final userAgent = web.window.navigator.userAgent.toLowerCase();
+    if (userAgent.contains("iphone") || userAgent.contains("ipad")) {
+      return _appStoreUrl;
+    }
+    if (userAgent.contains("android")) {
+      return _googlePlayUrl;
+    }
+
+    return _googlePlayUrl;
+  }
+
+  Future<void> _openDownloadPage() async {
+    final url = Uri.parse(_downloadUrlForDevice());
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      debugPrint("Could not launch $url");
+    }
   }
 }
 
