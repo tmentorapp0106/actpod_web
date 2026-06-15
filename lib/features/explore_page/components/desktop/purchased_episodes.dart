@@ -88,7 +88,7 @@ class _PurchasedEpisodeTile extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
-                imgProxy + item.storyImageUrl,
+                imgProxy + item.storyImageUrls[0],
                 width: 72,
                 height: 72,
                 fit: BoxFit.cover,
