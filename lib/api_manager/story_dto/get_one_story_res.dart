@@ -41,8 +41,8 @@ class GetOneStoryResItem {
   String endingUrl;
   String avatarUrl;
   String nickname;
+  String packageId;
   bool isPremium;
-  List<PackagePriceItem> packagePrices;
   int count;
 
   GetOneStoryResItem(
@@ -70,8 +70,8 @@ class GetOneStoryResItem {
     this.endingUrl,
     this.avatarUrl,
     this.nickname,
+    this.packageId,
     this.isPremium,
-    this.packagePrices,
     this.count,
   );
 
@@ -104,11 +104,8 @@ class GetOneStoryResItem {
       json["endingUrl"],
       json["avatarUrl"],
       json["nickname"],
+      json["packageId"]?? "",
       json["isPremium"],
-      (json["packagePrices"] as List<dynamic>?)
-          ?.map((e) => PackagePriceItem.fromJson(e))
-          .toList() ??
-          [],
       json["count"]
     );
   }

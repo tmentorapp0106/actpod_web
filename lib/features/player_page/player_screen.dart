@@ -439,7 +439,7 @@ class _WebAccountButton extends ConsumerWidget {
         );
         final storyInfo = ref.read(storyInfoProvider);
         if (storyInfo?.isPremium ?? false) {
-          playerController.checkPaid(storyInfo!.storyId);
+          playerController.checkPaid(storyInfo!.storyId, storyInfo.packageId);
         }
       },
       style: TextButton.styleFrom(

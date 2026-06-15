@@ -50,7 +50,7 @@ class MobileLoginButton extends ConsumerWidget {
           }
         );
         if(ref.watch(storyInfoProvider)?.isPremium ?? false) {
-          playerController.checkPaid(ref.watch(storyInfoProvider)!.storyId);
+          playerController.checkPaid(ref.watch(storyInfoProvider)!.storyId, ref.watch(storyInfoProvider)!.packageId);
         }
       },
       child: Padding(

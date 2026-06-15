@@ -37,9 +37,10 @@ class StoryApiManager extends AbstractApiManager {
     return GetStoryCountRes.fromJson(response.data);
   }
 
-  Future<SignedUrlRes> signedUrl(String storyId) async {
+  Future<SignedUrlRes> signedUrl(String storyId, String packageId) async {
     var data = {
-      "storyId": storyId
+      "storyId": storyId,
+      "packageId": packageId
     };
     
     Response response = await handelPostWithUserToken("/story/premium/signed", data);
