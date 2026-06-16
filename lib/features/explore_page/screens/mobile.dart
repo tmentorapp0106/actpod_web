@@ -131,7 +131,7 @@ class _ExploreMobileScreenState extends ConsumerState<ExploreMobileScreen> {
               ...purchasedEpisodes.map(
                 (episode) => Padding(
                   padding: const EdgeInsets.only(bottom: 14),
-                  child: MobilePurchasedCard(story: episode),
+                  child: MobilePurchasedCard(record: episode),
                 ),
               ),
           ],

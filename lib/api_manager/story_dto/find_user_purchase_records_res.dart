@@ -21,7 +21,7 @@ class FindUserPurchaseRecordsRes {
 
 class PurchaseRecordInfoItem extends PurchaseRecordItem {
   PurchaseRecordPackageInfoItem? packageInfo;
-  StoryInfoItem? storyInfo;
+  PurchaseRecordStoryInfoItem? storyInfo;
 
   PurchaseRecordInfoItem(
     super.userId,
@@ -51,7 +51,7 @@ class PurchaseRecordInfoItem extends PurchaseRecordItem {
           : PurchaseRecordPackageInfoItem.fromJson(json["packageInfo"]),
       json["storyInfo"] == null
           ? null
-          : StoryInfoItem.fromJson(json["storyInfo"]),
+          : PurchaseRecordStoryInfoItem.fromJson(json["storyInfo"]),
     );
   }
 }
@@ -121,6 +121,125 @@ class PurchaseRecordPackageInfoItem {
               ?.map((e) => StoryInfoItem.fromJson(e))
               .toList() ??
           [],
+    );
+  }
+}
+
+class PurchaseRecordStoryInfoItem {
+  String userName;
+  String collaboratorName;
+  String storyId;
+  String spaceName;
+  String channelId;
+  String channelName;
+  String channelImageUrl;
+  String voiceMessageStatus;
+  int voiceMessageCount;
+  int likesCount;
+  int commentCount;
+  int instantCommentCount;
+  String userId;
+  String collaboratorId;
+  String userAvatarUrl;
+  String collaboratorAvatarUrl;
+  String storyUrl;
+  String previewUrl;
+  String storyName;
+  String storyDescription;
+  int storyLength;
+  int totalLength;
+  List<String> storyImageUrls;
+  DateTime storyUploadTime;
+  int count;
+  PurchaseRecordReviewItem review;
+  bool locked;
+  bool isPremium;
+  int price;
+  DateTime releaseTime;
+
+  PurchaseRecordStoryInfoItem(
+    this.userName,
+    this.collaboratorName,
+    this.storyId,
+    this.spaceName,
+    this.channelId,
+    this.channelName,
+    this.channelImageUrl,
+    this.voiceMessageStatus,
+    this.voiceMessageCount,
+    this.likesCount,
+    this.commentCount,
+    this.instantCommentCount,
+    this.userId,
+    this.collaboratorId,
+    this.userAvatarUrl,
+    this.collaboratorAvatarUrl,
+    this.storyUrl,
+    this.previewUrl,
+    this.storyName,
+    this.storyDescription,
+    this.storyLength,
+    this.totalLength,
+    this.storyImageUrls,
+    this.storyUploadTime,
+    this.count,
+    this.review,
+    this.locked,
+    this.isPremium,
+    this.price,
+    this.releaseTime,
+  );
+
+  factory PurchaseRecordStoryInfoItem.fromJson(Map<String, dynamic>? json) {
+    json ??= {};
+
+    return PurchaseRecordStoryInfoItem(
+      _string(json["userName"]),
+      _string(json["collaboratorName"]),
+      _string(json["storyId"]),
+      _string(json["spaceName"]),
+      _string(json["channelId"]),
+      _string(json["channelName"]),
+      _string(json["channelImageUrl"]),
+      _string(json["voiceMessageStatus"]),
+      _int(json["voiceMessageCount"]),
+      _int(json["likesCount"]),
+      _int(json["commentCount"]),
+      _int(json["instantCommentCount"]),
+      _string(json["userId"]),
+      _string(json["collaboratorId"]),
+      _string(json["userAvatarUrl"]),
+      _string(json["collaboratorAvatarUrl"]),
+      _string(json["storyUrl"]),
+      _string(json["previewUrl"]),
+      _string(json["storyName"]),
+      _string(json["storyDescription"]),
+      _int(json["storyLength"]),
+      _int(json["totalLength"]),
+      _stringList(json["storyImageUrls"]),
+      _dateTime(json["storyUploadTime"]),
+      _int(json["count"]),
+      PurchaseRecordReviewItem.fromJson(json["review"]),
+      _bool(json["locked"]),
+      _bool(json["isPremium"]),
+      _int(json["price"]),
+      _dateTime(json["releaseTime"]),
+    );
+  }
+}
+
+class PurchaseRecordReviewItem {
+  String status;
+  String reason;
+
+  PurchaseRecordReviewItem(this.status, this.reason);
+
+  factory PurchaseRecordReviewItem.fromJson(Map<String, dynamic>? json) {
+    json ??= {};
+
+    return PurchaseRecordReviewItem(
+      _string(json["status"]),
+      _string(json["reason"] ?? json["comment"]),
     );
   }
 }

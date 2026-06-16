@@ -7,6 +7,8 @@ import 'package:actpod_web/features/package_purchase_success/main_page.dart';
 import 'package:actpod_web/features/personal_page/personal_screen.dart';
 import 'package:actpod_web/features/player_page/player_screen.dart';
 import 'package:actpod_web/features/podcast_store_page/podcast_store_page.dart';
+import 'package:actpod_web/features/story_purchase_fail/main_page.dart';
+import 'package:actpod_web/features/story_purchase_success/main_page.dart';
 import 'package:go_router/go_router.dart';
 
 final myRouter = GoRouter(
@@ -66,10 +68,26 @@ final myRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: "/purchase_success/story/:storyId",
+      builder: (context, state) {
+        return StoryPurchaseSuccessPage(
+          storyId: state.pathParameters["storyId"]!,
+        );
+      },
+    ),
+    GoRoute(
       path: "/purchase_fail/package/:packageId",
       builder: (context, state) {
         return PackagePurchaseFailPage(
           packageId: state.pathParameters["packageId"]!,
+        );
+      },
+    ),
+    GoRoute(
+      path: "/purchase_fail/story/:storyId",
+      builder: (context, state) {
+        return StoryPurchaseFailPage(
+          storyId: state.pathParameters["storyId"]!,
         );
       },
     ),
