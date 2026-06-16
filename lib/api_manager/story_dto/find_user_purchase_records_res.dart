@@ -86,7 +86,7 @@ class PurchaseRecordPackageInfoItem {
   DateTime updateTime;
   String nickname;
   String avatarUrl;
-  PackagePriceItem? price;
+  Price? price;
   List<StoryInfoItem> stories;
 
   PurchaseRecordPackageInfoItem(
@@ -116,7 +116,7 @@ class PurchaseRecordPackageInfoItem {
       _dateTime(json["updateTime"]),
       _string(json["nickname"]),
       _string(json["avatarUrl"]),
-      json["price"] == null ? null : PackagePriceItem.fromJson(json["price"]),
+      json["price"] == null ? null : Price.fromJson(json["price"]),
       (json["stories"] as List<dynamic>?)
               ?.map((e) => StoryInfoItem.fromJson(e))
               .toList() ??

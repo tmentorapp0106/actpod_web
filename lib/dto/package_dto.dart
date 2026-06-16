@@ -6,7 +6,7 @@ class PackageInfoItem {
   String packageName;
   String packageDescription;
   String packageImageUrl;
-  PackagePriceItem? packagePrice;
+  Price? packagePrice;
   DateTime createTime;
   DateTime updateTime;
   String nickname;
@@ -32,7 +32,7 @@ class PackageInfoItem {
       json["packageName"],
       json["packageDescription"],
       json["packageImageUrl"],
-      json["price"] != null? PackagePriceItem.fromJson(json["price"]) : null,
+      json["price"] != null? Price.fromJson(json["price"]) : null,
       DateTime.parse(json["createTime"]),
       DateTime.parse(json["updateTime"]),
       json["nickname"] ?? "",
@@ -41,7 +41,7 @@ class PackageInfoItem {
   }
 }
 
-class PackagePriceItem {
+class Price {
   String packagePriceId;
   String priceType;
   String lable;
@@ -49,7 +49,7 @@ class PackagePriceItem {
   int twd;
   bool isActive;
 
-  PackagePriceItem(
+  Price(
     this.packagePriceId,
     this.priceType,
     this.lable,
@@ -58,8 +58,8 @@ class PackagePriceItem {
     this.isActive,
   );
 
-  factory PackagePriceItem.fromJson(Map<String, dynamic> json) {
-    return PackagePriceItem(
+  factory Price.fromJson(Map<String, dynamic> json) {
+    return Price(
       json["priceId"],
       json["priceType"],
       json["lable"],
@@ -94,7 +94,7 @@ class PackageInfoWithStoriesItem extends PackageInfoItem {
       json["packageName"],
       json["packageDescription"],
       json["packageImageUrl"],
-      PackagePriceItem.fromJson(json["price"]),
+      Price.fromJson(json["price"]),
       DateTime.parse(json["createTime"]),
       DateTime.parse(json["updateTime"]),
       json["nickname"] ?? "",

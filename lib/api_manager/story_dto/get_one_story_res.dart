@@ -8,11 +8,8 @@ class GetOneStoryRes {
   GetOneStoryRes(this.code, this.message, this.story);
 
   factory GetOneStoryRes.fromJson(Map<String, dynamic> json) {
-    return GetOneStoryRes(
-        json["code"],
-        json["message"],
-        GetOneStoryResItem.fromJson(json["data"])
-    );
+    return GetOneStoryRes(json["code"], json["message"],
+        GetOneStoryResItem.fromJson(json["data"]));
   }
 }
 
@@ -42,6 +39,7 @@ class GetOneStoryResItem {
   String avatarUrl;
   String nickname;
   String packageId;
+  Price? price;
   bool isPremium;
   int count;
 
@@ -71,42 +69,43 @@ class GetOneStoryResItem {
     this.avatarUrl,
     this.nickname,
     this.packageId,
+    this.price,
     this.isPremium,
     this.count,
   );
 
   factory GetOneStoryResItem.fromJson(Map<String, dynamic> json) {
     return GetOneStoryResItem(
-      json["storyId"],
-      json["userId"],
-      json["collaboratorId"]?? "",
-      json["collaboratorName"]?? "",
-      json["collaboratorAvatarUrl"]?? "",
-      json["spaceId"],
-      json["spaceName"]?? "",
-      json["channelId"],
-      json["channelName"],
-      json["channelImageUrl"],
-      json["voiceMessageStatus"],
-      json["storyUrl"],
-      json["storyName"],
-      json["storyDescription"],
-      json["storyImageUrl"],
-      (json["storyImageUrls"] as List<dynamic>?)
-        ?.map((e) => e.toString())
-        .toList()
-        ?? [],
-      json["storyLength"],
-      json["totalLength"],
-      DateTime.parse(json["storyEditTime"]),
-      DateTime.parse(json["storyUploadTime"]),
-      json["openingUrl"],
-      json["endingUrl"],
-      json["avatarUrl"],
-      json["nickname"],
-      json["packageId"]?? "",
-      json["isPremium"],
-      json["count"]
-    );
+        json["storyId"],
+        json["userId"],
+        json["collaboratorId"] ?? "",
+        json["collaboratorName"] ?? "",
+        json["collaboratorAvatarUrl"] ?? "",
+        json["spaceId"],
+        json["spaceName"] ?? "",
+        json["channelId"],
+        json["channelName"],
+        json["channelImageUrl"],
+        json["voiceMessageStatus"],
+        json["storyUrl"],
+        json["storyName"],
+        json["storyDescription"],
+        json["storyImageUrl"],
+        (json["storyImageUrls"] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        json["storyLength"],
+        json["totalLength"],
+        DateTime.parse(json["storyEditTime"]),
+        DateTime.parse(json["storyUploadTime"]),
+        json["openingUrl"],
+        json["endingUrl"],
+        json["avatarUrl"],
+        json["nickname"],
+        json["packageId"] ?? "",
+        json["price"] == null ? null : Price.fromJson(json["price"]),
+        json["isPremium"],
+        json["count"]);
   }
 }
