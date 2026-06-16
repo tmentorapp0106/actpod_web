@@ -1,7 +1,7 @@
 class GetStoriesByUserIdRes {
   String code;
   String message;
-  List<GetStoriesByUserIdResItem>? storyList;
+  List<StoryItem>? storyList;
 
   GetStoriesByUserIdRes(this.code, this.message, this.storyList);
 
@@ -9,12 +9,12 @@ class GetStoriesByUserIdRes {
     return GetStoriesByUserIdRes(
       json["code"],
       json["message"],
-      json["data"]?.map<GetStoriesByUserIdResItem>((json) => GetStoriesByUserIdResItem.fromJson(json)).toList()
+      json["data"]?.map<StoryItem>((json) => StoryItem.fromJson(json)).toList()
     );
   }
 }
 
-class GetStoriesByUserIdResItem {
+class StoryItem {
   String username;
   String collaboratorName;
   String storyId;
@@ -44,85 +44,131 @@ class GetStoriesByUserIdResItem {
   int price;
   DateTime releaseTime;
 
+  StoryItem(
+    this.username,
+    this.collaboratorName,
+    this.storyId,
+    this.spaceName,
+    this.channelId,
+    this.channelName,
+    this.channelImageUrl,
+    this.voiceMessageStatus,
+    this.voiceMessageCount,
+    this.likesCount,
+    this.userId,
+    this.collaboratorId,
+    this.userAvatarUrl,
+    this.collaboratorAvatarUrl,
+    this.storyUrl,
+    this.storyName,
+    this.storyDescription,
+    this.storyLength,
+    this.totalLength,
+    this.storyImageUrl,
+    this.storyImageUrls,
+    this.storyUploadTime,
+    this.review,
+    this.count,
+    this.locked,
+    this.isPremium,
+    this.price,
+    this.releaseTime,
+  );
 
-  GetStoriesByUserIdResItem(
-      this.username,
-      this.collaboratorName,
-      this.storyId,
-      this.spaceName,
-      this.channelId,
-      this.channelName,
-      this.channelImageUrl,
-      this.voiceMessageStatus,
-      this.voiceMessageCount,
-      this.likesCount,
-      this.userId,
-      this.collaboratorId,
-      this.userAvatarUrl,
-      this.collaboratorAvatarUrl,
-      this.storyUrl,
-      this.storyName,
-      this.storyDescription,
-      this.storyLength,
-      this.totalLength,
-      this.storyImageUrl,
-      this.storyImageUrls,
-      this.storyUploadTime,
-      this.review,
-      this.count,
-      this.locked,
-      this.isPremium,
-      this.price,
-      this.releaseTime
-    );
+  factory StoryItem.fromJson(Map<String, dynamic>? json) {
+    json ??= {};
 
-  factory GetStoriesByUserIdResItem.fromJson(Map<String, dynamic> json) {
-    return GetStoriesByUserIdResItem(
-      json["userName"],
-      json["collaboratorName"]?? "",
-      json["storyId"],
-      json["spaceName"],
-      json["channelId"],
-      json["channelName"],
-      json["channelImageUrl"],
-      json["voiceMessageStatus"],
-      json["voiceMessageCount"],
-      json["likesCount"],
-      json["userId"],
-      json["collaboratorId"]?? "",
-      json["userAvatarUrl"],
-      json["collaboratorAvatarUrl"]?? "",
-      json["storyUrl"],
-      json["storyName"],
-      json["storyDescription"],
-      json["storyLength"],
-      json["totalLength"],
-      json["storyImageUrl"],
-      (json["storyImageUrls"] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList()
-          ?? [],
-      DateTime.parse(json["storyUploadTime"]),
-      Review.fromJson(json["review"]),
-      json["count"]?? 0,
-      json["locked"]?? false,
-      json["isPremium"]?? false,
-      json["price"]?? 0,
-      DateTime.parse(json["releaseTime"]),
+    return StoryItem(
+      _string(json["userName"]),
+      _string(json["collaboratorName"]),
+      _string(json["storyId"]),
+      _string(json["spaceName"]),
+      _string(json["channelId"]),
+      _string(json["channelName"]),
+      _string(json["channelImageUrl"]),
+      _string(json["voiceMessageStatus"]),
+      _int(json["voiceMessageCount"]),
+      _int(json["likesCount"]),
+      _string(json["userId"]),
+      _string(json["collaboratorId"]),
+      _string(json["userAvatarUrl"]),
+      _string(json["collaboratorAvatarUrl"]),
+      _string(json["storyUrl"]),
+      _string(json["storyName"]),
+      _string(json["storyDescription"]),
+      _int(json["storyLength"]),
+      _int(json["totalLength"]),
+      _string(json["storyImageUrl"]),
+      _stringList(json["storyImageUrls"]),
+      _dateTime(json["storyUploadTime"]),
+      Review.fromJson(json["review"] as Map<String, dynamic>?),
+      _int(json["count"]),
+      _bool(json["locked"]),
+      _bool(json["isPremium"]),
+      _int(json["price"]),
+      _dateTime(json["releaseTime"]),
     );
+  }
+
+  static String _string(dynamic value) {
+    if (value == null) return "";
+    return value.toString();
+  }
+
+  static int _int(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
+  }
+
+  static bool _bool(dynamic value) {
+    if (value == null) return false;
+    if (value is bool) return value;
+    if (value is String) {
+      return value.toLowerCase() == "true";
+    }
+    if (value is int) return value == 1;
+    return false;
+  }
+
+  static List<String> _stringList(dynamic value) {
+    if (value == null) return [];
+    if (value is List) {
+      return value.map((e) => e.toString()).toList();
+    }
+    return [];
+  }
+
+  static DateTime _dateTime(dynamic value) {
+    if (value == null) return DateTime.now();
+
+    if (value is DateTime) return value;
+
+    if (value is String) {
+      return DateTime.tryParse(value) ?? DateTime.now();
+    }
+
+    return DateTime.now();
   }
 }
 
 class Review {
-  String status;
-  String reason;
+  final String status;
+  final String comment;
 
-  Review(this.status, this.reason);
+  Review({
+    required this.status,
+    required this.comment,
+  });
 
-  factory Review.fromJson(Map<String, dynamic> json) {
+  factory Review.fromJson(Map<String, dynamic>? json) {
+    json ??= {};
+
     return Review(
-        json["status"],
-        json["reason"],
+      status: json["status"]?.toString() ?? "",
+      comment: json["comment"]?.toString() ?? "",
     );
   }
 }

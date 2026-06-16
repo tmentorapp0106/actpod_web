@@ -40,7 +40,7 @@ class PlayerController {
           _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.unpaid;
           return;
         } else {
-          checkPaid(storyId);
+          checkPaid(storyId, response.story!.packageId);
           return;
         }
       } else {
@@ -59,14 +59,15 @@ class PlayerController {
     }
   }
 
-  Future<void> checkPaid(String storyId) async {
+  Future<void> checkPaid(String storyId, String packageId) async {
     _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.preparing;
     if(!AuthService.isLoggedIn()) {
       _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.unpaid;
       return;
     }
 
-    SignedUrlRes signedRes = await storyApiManager.signedUrl(storyId);
+    SignedUrlRes signedRes = await storyApiManager.signedUrl(storyId, packageId);
+    print(signedRes.code);
     if(signedRes.code == "0006") {
       _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.unpaid;
       return;

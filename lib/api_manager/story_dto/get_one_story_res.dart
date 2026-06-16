@@ -1,3 +1,5 @@
+import 'package:actpod_web/dto/package_dto.dart';
+
 class GetOneStoryRes {
   String code;
   String message;
@@ -6,11 +8,8 @@ class GetOneStoryRes {
   GetOneStoryRes(this.code, this.message, this.story);
 
   factory GetOneStoryRes.fromJson(Map<String, dynamic> json) {
-    return GetOneStoryRes(
-        json["code"],
-        json["message"],
-        GetOneStoryResItem.fromJson(json["data"])
-    );
+    return GetOneStoryRes(json["code"], json["message"],
+        GetOneStoryResItem.fromJson(json["data"]));
   }
 }
 
@@ -39,8 +38,9 @@ class GetOneStoryResItem {
   String endingUrl;
   String avatarUrl;
   String nickname;
+  String packageId;
+  Price? price;
   bool isPremium;
-  int price;
   int count;
 
   GetOneStoryResItem(
@@ -68,43 +68,44 @@ class GetOneStoryResItem {
     this.endingUrl,
     this.avatarUrl,
     this.nickname,
-    this.isPremium,
+    this.packageId,
     this.price,
+    this.isPremium,
     this.count,
   );
 
   factory GetOneStoryResItem.fromJson(Map<String, dynamic> json) {
     return GetOneStoryResItem(
-      json["storyId"],
-      json["userId"],
-      json["collaboratorId"]?? "",
-      json["collaboratorName"]?? "",
-      json["collaboratorAvatarUrl"]?? "",
-      json["spaceId"],
-      json["spaceName"]?? "",
-      json["channelId"],
-      json["channelName"],
-      json["channelImageUrl"],
-      json["voiceMessageStatus"],
-      json["storyUrl"],
-      json["storyName"],
-      json["storyDescription"],
-      json["storyImageUrl"],
-      (json["storyImageUrls"] as List<dynamic>?)
-        ?.map((e) => e.toString())
-        .toList()
-        ?? [],
-      json["storyLength"],
-      json["totalLength"],
-      DateTime.parse(json["storyEditTime"]),
-      DateTime.parse(json["storyUploadTime"]),
-      json["openingUrl"],
-      json["endingUrl"],
-      json["avatarUrl"],
-      json["nickname"],
-      json["isPremium"],
-      json["price"],
-      json["count"]
-    );
+        json["storyId"],
+        json["userId"],
+        json["collaboratorId"] ?? "",
+        json["collaboratorName"] ?? "",
+        json["collaboratorAvatarUrl"] ?? "",
+        json["spaceId"],
+        json["spaceName"] ?? "",
+        json["channelId"],
+        json["channelName"],
+        json["channelImageUrl"],
+        json["voiceMessageStatus"],
+        json["storyUrl"],
+        json["storyName"],
+        json["storyDescription"],
+        json["storyImageUrl"],
+        (json["storyImageUrls"] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        json["storyLength"],
+        json["totalLength"],
+        DateTime.parse(json["storyEditTime"]),
+        DateTime.parse(json["storyUploadTime"]),
+        json["openingUrl"],
+        json["endingUrl"],
+        json["avatarUrl"],
+        json["nickname"],
+        json["packageId"] ?? "",
+        json["price"] == null ? null : Price.fromJson(json["price"]),
+        json["isPremium"],
+        json["count"]);
   }
 }

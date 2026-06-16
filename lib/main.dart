@@ -45,14 +45,12 @@ Future<void> main() async {
       firebaseUser.displayName,
     );
     if(res.code != "0000") {
-      print(res.message);
     } else {
       CookieUtils.setCookie("userToken", res.data?.userToken?? "", expires: DateTime.now().add(const Duration(hours: 6)));
     }
 
     GetUserInfoRes userInfoRes = await userApiManager.getUserInfo();
     if(userInfoRes.code != "0000") {
-      print(userInfoRes.message);
     } else {
       UserPrefs.setUserInfo(userInfoRes.userInfo);
     }

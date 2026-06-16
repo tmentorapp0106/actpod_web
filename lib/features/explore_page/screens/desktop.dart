@@ -1,55 +1,122 @@
+import 'package:actpod_web/features/explore_page/components/desktop/podcoin_card.dart';
+import 'package:actpod_web/features/explore_page/components/desktop/purchased_episodes.dart';
+import 'package:actpod_web/features/explore_page/components/desktop/story_card.dart';
+import 'package:actpod_web/features/explore_page/components/desktop/top_nav_bar.dart';
+import 'package:actpod_web/features/explore_page/components/shared/package_card.dart';
+import 'package:actpod_web/features/explore_page/components/shared/recommendation_switch.dart';
+import 'package:actpod_web/features/explore_page/controllers/story_controller.dart';
+import 'package:actpod_web/features/explore_page/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExploreDesktopScreen extends ConsumerWidget {
+  final StoryController storyController;
 
   const ExploreDesktopScreen({
     super.key,
+    required this.storyController,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final stories = ref.watch(storiesProvider);
+    final packages = ref.watch(packagesProvider);
+    final purchasedEpisodes = ref.watch(purchasedStoriesProvider);
+    final recommendationMode = ref.watch(exploreRecommendationModeProvider);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          children: [
-            const SizedBox(width: 8),
-            const Text(
-              "Desktop",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ),
-        actions: const [
-          Icon(Icons.search, color: Colors.black),
-          SizedBox(width: 16),
-          Icon(Icons.notifications_none, color: Colors.black),
-          SizedBox(width: 16),
-        ],
-      ),
+      backgroundColor: const Color(0xFFF8F8F8),
       body: Stack(
         children: [
-          ListView(
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 170),
+          Column(
             children: [
-              const Text(
-                "推薦內容 ✨",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
+              const TopNavBar(),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.fromLTRB(28, 20, 16, 50),
+                        children: [
+                          // const _SectionTitle(title: "推薦內容"),
+                          // const SizedBox(height: 12),
+                          SizedBox(
+                            width: 390,
+                            child: RecommendationSwitch(
+                              selectedMode: recommendationMode,
+                              onChanged: (mode) {
+                                ref
+                                    .watch(
+                                      exploreRecommendationModeProvider
+                                          .notifier,
+                                    )
+                                    .state = mode;
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 18),
+                          if (recommendationMode ==
+                              ExploreRecommendationMode.episode) ...[
+                            if (stories == null)
+                              const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            if (stories != null)
+                              ...stories.map(
+                                (e) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 18),
+                                  child: StoryCardDesktop(story: e),
+                                ),
+                              ),
+                          ] else ...[
+                            if (stories == null)
+                              const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            if (packages != null)
+                              ...packages.map(
+                                (package) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: PackageCard(package: package),
+                                ),
+                              ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 330,
+                      child: ListView(
+                        padding: const EdgeInsets.fromLTRB(0, 24, 28, 110),
+                        children: [
+                          PodCoinCard(storyController: storyController),
+                          const SizedBox(height: 18),
+                          PurchasedEpisodesPanel(items: purchasedEpisodes),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ],
       ),
-      // bottomNavigationBar: const ActPodBottomNav(),
     );
   }
+}
+
+class CategoryItem {
+  final String title;
+  final IconData icon;
+
+  CategoryItem({
+    required this.title,
+    required this.icon,
+  });
 }
