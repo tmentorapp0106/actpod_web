@@ -91,12 +91,6 @@ final myRouter = GoRouter(
         );
       },
     ),
-    // GoRoute(
-    //   path: "/merchant",
-    //   builder: (context, state) {
-    //     return const TapPayCheckoutPage();
-    //   },
-    // ),
     GoRoute(
       path: "/podcast_store/:userId",
       builder: (context, state) {
