@@ -390,12 +390,12 @@ class _PurchasedRecordView {
       ),
       channelName: story?.channelName ?? "",
       channelImageUrl: _imageUrl(story?.channelImageUrl ?? ""),
-      creatorName: story?.userName ?? "",
-      avatarUrl: story?.userAvatarUrl ?? "",
+      creatorName: story?.nickname ?? "",
+      avatarUrl: story?.avatarUrl ?? "",
       spaceName: story?.spaceName ?? "",
-      duration: story?.totalLength ?? story?.storyLength ?? 0,
-      releaseTime: story?.releaseTime ?? record.createTime,
-      onTap: () => myRouter.push("/story/${story?.storyId ?? record.storyId}"),
+      duration: story?.storyLength ?? 0,
+      releaseTime: story?.releaseTime ?? DateTime.now(),
+      onTap: () => myRouter.push("/story/${story?.storyId ?? ""}"),
     );
   }
 }

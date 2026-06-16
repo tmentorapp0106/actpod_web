@@ -251,8 +251,8 @@ class _PurchasedRecordView {
       title: story?.storyName ?? "",
       imageUrl: _imageUrl(storyImage),
       channelName: story?.channelName ?? "",
-      duration: story?.totalLength ?? story?.storyLength ?? 0,
-      onTap: () => myRouter.push("/story/${story?.storyId ?? record.storyId}"),
+      duration: story?.storyLength ?? 0,
+      onTap: () => myRouter.push("/story/${story?.storyId ?? ""}"),
     );
   }
 }
