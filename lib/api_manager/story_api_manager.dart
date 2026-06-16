@@ -1,5 +1,6 @@
 import 'package:actpod_web/api_manager/abstractApiManager.dart';
 import 'package:actpod_web/api_manager/story_dto/check_purchase_res.dart';
+import 'package:actpod_web/api_manager/story_dto/find_user_purchase_records_res.dart';
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/api_manager/story_dto/get_package_info_res.dart';
 import 'package:actpod_web/api_manager/story_dto/get_packages_res.dart';
@@ -21,11 +22,13 @@ class StoryApiManager extends AbstractApiManager {
   }
 
   Future<ListenStoryRes> listenStory(String storyId, String deviceId) async {
-    Response response = await handelPost("/story/$storyId/device/$deviceId/listen", {});
+    Response response =
+        await handelPost("/story/$storyId/device/$deviceId/listen", {});
     return ListenStoryRes.fromJson(response.data);
   }
 
-  Future<GetStoriesByUserIdRes> getStoriesByUserId(String userId, {bool filterReviewStatus = true}) async {
+  Future<GetStoriesByUserIdRes> getStoriesByUserId(String userId,
+      {bool filterReviewStatus = true}) async {
     String queryParam = "?filterReviewStatus=${filterReviewStatus.toString()}";
     Response response = await handelGet("/story/user/$userId$queryParam");
     return GetStoriesByUserIdRes.fromJson(response.data);
@@ -37,12 +40,10 @@ class StoryApiManager extends AbstractApiManager {
   }
 
   Future<SignedUrlRes> signedUrl(String storyId, String packageId) async {
-    var data = {
-      "storyId": storyId,
-      "packageId": packageId
-    };
-    
-    Response response = await handelPostWithUserToken("/story/premium/signed", data);
+    var data = {"storyId": storyId, "packageId": packageId};
+
+    Response response =
+        await handelPostWithUserToken("/story/premium/signed", data);
     return SignedUrlRes.fromJson(response.data);
   }
 
@@ -56,12 +57,19 @@ class StoryApiManager extends AbstractApiManager {
     return GetPackageInfoRes.fromJson(response.data);
   }
 
-  Future<CheckPurchaseRes> checkPurchased(String storyId, String packageId) async {
+  Future<CheckPurchaseRes> checkPurchased(
+      String storyId, String packageId) async {
     var data = {
       "storyId": storyId,
       "packageId": packageId,
     };
-    Response response = await handelPostWithUserToken("/story/premium/record/exist", data);
+    Response response =
+        await handelPostWithUserToken("/story/premium/record/exist", data);
     return CheckPurchaseRes.fromJson(response.data);
+  }
+
+  Future<FindUserPurchaseRecordsRes> findUserPurchaseRecords() async {
+    Response response = await handelGetWithUserToken("/story/premium/record");
+    return FindUserPurchaseRecordsRes.fromJson(response.data);
   }
 }

@@ -71,7 +71,7 @@ class PackagePriceItem {
 }
 
 class PackageInfoWithStoriesItem extends PackageInfoItem {
-  List<PackageStoryInfoItem> stories;
+  List<StoryInfoItem> stories;
 
   PackageInfoWithStoriesItem(
     super.packageId,
@@ -100,14 +100,14 @@ class PackageInfoWithStoriesItem extends PackageInfoItem {
       json["nickname"] ?? "",
       json["avatarUrl"] ?? "",
       (json["stories"] as List<dynamic>?)
-              ?.map((e) => PackageStoryInfoItem.fromJson(e))
+              ?.map((e) => StoryInfoItem.fromJson(e))
               .toList() ??
           [],
     );
   }
 }
 
-class PackageStoryInfoItem {
+class StoryInfoItem {
   String storyId;
   String userId;
   String collaborator;
@@ -140,7 +140,7 @@ class PackageStoryInfoItem {
   String channelImageUrl;
   String spaceName;
 
-  PackageStoryInfoItem(
+  StoryInfoItem(
     this.storyId,
     this.userId,
     this.collaborator,
@@ -174,8 +174,8 @@ class PackageStoryInfoItem {
     this.spaceName,
   );
 
-  factory PackageStoryInfoItem.fromJson(Map<String, dynamic> json) {
-    return PackageStoryInfoItem(
+  factory StoryInfoItem.fromJson(Map<String, dynamic> json) {
+    return StoryInfoItem(
       json["storyId"],
       json["userId"],
       json["collaborator"] ?? "",

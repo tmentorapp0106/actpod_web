@@ -678,7 +678,7 @@ class PackageStoriesSection extends ConsumerWidget {
 }
 
 class PackageStoryRow extends StatelessWidget {
-  final PackageStoryInfoItem story;
+  final StoryInfoItem story;
   final bool purchased;
   final bool compact;
 
