@@ -12,12 +12,11 @@ import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/utils/link_utils.dart';
+import 'package:actpod_web/utils/neweb_pay_form.dart';
 import 'package:actpod_web/utils/time_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
-import 'dart:html' as html;
 
 const packageAccent = Color(0xFFFFA300);
 const packageSoft = Color(0xFFFFFAEF);
@@ -118,34 +117,6 @@ class PackageInfoCard extends ConsumerWidget {
     required this.packageDetailController,
     this.compact = false,
   });
-
-  void submitNewebPayForm({
-    required String gatewayUrl,
-    required String merchantID,
-    required String tradeInfo,
-    required String tradeSha,
-    required String version,
-  }) {
-    final form = html.FormElement()
-      ..method = 'POST'
-      ..action = gatewayUrl;
-
-    void addInput(String name, String value) {
-      final input = html.InputElement()
-        ..type = 'hidden'
-        ..name = name
-        ..value = value;
-      form.children.add(input);
-    }
-
-    addInput('MerchantID', merchantID);
-    addInput('TradeInfo', tradeInfo);
-    addInput('TradeSha', tradeSha);
-    addInput('Version', version);
-
-    html.document.body!.append(form);
-    form.submit();
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

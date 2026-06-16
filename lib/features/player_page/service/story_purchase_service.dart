@@ -5,11 +5,9 @@ import 'package:actpod_web/features/package_detail_page/components/package_detai
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/services/auth_service.dart';
+import 'package:actpod_web/utils/neweb_pay_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
-import 'dart:html' as html;
 
 Future<void> createStoryCreditCardPayment(
   BuildContext context,
@@ -58,39 +56,11 @@ Future<void> createStoryCreditCardPayment(
     return;
   }
 
-  _submitNewebPayForm(
+  submitNewebPayForm(
     gatewayUrl: response.creditCardPayment!.gatewayURL,
     merchantID: response.creditCardPayment!.merchantID,
     tradeInfo: response.creditCardPayment!.tradeInfo,
     tradeSha: response.creditCardPayment!.tradeSha,
     version: response.creditCardPayment!.version,
   );
-}
-
-void _submitNewebPayForm({
-  required String gatewayUrl,
-  required String merchantID,
-  required String tradeInfo,
-  required String tradeSha,
-  required String version,
-}) {
-  final form = html.FormElement()
-    ..method = 'POST'
-    ..action = gatewayUrl;
-
-  void addInput(String name, String value) {
-    final input = html.InputElement()
-      ..type = 'hidden'
-      ..name = name
-      ..value = value;
-    form.children.add(input);
-  }
-
-  addInput('MerchantID', merchantID);
-  addInput('TradeInfo', tradeInfo);
-  addInput('TradeSha', tradeSha);
-  addInput('Version', version);
-
-  html.document.body!.append(form);
-  form.submit();
 }
