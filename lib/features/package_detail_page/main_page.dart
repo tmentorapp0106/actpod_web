@@ -6,6 +6,8 @@ import 'package:actpod_web/features/package_detail_page/screens/mobile.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/services/auth_service.dart';
+import 'package:actpod_web/services/toast_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,12 +34,15 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
     userController = UserController(ref);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!AuthService.isLoggedIn() || UserPrefs.getUserInfo() == null) {
-        UserPrefs.cleanUser();
-      } else {
-        ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
-        userController.getUserPurses();
-      }
+      // if (!AuthService.isLoggedIn() || UserPrefs.getUserInfo() == null) {
+      //   UserPrefs.cleanUser();
+      // } else {
+        // ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
+        // userController.getUserPurses();
+      // }
+      // ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
+      ToastService.showSuccessToast(FirebaseAuth.instance.currentUser?.uid?? "null");
+      userController.getUserPurses();
       packageDetailController.checkPurchased(widget.packageId);
       packageDetailController.getPackageInfo(widget.packageId);
     });
