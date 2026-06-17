@@ -27,9 +27,6 @@ Future<void> main() async {
   setUrlStrategy(PathUrlStrategy());
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
-  UserPrefs.cleanUser();
-  CookieUtils.deleteCookie("userToken");
-
   try {
     await AuthService.restoreFirebaseLogin();
   } catch (_) {
