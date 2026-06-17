@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:actpod_web/features/explore_page/controllers/user_controller.dart';
 import 'package:actpod_web/features/explore_page/main_page.dart';
 import 'package:actpod_web/features/package_detail_page/controllers/package_detail_controller.dart';
@@ -6,7 +8,6 @@ import 'package:actpod_web/features/package_detail_page/screens/mobile.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/services/auth_service.dart';
-import 'package:actpod_web/services/toast_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,25 +27,75 @@ class PackageDetailPage extends ConsumerStatefulWidget {
 class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
   late final PackageDetailController packageDetailController;
   late final UserController userController;
+  StreamSubscription<User?>? _authStateSubscription;
+  String? _syncedFirebaseUid;
 
   @override
   void initState() {
     super.initState();
     packageDetailController = PackageDetailController(ref);
     userController = UserController(ref);
+    _authStateSubscription =
+        FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChange);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // if (!AuthService.isLoggedIn() || UserPrefs.getUserInfo() == null) {
-      //   UserPrefs.cleanUser();
-      // } else {
-        // ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
-        // userController.getUserPurses();
-      // }
-      // ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
-      userController.getUserPurses();
+      _restoreStoredUser();
       packageDetailController.checkPurchased(widget.packageId);
       packageDetailController.getPackageInfo(widget.packageId);
     });
+  }
+
+  Future<void> _handleAuthStateChange(User? firebaseUser) async {
+    if (!mounted) {
+      return;
+    }
+
+    if (firebaseUser == null) {
+      if (!AuthService.isLoggedIn()) {
+        _clearUserState();
+        packageDetailController.checkPurchased(widget.packageId);
+      }
+      return;
+    }
+
+    if (_syncedFirebaseUid == firebaseUser.uid && AuthService.isLoggedIn()) {
+      return;
+    }
+
+    try {
+      final userInfo = await AuthService.syncFirebaseUser(firebaseUser);
+      if (!mounted || userInfo == null) {
+        return;
+      }
+
+      _syncedFirebaseUid = firebaseUser.uid;
+      ref.read(userInfoProvider.notifier).state = userInfo;
+      userController.getUserPurses();
+      packageDetailController.checkPurchased(widget.packageId);
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      _clearUserState();
+      packageDetailController.checkPurchased(widget.packageId);
+    }
+  }
+
+  void _restoreStoredUser() {
+    final userInfo = UserPrefs.getUserInfo();
+    if (!AuthService.isLoggedIn() || userInfo == null) {
+      UserPrefs.cleanUser();
+      _clearUserState();
+      return;
+    }
+
+    ref.read(userInfoProvider.notifier).state = userInfo;
+    userController.getUserPurses();
+  }
+
+  void _clearUserState() {
+    ref.read(userInfoProvider.notifier).state = null;
+    ref.read(userPodCoinsProvider.notifier).state = 0;
   }
 
   @override
@@ -54,6 +105,12 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
       packageDetailController.checkPurchased(widget.packageId);
       packageDetailController.getPackageInfo(widget.packageId);
     }
+  }
+
+  @override
+  void dispose() {
+    _authStateSubscription?.cancel();
+    super.dispose();
   }
 
   @override

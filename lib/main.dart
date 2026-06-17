@@ -1,11 +1,7 @@
 import 'package:actpod_web/design_system/color.dart';
-import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/router.dart';
 import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/services/env_service.dart';
-import 'package:actpod_web/services/toast_service.dart';
-import 'package:actpod_web/utils/cookie_utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,9 +13,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
-      options: const FirebaseOptions(
+      options: FirebaseOptions(
     apiKey: "AIzaSyC98t3s2itcyGLZW1CaZhl_HhblEwwOZBk",
-    authDomain: "backstage.actpodapp.com", // only for web
+    authDomain: _firebaseAuthDomain(),
     projectId: "share-voice-77cc4",
     appId: "1:633262239415:web:a015a02dbabf75c523e732",
     messagingSenderId: "633262239415",
@@ -28,25 +24,19 @@ Future<void> main() async {
   await EnvService.load();
   setUrlStrategy(PathUrlStrategy());
   GoRouter.optionURLReflectsImperativeAPIs = true;
-
-  // try {
-  //   await AuthService.restoreFirebaseLogin();
-  // } catch (_) {
-  //   UserPrefs.cleanUser();
-  //   CookieUtils.deleteCookie("userToken");
-  // }
-  FirebaseAuth.instance
-  .authStateChanges()
-  .listen((User? user) {
-    if (user == null) {
-      ToastService.showSuccessToast('User is currently signed out!');
-    } else {
-      ToastService.showSuccessToast(user.uid);
-      print('User is signed in!');
-    }
-  });
+  await AuthService.prepareFirebaseAuth();
 
   runApp(const ProviderScope(child: MyApp()));
+}
+
+String _firebaseAuthDomain() {
+  final host = Uri.base.host;
+  if (host == "web.actpodapp.com" ||
+      host.endsWith(".web.app") ||
+      host.endsWith(".firebaseapp.com")) {
+    return host;
+  }
+  return "web.actpodapp.com";
 }
 
 class MyApp extends StatelessWidget {
