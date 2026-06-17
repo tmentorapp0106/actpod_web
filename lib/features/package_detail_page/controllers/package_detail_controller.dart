@@ -33,11 +33,13 @@ class PackageDetailController {
   }
 
   Future<void> checkPurchased(String packageId) async {
-    if(!AuthService.isLoggedIn()) {
-      ref.watch(packagePurchasedProvider.notifier).state = false;
+    if (!AuthService.isLoggedIn()) {
+      ref.read(packagePurchasedProvider.notifier).state = false;
       return;
     }
-    CheckPurchaseRes response = await storyApiManager.checkPurchased("", packageId);
-    ref.watch(packagePurchasedProvider.notifier).state = response.purchased;
+    ref.read(packagePurchasedProvider.notifier).state = null;
+    CheckPurchaseRes response =
+        await storyApiManager.checkPurchased("", packageId);
+    ref.read(packagePurchasedProvider.notifier).state = response.purchased;
   }
 }
