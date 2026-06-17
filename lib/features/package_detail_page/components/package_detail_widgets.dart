@@ -136,14 +136,7 @@ class PackageInfoCard extends ConsumerWidget {
       }
 
       await packageDetailController.checkPurchased(package.packageId);
-
-      if (!context.mounted) {
-        return;
-      }
-
-      if (ref.read(packagePurchasedProvider) == true) {
-        return;
-      }
+      return;
     }
 
     final invoiceEmail = await showDialog<String>(
@@ -184,6 +177,7 @@ class PackageInfoCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final twd = package.packagePrice?.twd;
     final purchased = ref.watch(packagePurchasedProvider);
+    final isLoggedIn = AuthService.isLoggedIn();
     final isNotForSale = twd == null || twd < 0;
     final isPurchaseLoading = purchased == null;
     final canPurchase = !isNotForSale && purchased == false;
@@ -195,7 +189,9 @@ class PackageInfoCard extends ConsumerWidget {
             : "開始收聽第一集"
         : isNotForSale
             ? "尚未開賣"
-            : "購買套裝";
+            : isLoggedIn
+                ? "購買套裝"
+                : "前往購買";
 
     return Container(
       padding: EdgeInsets.all(compact ? 14 : 24),
@@ -835,10 +831,14 @@ class PackageStoryRow extends StatelessWidget {
 
 class PodCoinSummaryCard extends ConsumerWidget {
   final bool compact;
+  final PackageDetailController packageDetailController;
+  final String packageId;
 
   const PodCoinSummaryCard({
     super.key,
     this.compact = false,
+    required this.packageDetailController,
+    required this.packageId
   });
 
   Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
@@ -940,6 +940,7 @@ class PodCoinSummaryCard extends ConsumerWidget {
                     return const LoginScreen();
                   },
                 );
+                await packageDetailController.checkPurchased(packageId);
               },
               icon: Icon(Icons.login, size: compact ? 18 : 20),
               label: Text(
