@@ -118,6 +118,68 @@ class PackageInfoCard extends ConsumerWidget {
     this.compact = false,
   });
 
+  Future<void> _handlePurchase(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    if (!AuthService.isLoggedIn()) {
+      final bool? loggedIn = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return const LoginScreen();
+        },
+      );
+
+      if (loggedIn != true || !context.mounted) {
+        return;
+      }
+
+      await packageDetailController.checkPurchased(package.packageId);
+
+      if (!context.mounted) {
+        return;
+      }
+
+      if (ref.read(packagePurchasedProvider) == true) {
+        return;
+      }
+    }
+
+    final invoiceEmail = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return InvoiceEmailDialog(
+          initialEmail: UserPrefs.getUserInfo()?.email ?? "",
+        );
+      },
+    );
+
+    if (invoiceEmail == null) {
+      return;
+    }
+
+    CreateCreditCardPaymentRes response =
+        await purchaseApiManager.createCreditCardPayment(
+      package.packagePrice!.twd,
+      "package",
+      package.packageId,
+      package.packageName,
+      invoiceEmail,
+    );
+    if (response.code != "0000") {
+      return;
+    }
+    submitNewebPayForm(
+      gatewayUrl: response.creditCardPayment!.gatewayURL,
+      merchantID: response.creditCardPayment!.merchantID,
+      tradeInfo: response.creditCardPayment!.tradeInfo,
+      tradeSha: response.creditCardPayment!.tradeSha,
+      version: response.creditCardPayment!.version,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final twd = package.packagePrice?.twd;
@@ -219,51 +281,7 @@ class PackageInfoCard extends ConsumerWidget {
             onPressed: canStartListening
                 ? () => context.push("/story/${package.stories.first.storyId}")
                 : canPurchase
-                    ? () async {
-                        if (!AuthService.isLoggedIn()) {
-                          bool? loggedIn = await showDialog<bool>(
-                            context: context,
-                            barrierDismissible:
-                                false, // prevent tap outside to close
-                            builder: (context) {
-                              return const LoginScreen();
-                            },
-                          );
-                          if (loggedIn != null && loggedIn) {}
-                          return;
-                        }
-                        final invoiceEmail = await showDialog<String>(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return InvoiceEmailDialog(
-                              initialEmail:
-                                  UserPrefs.getUserInfo()?.email ?? "",
-                            );
-                          },
-                        );
-
-                        if (invoiceEmail == null) {
-                          return;
-                        }
-
-                        CreateCreditCardPaymentRes response =
-                            await purchaseApiManager.createCreditCardPayment(
-                                package.packagePrice!.twd,
-                                "package",
-                                package.packageId,
-                                package.packageName,
-                                invoiceEmail);
-                        if (response.code != "0000") {
-                          return;
-                        }
-                        submitNewebPayForm(
-                            gatewayUrl: response.creditCardPayment!.gatewayURL,
-                            merchantID: response.creditCardPayment!.merchantID,
-                            tradeInfo: response.creditCardPayment!.tradeInfo,
-                            tradeSha: response.creditCardPayment!.tradeSha,
-                            version: response.creditCardPayment!.version);
-                      }
+                    ? () => _handlePurchase(context, ref)
                     : null,
           ),
           const SizedBox(height: 8),
