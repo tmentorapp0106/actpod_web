@@ -3,7 +3,9 @@ import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/router.dart';
 import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/services/env_service.dart';
+import 'package:actpod_web/services/toast_service.dart';
 import 'package:actpod_web/utils/cookie_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,12 +29,22 @@ Future<void> main() async {
   setUrlStrategy(PathUrlStrategy());
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
-  try {
-    await AuthService.restoreFirebaseLogin();
-  } catch (_) {
-    UserPrefs.cleanUser();
-    CookieUtils.deleteCookie("userToken");
-  }
+  // try {
+  //   await AuthService.restoreFirebaseLogin();
+  // } catch (_) {
+  //   UserPrefs.cleanUser();
+  //   CookieUtils.deleteCookie("userToken");
+  // }
+  FirebaseAuth.instance
+  .authStateChanges()
+  .listen((User? user) {
+    if (user == null) {
+      ToastService.showSuccessToast('User is currently signed out!');
+    } else {
+      ToastService.showSuccessToast(user.uid);
+      print('User is signed in!');
+    }
+  });
 
   runApp(const ProviderScope(child: MyApp()));
 }
