@@ -41,7 +41,6 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
         // userController.getUserPurses();
       // }
       // ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
-      ToastService.showSuccessToast(FirebaseAuth.instance.currentUser?.uid?? "null");
       userController.getUserPurses();
       packageDetailController.checkPurchased(widget.packageId);
       packageDetailController.getPackageInfo(widget.packageId);
