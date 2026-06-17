@@ -1,6 +1,30 @@
 import 'package:web/web.dart';
 
 class CookieUtils {
+  static const _weekdays = [
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
+  ];
+  static const _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
   static String? getCookie(String name) {
     final cookies = document.cookie.split('; ');
     for (final c in cookies) {
@@ -21,12 +45,12 @@ class CookieUtils {
     String path = '/',
     String? domain, // e.g. ".yourdomain.com" (must match current host rules)
     String sameSite = 'Lax', // 'Lax' | 'Strict' | 'None'
-    bool secure = false,     // must be true when sameSite=None
+    bool secure = false, // must be true when sameSite=None
   }) {
     final encoded = Uri.encodeComponent(value);
     final parts = <String>[
       '$name=$encoded',
-      if (expires != null) 'Expires=${expires.toUtc().toIso8601String()}',
+      if (expires != null) 'Expires=${_formatCookieDate(expires)}',
       if (maxAge != null) 'Max-Age=${maxAge.inSeconds}',
       'Path=$path',
       if (domain != null) 'Domain=$domain',
@@ -34,6 +58,16 @@ class CookieUtils {
       if (secure) 'Secure',
     ];
     document.cookie = parts.join('; ');
+  }
+
+  static String _formatCookieDate(DateTime dateTime) {
+    final utc = dateTime.toUtc();
+    final day = utc.day.toString().padLeft(2, '0');
+    final hour = utc.hour.toString().padLeft(2, '0');
+    final minute = utc.minute.toString().padLeft(2, '0');
+    final second = utc.second.toString().padLeft(2, '0');
+    return '${_weekdays[utc.weekday - 1]}, $day ${_months[utc.month - 1]} '
+        '${utc.year} $hour:$minute:$second GMT';
   }
 
   /// Delete a cookie
