@@ -32,14 +32,22 @@ class PackageDetailController {
     }
   }
 
-  Future<void> checkPurchased(String packageId) async {
+  Future<bool> checkPurchased(String packageId) async {
     if (!AuthService.isLoggedIn()) {
-      ref.read(packagePurchasedProvider.notifier).state = false;
-      return;
+      ref.watch(packagePurchasedProvider.notifier).state = false;
+      return false;
     }
-    ref.read(packagePurchasedProvider.notifier).state = null;
-    CheckPurchaseRes response =
-        await storyApiManager.checkPurchased("", packageId);
-    ref.read(packagePurchasedProvider.notifier).state = response.purchased;
+    ref.watch(packagePurchasedProvider.notifier).state = null;
+    try {
+      CheckPurchaseRes response =
+          await storyApiManager.checkPurchased("", packageId);
+      final bool purchased = response.code == "0000" && response.purchased;
+      ref.watch(packagePurchasedProvider.notifier).state = purchased;
+      return purchased;
+    } catch (e) {
+      ref.watch(packagePurchasedProvider.notifier).state = false;
+      ToastService.showNoticeToast("確認購買狀態失敗");
+      return false;
+    }
   }
 }

@@ -64,7 +64,11 @@ class PackageDetailMobileScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
         children: [
-          const PodCoinSummaryCard(compact: true),
+          PodCoinSummaryCard(
+            packageDetailController: packageDetailController,
+            packageId: package.packageId,
+            compact: true
+            ),
           const SizedBox(height: 14),
           PackageCover(
             imageUrl: package.packageImageUrl,

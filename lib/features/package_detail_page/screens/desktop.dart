@@ -60,7 +60,10 @@ class PackageDetailDesktopScreen extends ConsumerWidget {
                         children: [
                           PackageInfoCard(package: package, packageDetailController: packageDetailController,),
                           const SizedBox(height: 24),
-                          const PodCoinSummaryCard(),
+                          PodCoinSummaryCard(
+                            packageDetailController: packageDetailController,
+                            packageId: package.packageId,
+                          ),
                         ],
                       ),
                     ),
