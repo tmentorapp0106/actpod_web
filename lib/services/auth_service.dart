@@ -3,7 +3,6 @@ import 'package:actpod_web/api_manager/user_dto/create_login.dart';
 import 'package:actpod_web/api_manager/user_dto/get_user_info.dart';
 import 'package:actpod_web/dto/user_info_dto.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
-import 'package:actpod_web/services/toast_service.dart';
 import 'package:actpod_web/utils/cookie_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -82,15 +81,19 @@ class AuthService {
     return userInfoRes.userInfo;
   }
 
-  static Future<UserInfoDto?> restoreFirebaseLogin() async {
+  static Future<void> prepareFirebaseAuth() async {
     await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
 
     try {
       await FirebaseAuth.instance.getRedirectResult();
     } catch (_) {}
+  }
 
-    await FirebaseAuth.instance.authStateChanges().first;
-    return syncFirebaseUser(FirebaseAuth.instance.currentUser);
+  static Future<UserInfoDto?> restoreFirebaseLogin() async {
+    await prepareFirebaseAuth();
+
+    final firebaseUser = await FirebaseAuth.instance.authStateChanges().first;
+    return syncFirebaseUser(firebaseUser);
   }
 
   static bool isLoggedIn() {
