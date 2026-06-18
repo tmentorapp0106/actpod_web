@@ -59,7 +59,6 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
       return;
     }
 
-    ToastService.showSuccessToast(firebaseUser.uid);
     if (_syncedFirebaseUid == firebaseUser.uid && AuthService.isLoggedIn()) {
       return;
     }
