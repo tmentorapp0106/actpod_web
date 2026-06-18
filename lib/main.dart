@@ -12,7 +12,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  await MetaTrackingService.instance.init();
   await Firebase.initializeApp(
       options: FirebaseOptions(
     apiKey: "AIzaSyC98t3s2itcyGLZW1CaZhl_HhblEwwOZBk",

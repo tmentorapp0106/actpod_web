@@ -40,7 +40,6 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
     _authStateSubscription = FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChange);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await MetaTrackingService.instance.init();
       _restoreStoredUser();
       MetaTrackingService.instance.trackViewContent(
         pageName: 'Yuma 夏季旅遊日文速成班',
