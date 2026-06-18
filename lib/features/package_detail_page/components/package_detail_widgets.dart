@@ -174,6 +174,16 @@ class PackageInfoCard extends ConsumerWidget {
     );
   }
 
+  void _handleStartListening(BuildContext context) {
+    final firstStory = package.stories.first;
+    if (firstStory.storyUrl.trim().isEmpty) {
+      ToastService.showNoticeToast("尚未上傳內容");
+      return;
+    }
+
+    context.push("/story/${firstStory.storyId}");
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final twd = package.packagePrice?.twd;
@@ -276,7 +286,7 @@ class PackageInfoCard extends ConsumerWidget {
             text: buttonText,
             loading: !isNotForSale && isPurchaseLoading,
             onPressed: canStartListening
-                ? () => context.push("/story/${package.stories.first.storyId}")
+                ? () => _handleStartListening(context)
                 : canPurchase
                     ? () => _handlePurchase(context, ref)
                     : null,
@@ -720,7 +730,7 @@ class PackageStoryRow extends StatelessWidget {
     }
 
     if (story.storyUrl.trim().isEmpty) {
-      ToastService.showNoticeToast("尚未上傳");
+      ToastService.showNoticeToast("尚未上傳內容");
       return;
     }
 

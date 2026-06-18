@@ -67,7 +67,6 @@ class PlayerController {
     }
 
     SignedUrlRes signedRes = await storyApiManager.signedUrl(storyId, packageId);
-    print(signedRes.code);
     if(signedRes.code == "0006") {
       _ref.watch(playerStatusProvider.notifier).state = PlayerStatus.unpaid;
       return;
