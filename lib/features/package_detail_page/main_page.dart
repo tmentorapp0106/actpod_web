@@ -8,6 +8,7 @@ import 'package:actpod_web/features/package_detail_page/screens/mobile.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/services/auth_service.dart';
+import 'package:actpod_web/services/meta_tracking_service.dart';
 import 'package:actpod_web/services/toast_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +37,15 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
     super.initState();
     packageDetailController = PackageDetailController(ref);
     userController = UserController(ref);
-    _authStateSubscription =
-        FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChange);
+    _authStateSubscription = FirebaseAuth.instance.authStateChanges().listen(_handleAuthStateChange);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _restoreStoredUser();
+      MetaTrackingService.instance.trackViewContent(
+        pageName: 'Yuma 夏季旅遊日文速成班',
+        contentId: widget.packageId,
+        contentType: 'package',
+      );
       packageDetailController.checkPurchased(widget.packageId);
       packageDetailController.getPackageInfo(widget.packageId);
     });

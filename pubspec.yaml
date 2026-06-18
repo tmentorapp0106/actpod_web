@@ -63,6 +63,7 @@ dependencies:
   livekit_client: ^2.6.5
   permission_handler: ^12.0.1
   readmore: ^3.0.0
+  flutter_meta_appads_sdk: ^2.3.0
 
 dev_dependencies:
   flutter_test:

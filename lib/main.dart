@@ -2,6 +2,7 @@ import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/router.dart';
 import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/services/env_service.dart';
+import 'package:actpod_web/services/meta_tracking_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await MetaTrackingService.instance.init();
   await Firebase.initializeApp(
       options: FirebaseOptions(
     apiKey: "AIzaSyC98t3s2itcyGLZW1CaZhl_HhblEwwOZBk",
@@ -46,21 +48,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(375, 812),
-        builder: (BuildContext context, Widget? child) {
-          return MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                  seedColor: Colors.white, primary: DesignColor.primary50),
-            ),
-            title: 'ActPod',
-            color: Colors.white,
-            // routerConfig: myRouter,
-            routerDelegate: myRouter.routerDelegate,
-            routeInformationParser: myRouter.routeInformationParser,
-            routeInformationProvider: myRouter.routeInformationProvider,
-          );
-        });
+      designSize: const Size(375, 812),
+      builder: (BuildContext context, Widget? child) {
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.white, primary: DesignColor.primary50),
+          ),
+          title: 'ActPod',
+          color: Colors.white,
+          // routerConfig: myRouter,
+          routerDelegate: myRouter.routerDelegate,
+          routeInformationParser: myRouter.routeInformationParser,
+          routeInformationProvider: myRouter.routeInformationProvider,
+        );
+      }
+    );
   }
 }
