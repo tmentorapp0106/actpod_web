@@ -8,6 +8,7 @@ import 'package:actpod_web/features/package_detail_page/screens/mobile.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/services/auth_service.dart';
+import 'package:actpod_web/services/toast_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,6 +59,7 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
       return;
     }
 
+    ToastService.showSuccessToast(firebaseUser.uid);
     if (_syncedFirebaseUid == firebaseUser.uid && AuthService.isLoggedIn()) {
       return;
     }
@@ -89,13 +91,13 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
       return;
     }
 
-    ref.read(userInfoProvider.notifier).state = userInfo;
+    ref.watch(userInfoProvider.notifier).state = userInfo;
     userController.getUserPurses();
   }
 
   void _clearUserState() {
-    ref.read(userInfoProvider.notifier).state = null;
-    ref.read(userPodCoinsProvider.notifier).state = 0;
+    ref.watch(userInfoProvider.notifier).state = null;
+    ref.watch(userPodCoinsProvider.notifier).state = 0;
   }
 
   @override
