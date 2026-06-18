@@ -11,6 +11,7 @@ import 'package:actpod_web/features/package_detail_page/providers.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/services/auth_service.dart';
+import 'package:actpod_web/services/toast_service.dart';
 import 'package:actpod_web/utils/link_utils.dart';
 import 'package:actpod_web/utils/neweb_pay_form.dart';
 import 'package:actpod_web/utils/time_utils.dart';
@@ -712,6 +713,20 @@ class PackageStoryRow extends StatelessWidget {
     );
   }
 
+  void _handleTap(BuildContext context) {
+    if (!purchased) {
+      _showNotPurchasedAlert(context);
+      return;
+    }
+
+    if (story.storyUrl.trim().isEmpty) {
+      ToastService.showNoticeToast("尚未上傳");
+      return;
+    }
+
+    context.push("/story/${story.storyId}");
+  }
+
   @override
   Widget build(BuildContext context) {
     final imageUrl = story.storyImageUrls.isNotEmpty
@@ -720,9 +735,7 @@ class PackageStoryRow extends StatelessWidget {
     final packageNote = story.packageNote.trim();
 
     return InkWell(
-      onTap: purchased
-          ? () => context.push("/story/${story.storyId}")
-          : () => _showNotPurchasedAlert(context),
+      onTap: () => _handleTap(context),
       borderRadius: BorderRadius.circular(8),
       child: Container(
         padding:

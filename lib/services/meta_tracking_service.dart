@@ -15,7 +15,7 @@ class MetaTrackingService {
 
     if (kIsWeb) {
       await _metaSdk.initWebPixel(
-        pixelId: '555379277098555',
+        pixelId: '1165023005790351',
       );
     } else {
       await _metaSdk.initSdk(
