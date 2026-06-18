@@ -39,6 +39,7 @@ class GetOneStoryResItem {
   String avatarUrl;
   String nickname;
   String packageId;
+  String packageNote;
   Price? price;
   bool isPremium;
   int count;
@@ -69,6 +70,7 @@ class GetOneStoryResItem {
     this.avatarUrl,
     this.nickname,
     this.packageId,
+    this.packageNote,
     this.price,
     this.isPremium,
     this.count,
@@ -104,6 +106,7 @@ class GetOneStoryResItem {
         json["avatarUrl"],
         json["nickname"],
         json["packageId"] ?? "",
+        json["packageNote"] ?? "",
         json["price"] == null ? null : Price.fromJson(json["price"]),
         json["isPremium"],
         json["count"]);

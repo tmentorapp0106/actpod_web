@@ -717,6 +717,7 @@ class PackageStoryRow extends StatelessWidget {
     final imageUrl = story.storyImageUrls.isNotEmpty
         ? story.storyImageUrls.first
         : story.channelImageUrl;
+    final packageNote = story.packageNote.trim();
 
     return InkWell(
       onTap: purchased
@@ -776,6 +777,30 @@ class PackageStoryRow extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  if (packageNote.isNotEmpty) ...[
+                    SizedBox(height: compact ? 4 : 6),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: compact ? 6 : 8,
+                        vertical: compact ? 2 : 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF2C7),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        packageNote,
+                        maxLines: compact ? 1 : 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: compact ? 10 : 13,
+                          height: 1.35,
+                          color: const Color(0xFF6B4B12),
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 3),
                   Row(
                     children: [
@@ -834,12 +859,11 @@ class PodCoinSummaryCard extends ConsumerWidget {
   final PackageDetailController packageDetailController;
   final String packageId;
 
-  const PodCoinSummaryCard({
-    super.key,
-    this.compact = false,
-    required this.packageDetailController,
-    required this.packageId
-  });
+  const PodCoinSummaryCard(
+      {super.key,
+      this.compact = false,
+      required this.packageDetailController,
+      required this.packageId});
 
   Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
     final bool? shouldLogout = await showDialog<bool>(
