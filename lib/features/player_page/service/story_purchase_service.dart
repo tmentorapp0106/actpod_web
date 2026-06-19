@@ -1,7 +1,7 @@
 import 'package:actpod_web/api_manager/purchase_dto/create_credit_card_payment.dart';
 import 'package:actpod_web/api_manager/purchase_system_api_manager.dart';
 import 'package:actpod_web/features/login/login_screen.dart';
-import 'package:actpod_web/features/package_detail_page/components/package_detail_widgets.dart';
+import 'package:actpod_web/features/package_detail_page/components/invoice_email_dialog.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/services/auth_service.dart';
