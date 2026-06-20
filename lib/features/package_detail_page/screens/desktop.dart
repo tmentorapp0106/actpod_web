@@ -1,3 +1,4 @@
+import 'package:actpod_web/features/package_detail_page/components/actpod_download_widget.dart';
 import 'package:actpod_web/features/package_detail_page/components/package_cover.dart';
 import 'package:actpod_web/features/package_detail_page/components/package_description_section.dart';
 import 'package:actpod_web/features/package_detail_page/components/package_detail_state_views.dart';
@@ -13,10 +14,8 @@ import 'package:go_router/go_router.dart';
 class PackageDetailDesktopScreen extends ConsumerWidget {
   final PackageDetailController packageDetailController;
 
-  const PackageDetailDesktopScreen({
-    super.key,
-    required this.packageDetailController
-  });
+  const PackageDetailDesktopScreen(
+      {super.key, required this.packageDetailController});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,38 +39,50 @@ class PackageDetailDesktopScreen extends ConsumerWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1260),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(42, 28, 42, 52),
                   children: [
-                    Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.fromLTRB(42, 28, 20, 52),
-                        children: [
-                          PackageCover(
-                            imageUrl: package.packageImageUrl,
-                            height: 280,
-                            badgeSize: 15,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              PackageCover(
+                                imageUrl: package.packageImageUrl,
+                                height: 280,
+                                badgeSize: 15,
+                              ),
+                              const SizedBox(height: 24),
+                              PackageDescriptionSection(package: package),
+                              PackageStoriesSection(package: package),
+                            ],
                           ),
-                          const SizedBox(height: 24),
-                          PackageDescriptionSection(package: package),
-                          PackageStoriesSection(package: package),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 380,
-                      child: ListView(
-                        padding: const EdgeInsets.fromLTRB(20, 28, 42, 52),
-                        children: [
-                          PackageInfoCard(package: package, packageDetailController: packageDetailController,),
-                          const SizedBox(height: 24),
-                          PodCoinSummaryCard(
-                            packageDetailController: packageDetailController,
-                            packageId: package.packageId,
+                        ),
+                        const SizedBox(width: 40),
+                        SizedBox(
+                          width: 380,
+                          child: Column(
+                            children: [
+                              PackageInfoCard(
+                                package: package,
+                                packageDetailController:
+                                    packageDetailController,
+                              ),
+                              const SizedBox(height: 24),
+                              PodCoinSummaryCard(
+                                packageDetailController:
+                                    packageDetailController,
+                                packageId: package.packageId,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 32),
+                    const ActPodDownloadWidget(),
                   ],
                 ),
               ),

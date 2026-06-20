@@ -1,3 +1,4 @@
+import 'package:actpod_web/features/package_detail_page/components/actpod_download_widget.dart';
 import 'package:actpod_web/features/package_detail_page/components/package_cover.dart';
 import 'package:actpod_web/features/package_detail_page/components/package_description_section.dart';
 import 'package:actpod_web/features/package_detail_page/components/package_detail_state_views.dart';
@@ -13,11 +14,9 @@ import 'package:go_router/go_router.dart';
 
 class PackageDetailMobileScreen extends ConsumerWidget {
   final PackageDetailController packageDetailController;
-  
-  const PackageDetailMobileScreen({
-    super.key,
-    required this.packageDetailController
-  });
+
+  const PackageDetailMobileScreen(
+      {super.key, required this.packageDetailController});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,7 +46,8 @@ class PackageDetailMobileScreen extends ConsumerWidget {
               context.go("/explore");
             }
           },
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: Colors.black87),
         ),
         title: const Text(
           "套裝詳情",
@@ -70,10 +70,9 @@ class PackageDetailMobileScreen extends ConsumerWidget {
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
         children: [
           PodCoinSummaryCard(
-            packageDetailController: packageDetailController,
-            packageId: package.packageId,
-            compact: true
-            ),
+              packageDetailController: packageDetailController,
+              packageId: package.packageId,
+              compact: true),
           const SizedBox(height: 14),
           PackageCover(
             imageUrl: package.packageImageUrl,
@@ -92,6 +91,8 @@ class PackageDetailMobileScreen extends ConsumerWidget {
             package: package,
             compact: true,
           ),
+          const SizedBox(height: 20),
+          const ActPodDownloadWidget(compact: true),
         ],
       ),
     );
