@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+            fontFamily: 'NotoSansTC',
             colorScheme: ColorScheme.fromSeed(
                 seedColor: Colors.white, primary: DesignColor.primary50),
           ),
