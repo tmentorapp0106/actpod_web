@@ -1,4 +1,9 @@
-import 'package:actpod_web/features/package_detail_page/components/package_detail_widgets.dart';
+import 'package:actpod_web/features/package_detail_page/components/package_cover.dart';
+import 'package:actpod_web/features/package_detail_page/components/package_description_section.dart';
+import 'package:actpod_web/features/package_detail_page/components/package_detail_state_views.dart';
+import 'package:actpod_web/features/package_detail_page/components/package_info_card.dart';
+import 'package:actpod_web/features/package_detail_page/components/package_stories_section.dart';
+import 'package:actpod_web/features/package_detail_page/components/podcoin_summary_card.dart';
 import 'package:actpod_web/features/package_detail_page/controllers/package_detail_controller.dart';
 import 'package:actpod_web/features/package_detail_page/providers.dart';
 import 'package:flutter/material.dart';
