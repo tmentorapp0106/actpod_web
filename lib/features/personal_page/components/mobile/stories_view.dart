@@ -146,8 +146,13 @@ class StoriesView extends ConsumerWidget {
                                           color: Colors.black,
                                           fontSize: 12.w)))),
                         ]),
-                        const SizedBox(height: 2,),
-                        ContentRatingBadge(contentRating: story.contentRating, compact: true,),
+                        const SizedBox(
+                          height: 2,
+                        ),
+                        ContentRatingBadge(
+                          contentRating: story.contentRating,
+                          compact: true,
+                        ),
                         const Spacer(),
                         SizedBox(
                             width: 160.w,

@@ -18,6 +18,7 @@ import 'package:actpod_web/features/player_page/controllers/stat_controller.dart
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/providers.dart';
+import 'package:actpod_web/router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,6 +47,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   final FocusNode _commentFocusNode = FocusNode();
   final FocusNode _instantCommentFocusNode = FocusNode();
   Timer? _instantCommentTimer;
+  bool _adultContentDialogShown = false;
 
   @override
   void initState() {
@@ -60,6 +62,8 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
       initInstantComment();
       _statController!.getLikesCount(widget.storyId);
       await _playerController!.getStoryInfo(widget.storyId);
+      await confirmAdultContentIfNeeded();
+      if (!mounted) return;
       _collectionController!
           .checkCollected(ref.read(storyInfoProvider)?.channelId ?? "");
     });
@@ -101,6 +105,54 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     ref.watch(storyInfoProvider.notifier).state = null;
     ref.watch(storyStateProvider.notifier).state = null;
     ref.watch(isCollectedProvider.notifier).state = null;
+  }
+
+  Future<void> confirmAdultContentIfNeeded() async {
+    final storyInfo = ref.read(storyInfoProvider);
+    if (_adultContentDialogShown ||
+        storyInfo?.contentRating.toLowerCase() != "adult") {
+      return;
+    }
+
+    _adultContentDialogShown = true;
+    final isAdult = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: const Text(
+            "內容含有敏感話題，是否滿 18 歲",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text("未滿 18 歲"),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text("已滿 18 歲"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!mounted) return;
+    if (isAdult != true) {
+      if (myRouter.canPop()) {
+        myRouter.pop();
+      } else {
+        myRouter.go("/explore");
+      }
+    }
   }
 
   @override

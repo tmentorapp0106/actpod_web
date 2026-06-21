@@ -10,7 +10,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 
 class ChannelsView extends ConsumerWidget {
-
   ChannelsView();
 
   @override
@@ -20,42 +19,43 @@ class ChannelsView extends ConsumerWidget {
 
     return Container(
         color: DesignColor.background,
-        child: channelList == null || channelList.isEmpty? emptyView() : channelsView(channelList, userInfoDto)
-    );
+        child: channelList == null || channelList.isEmpty
+            ? emptyView()
+            : channelsView(channelList, userInfoDto));
   }
 
   Widget emptyView() {
     return Center(
         child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            "assets/images/empty_collections.svg",
-            color: Colors.grey,
-            width: 100.w,
-            height: 100.w,
-            fit: BoxFit.fitWidth,
-          ),
-          SizedBox(height: 20.h,),
-          Text(
-            "尚無頻道",
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: Colors.grey,
-              fontWeight: FontWeight.bold
-            ),
-          )
-        ],
-      )
-    );
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SvgPicture.asset(
+          "assets/images/empty_collections.svg",
+          color: Colors.grey,
+          width: 100.w,
+          height: 100.w,
+          fit: BoxFit.fitWidth,
+        ),
+        SizedBox(
+          height: 20.h,
+        ),
+        Text(
+          "尚無頻道",
+          style: TextStyle(
+              fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.bold),
+        )
+      ],
+    ));
   }
 
-  Widget channelsView(List<ChannelDto> channelList, UserInfoDto? otherUserInfo) {
-    return Column(
-        children:[
-          SizedBox(height: 15.h,),
-          Expanded(
-            child: GridView.builder(
+  Widget channelsView(
+      List<ChannelDto> channelList, UserInfoDto? otherUserInfo) {
+    return Column(children: [
+      SizedBox(
+        height: 15.h,
+      ),
+      Expanded(
+          child: GridView.builder(
               physics: const BouncingScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 childAspectRatio: 105.w / 105.w,
@@ -65,21 +65,18 @@ class ChannelsView extends ConsumerWidget {
               ),
               itemCount: channelList.length,
               itemBuilder: (context, index) {
-                return channelList[index].channelImageUrl == ""? channelWithoutImageWidget(channelList[index]) : channelWidget(channelList[index]);
+                return channelList[index].channelImageUrl == ""
+                    ? channelWithoutImageWidget(channelList[index])
+                    : channelWidget(channelList[index]);
                 // return storyWidget(index, storyList[index], storyList, otherUserInfo);
-              }
-            )
-          ),
-        ]
-    );
+              })),
+    ]);
   }
 
   Widget channelWidget(ChannelDto channel) {
     return GestureDetector(
-      onTap: () {
-      },
-      child: Stack(
-        children: [
+        onTap: () {},
+        child: Stack(children: [
           Image.network(
             imgProxy + channel.channelImageUrl,
             fit: BoxFit.cover,
@@ -107,39 +104,28 @@ class ChannelsView extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Marquee(
-                  animationDuration: const Duration(seconds: 10),
-                  directionMarguee: DirectionMarguee.oneDirection,
-                  child: Text(
-                    channel.channelName,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.w
-                    )
-                  )
-                ),
+                    animationDuration: const Duration(seconds: 10),
+                    directionMarguee: DirectionMarguee.oneDirection,
+                    child: Text(channel.channelName,
+                        style: TextStyle(color: Colors.black, fontSize: 16.w))),
               ],
             ),
           )
-        ]
-      )
-    );
+        ]));
   }
 
   Widget channelWithoutImageWidget(ChannelDto channel) {
-    return Stack(
-      children: [
-        Center(
-          child: Text(
-            channel.channelName[0],
-            style: TextStyle(
-              fontSize: 50.w
-            ),
-          ),
+    return Stack(children: [
+      Center(
+        child: Text(
+          channel.channelName[0],
+          style: TextStyle(fontSize: 50.w),
         ),
-        Container(
-          width: 500.w,
-          height: 500.w,
-          decoration: BoxDecoration(
+      ),
+      Container(
+        width: 500.w,
+        height: 500.w,
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.grey, Colors.white.withOpacity(0), Colors.grey],
             stops: [0.0, 0.5, 1.0],
@@ -147,24 +133,17 @@ class ChannelsView extends ConsumerWidget {
             end: Alignment.topCenter,
           ),
         ),
-          child: Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Marquee(
-              animationDuration: const Duration(seconds: 10),
-              directionMarguee: DirectionMarguee.oneDirection,
-              child: Text(
-                channel.channelName,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16.w
-                )
-              )
-            ),
+                animationDuration: const Duration(seconds: 10),
+                directionMarguee: DirectionMarguee.oneDirection,
+                child: Text(channel.channelName,
+                    style: TextStyle(color: Colors.black, fontSize: 16.w))),
           ],
-          ),
-        )
-      ]
-    );
+        ),
+      )
+    ]);
   }
 }
