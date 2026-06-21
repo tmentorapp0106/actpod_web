@@ -1,3 +1,4 @@
+import 'package:actpod_web/components/content_rating_badge.dart';
 import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
@@ -15,14 +16,18 @@ class MobileAboutStory extends ConsumerWidget {
     final storyInfo = ref.watch(storyInfoProvider);
     return Column(
       children: [
-        title(storyInfo == null? DateTime.now() : storyInfo.storyUploadTime, storyInfo == null? "" : storyInfo.spaceName),
+        title(
+          storyInfo == null? DateTime.now() : storyInfo.storyUploadTime, 
+          storyInfo == null? "" : storyInfo.spaceName, 
+          storyInfo == null? "general" : storyInfo.contentRating, 
+        ),
         SizedBox(height: 5.h,),
         description(storyInfo == null? "" : storyInfo.storyDescription)
       ],
     );
   }
 
-  Widget title(DateTime uploadTime, String spaceName) {
+  Widget title(DateTime uploadTime, String spaceName, String rating) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -53,7 +58,9 @@ class MobileAboutStory extends ConsumerWidget {
               fontSize: 12.w
             ),
           ),
-        )
+        ),
+        SizedBox(width: 8.w,),
+        ContentRatingBadge(contentRating: rating, compact: true,)
       ],
     );
   }

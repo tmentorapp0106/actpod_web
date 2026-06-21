@@ -52,7 +52,7 @@ class CollectButton extends ConsumerWidget {
           foregroundColor: Colors.white,
           shape: const StadiumBorder(),
           side: BorderSide.none,
-          padding: const EdgeInsets.symmetric(horizontal: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 2),
         ).copyWith(
           overlayColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.pressed)) {
@@ -99,7 +99,7 @@ class CollectButton extends ConsumerWidget {
           foregroundColor: Colors.white,
           shape: const StadiumBorder(),
           side: BorderSide.none,
-          padding: const EdgeInsets.symmetric(horizontal: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 2),
         ).copyWith(
           overlayColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.pressed)) {
@@ -114,7 +114,7 @@ class CollectButton extends ConsumerWidget {
             Icon(Icons.bookmark_border, size: 16, color: Colors.white),
             SizedBox(width: 2),
             Text(
-              "登入收藏",
+              "收藏",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 12,
@@ -142,7 +142,7 @@ class CollectButton extends ConsumerWidget {
             width: 1.5,
           ),
           shape: const StadiumBorder(),
-          padding: const EdgeInsets.symmetric(horizontal: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 2),
           elevation: 0,
         ).copyWith(
           overlayColor: WidgetStateProperty.resolveWith((states) {

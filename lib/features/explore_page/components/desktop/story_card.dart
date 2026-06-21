@@ -1,4 +1,5 @@
 import 'package:actpod_web/const.dart';
+import 'package:actpod_web/components/content_rating_badge.dart';
 import 'package:actpod_web/features/explore_page/dto/story_info_dto.dart';
 import 'package:actpod_web/router.dart';
 import 'package:actpod_web/utils/time_utils.dart';
@@ -40,54 +41,51 @@ class StoryCardDesktop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        myRouter.push("/story/${story.storyId}");
-      },
-      child: Container(
-        height: 248,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: const Color(0xFFEDEDED)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Stack(
-          children: [
-            Row(
-              children: [
-                _CoverImage(
-                  imageUrl: imgProxy + story.storyImageUrl,
-                  size: 192,
-                  duration: story.totalLength,
-                ),
-
-                const SizedBox(width: 16),
-
-                Expanded(
-                  child: Padding(
-                    // 右邊預留播放按鈕空間，避免文字或 metrics 被蓋住
-                    padding: const EdgeInsets.only(right: 72),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _ChannelUserInfo(
-                          channelImageUrl: story.channelImageUrl,
-                          channelName: story.channelName,
-                          avatarUrl: story.userAvatarUrl,
-                          nickname: story.channelName,
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        SelectionArea(
-                          child: Text(
+        onTap: () {
+          myRouter.push("/story/${story.storyId}");
+        },
+        child: Container(
+          height: 248,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: const Color(0xFFEDEDED)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Stack(
+            children: [
+              Row(
+                children: [
+                  _CoverImage(
+                    imageUrl: imgProxy + story.storyImageUrl,
+                    size: 192,
+                    duration: story.totalLength,
+                    contentRating: story.contentRating,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Padding(
+                      // 右邊預留播放按鈕空間，避免文字或 metrics 被蓋住
+                      padding: const EdgeInsets.only(right: 72),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _ChannelUserInfo(
+                            channelImageUrl: story.channelImageUrl,
+                            channelName: story.channelName,
+                            avatarUrl: story.userAvatarUrl,
+                            nickname: story.channelName,
+                          ),
+                          const SizedBox(height: 8),
+                          SelectionArea(
+                              child: Text(
                             story.storyName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -96,13 +94,10 @@ class StoryCardDesktop extends StatelessWidget {
                               height: 1.2,
                               fontWeight: FontWeight.w800,
                             ),
-                          )
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        SelectionArea(
-                          child: Text(
+                          )),
+                          const SizedBox(height: 8),
+                          SelectionArea(
+                              child: Text(
                             story.storyDescription,
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
@@ -110,58 +105,53 @@ class StoryCardDesktop extends StatelessWidget {
                               fontSize: 14,
                               color: Colors.black54,
                             ),
-                          )
-                        ),
-
-                        const Spacer(),
-
-                        Row(
-                          children: [
-                            _CategoryPill(text: story.spaceName),
-                            const SizedBox(width: 8),
-                            SelectableText(
-                              TimeUtils.convertToFormat("yyyy/MM/dd", story.releaseTime),
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.black54,
+                          )),
+                          const Spacer(),
+                          Row(
+                            children: [
+                              _CategoryPill(text: story.spaceName),
+                              const SizedBox(width: 8),
+                              SelectableText(
+                                TimeUtils.convertToFormat(
+                                    "yyyy/MM/dd", story.releaseTime),
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black54,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 8,),
-
-                        Row(
-                          children: [
-                            const SizedBox(width: 4),
-                            _Metric(
-                              icon: Icons.chat_bubble_outline,
-                              value: "${story.commentCount}",
-                            ),
-                            const SizedBox(width: 8),
-                            _Metric(
-                              icon: Icons.favorite_border,
-                              value: "${story.likesCount}",
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(width: 4),
+                              _Metric(
+                                icon: Icons.chat_bubble_outline,
+                                value: "${story.commentCount}",
+                              ),
+                              const SizedBox(width: 8),
+                              _Metric(
+                                icon: Icons.favorite_border,
+                                value: "${story.likesCount}",
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-
-            const Positioned(
-              right: 0,
-              bottom: 0,
-              child: _PlayCircleButton(
+                ],
               ),
-            ),
-          ],
-        ),
-      )
-    );
+              const Positioned(
+                right: 0,
+                bottom: 0,
+                child: _PlayCircleButton(),
+              ),
+            ],
+          ),
+        ));
   }
 }
 
@@ -192,52 +182,44 @@ class _ChannelUserInfo extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-
         const SizedBox(width: 4),
-
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SelectionArea(
-                child: Text(
-                  channelName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    height: 1.15,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w500,
-                  ),
-                )
-              ),
-
+                  child: Text(
+                channelName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 18,
+                  height: 1.15,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w500,
+                ),
+              )),
               const SizedBox(height: 6),
-
               Row(
                 children: [
                   CircleAvatar(
                     radius: 10,
                     backgroundImage: NetworkImage(avatarUrl),
                   ),
-
                   const SizedBox(width: 4),
-
                   Expanded(
                     child: SelectionArea(
-                      child: Text(
-                        nickname,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
-                    ),
+                        child: Text(
+                      nickname,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )),
                   ),
                 ],
               ),
@@ -253,11 +235,13 @@ class _CoverImage extends StatelessWidget {
   final String imageUrl;
   final double size;
   final int duration;
+  final String contentRating;
 
   const _CoverImage({
     required this.imageUrl,
     required this.size,
     required this.duration,
+    required this.contentRating,
   });
 
   @override
@@ -276,7 +260,15 @@ class _CoverImage extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-
+          Positioned(
+            left: 10,
+            top: 10,
+            child: ContentRatingBadge(
+              contentRating: contentRating,
+              compact: true,
+              overlay: true,
+            ),
+          ),
           Positioned(
             right: 8,
             bottom: 8,
@@ -290,7 +282,8 @@ class _CoverImage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(999),
               ),
               child: SelectableText(
-                TimeUtils.formatDuration(Duration(milliseconds: duration), "HH:mm:ss"),
+                TimeUtils.formatDuration(
+                    Duration(milliseconds: duration), "HH:mm:ss"),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,

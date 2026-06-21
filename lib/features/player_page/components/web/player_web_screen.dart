@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:actpod_web/api_manager/story_dto/get_one_story_res.dart';
 import 'package:actpod_web/components/avatar.dart';
 import 'package:actpod_web/components/channel_image.dart';
+import 'package:actpod_web/components/content_rating_badge.dart';
 import 'package:actpod_web/components/launch_deep_link_dialog.dart';
 import 'package:actpod_web/design_system/shadow.dart';
 import 'package:actpod_web/features/login/login_screen.dart';

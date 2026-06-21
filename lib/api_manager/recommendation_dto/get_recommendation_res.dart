@@ -6,10 +6,12 @@ class GetRecommendationRes {
   GetRecommendationRes(this.code, this.message, this.recordList);
 
   factory GetRecommendationRes.fromJson(Map<String, dynamic> json) {
-    List<GetRecommendationResItem> updatedRecordList = json["data"] == null? [] : json["data"]
-        .map<GetRecommendationResItem>(
-            (json) => GetRecommendationResItem.fromJson(json))
-        .toList();
+    List<GetRecommendationResItem> updatedRecordList = json["data"] == null
+        ? []
+        : json["data"]
+            .map<GetRecommendationResItem>(
+                (json) => GetRecommendationResItem.fromJson(json))
+            .toList();
     return GetRecommendationRes(
         json["code"], json["message"], updatedRecordList);
   }
@@ -49,8 +51,8 @@ class GetRecommendationResItem {
   int count;
   bool isPremium;
   int price;
+  String contentRating;
   DateTime releaseTime;
-
 
   GetRecommendationResItem(
       this.storyId,
@@ -86,8 +88,8 @@ class GetRecommendationResItem {
       this.count,
       this.isPremium,
       this.price,
-      this.releaseTime
-    );
+      this.contentRating,
+      this.releaseTime);
 
   factory GetRecommendationResItem.fromJson(Map<String, dynamic> json) {
     return GetRecommendationResItem(
@@ -98,22 +100,22 @@ class GetRecommendationResItem {
       json["channelName"],
       json["channelImageUrl"],
       json["userId"],
-      json["collaboratorId"]?? "",
+      json["collaboratorId"] ?? "",
       json["userName"],
-      json["collaboratorName"]?? "",
+      json["collaboratorName"] ?? "",
       json["userAvatarUrl"],
-      json["collaboratorAvatarUrl"]?? "",
+      json["collaboratorAvatarUrl"] ?? "",
       json["storyUrl"],
       json["previewUrl"],
-      json["backgroundMusicUrl"]?? "",
-      double.tryParse(json["backgroundMusicVolume"].toString())?? 0.0,
+      json["backgroundMusicUrl"] ?? "",
+      double.tryParse(json["backgroundMusicVolume"].toString()) ?? 0.0,
       json["storyName"],
       json["storyDescription"],
       json["storyImageUrl"],
       (json["storyImageUrls"] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList()
-          ?? [],
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       DateTime.parse(json["storyUploadTime"]),
       json["voiceMessageStatus"],
       json["voiceMessageCount"],
@@ -121,12 +123,13 @@ class GetRecommendationResItem {
       json["totalLength"],
       json["openingUrl"],
       json["endingUrl"],
-      json["commentCount"]?? 0,
+      json["commentCount"] ?? 0,
       json["likesCount"],
-      json["instantCommentCount"]?? 0,
-      json["count"]?? 0,
-      json["isPremium"]?? false,
-      json["price"]?? 0,
+      json["instantCommentCount"] ?? 0,
+      json["count"] ?? 0,
+      json["isPremium"] ?? false,
+      json["price"] ?? 0,
+      json["contentRating"] ?? "general",
       DateTime.parse(json["releaseTime"]),
     );
   }
