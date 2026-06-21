@@ -33,4 +33,6 @@ class DesignColor {
   static const neutral400 = Color(0xFF989898);
   static const neutral600 = Color(0xFF656565);
   static const neutral950 = Color(0xFF292929);
+  
+  static const attention = Color(0xFFf20000);
 }

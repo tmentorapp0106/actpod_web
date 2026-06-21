@@ -43,6 +43,7 @@ class GetOneStoryResItem {
   Price? price;
   bool isPremium;
   int count;
+  String contentRating;
 
   GetOneStoryResItem(
     this.storyId,
@@ -74,6 +75,7 @@ class GetOneStoryResItem {
     this.price,
     this.isPremium,
     this.count,
+    this.contentRating,
   );
 
   factory GetOneStoryResItem.fromJson(Map<String, dynamic> json) {
@@ -109,6 +111,8 @@ class GetOneStoryResItem {
         json["packageNote"] ?? "",
         json["price"] == null ? null : Price.fromJson(json["price"]),
         json["isPremium"],
-        json["count"]);
+        json["count"],
+        json["contentRating"]?? "general"
+      );
   }
 }
