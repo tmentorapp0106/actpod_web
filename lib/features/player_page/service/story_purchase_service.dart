@@ -2,6 +2,7 @@ import 'package:actpod_web/api_manager/purchase_dto/create_credit_card_payment.d
 import 'package:actpod_web/api_manager/purchase_system_api_manager.dart';
 import 'package:actpod_web/features/login/login_screen.dart';
 import 'package:actpod_web/features/package_detail_page/components/invoice_email_dialog.dart';
+import 'package:actpod_web/features/player_page/controllers/player_controller.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/services/auth_service.dart';
@@ -20,13 +21,24 @@ Future<void> createStoryCreditCardPayment(
   }
 
   if (!AuthService.isLoggedIn()) {
-    await showDialog<bool>(
+    final loggedIn = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return const LoginScreen();
       },
     );
+
+    if (loggedIn != true || !AuthService.isLoggedIn()) {
+      return;
+    }
+  }
+
+  await PlayerController(ref).checkPaid(story.storyId, story.packageId);
+  if (ref.read(playerStatusProvider) != PlayerStatus.unpaid) {
+    return;
+  }
+  if (!context.mounted) {
     return;
   }
 
