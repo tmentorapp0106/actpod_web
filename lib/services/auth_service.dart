@@ -85,7 +85,10 @@ class AuthService {
     await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
 
     try {
-      await FirebaseAuth.instance.getRedirectResult();
+      final userCredential = await FirebaseAuth.instance.getRedirectResult();
+      if (userCredential.user != null && !isLoggedIn()) {
+        await syncFirebaseUser(userCredential.user);
+      }
     } catch (_) {}
   }
 
@@ -102,6 +105,24 @@ class AuthService {
       return true;
     }
     return false;
+  }
+
+  static Future<bool> ensureLoggedIn() async {
+    if (isLoggedIn()) {
+      return true;
+    }
+
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) {
+      return false;
+    }
+
+    try {
+      await syncFirebaseUser(firebaseUser);
+      return isLoggedIn();
+    } catch (_) {
+      return false;
+    }
   }
 
   static Future<void> logout() async {
