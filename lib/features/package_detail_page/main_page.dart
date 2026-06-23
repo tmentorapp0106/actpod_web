@@ -9,6 +9,7 @@ import 'package:actpod_web/local_storage/user_info.dart';
 import 'package:actpod_web/providers.dart';
 import 'package:actpod_web/services/auth_service.dart';
 import 'package:actpod_web/services/meta_tracking_service.dart';
+import 'package:actpod_web/services/toast_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,8 +46,10 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
         contentId: widget.packageId,
         contentType: 'package',
       );
-      packageDetailController.checkPurchased(widget.packageId);
       packageDetailController.getPackageInfo(widget.packageId);
+      await Future.delayed(const Duration(seconds: 2));
+      packageDetailController.checkPurchased(widget.packageId);
+      ToastService.showNoticeToast("成功確認");
     });
   }
 
