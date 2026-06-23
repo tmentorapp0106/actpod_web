@@ -47,9 +47,8 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
         contentType: 'package',
       );
       packageDetailController.getPackageInfo(widget.packageId);
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
       packageDetailController.checkPurchased(widget.packageId);
-      ToastService.showNoticeToast("成功確認");
     });
   }
 
