@@ -33,7 +33,7 @@ class PackageDetailController {
   }
 
   Future<bool> checkPurchased(String packageId) async {
-    if (!AuthService.isLoggedIn()) {
+    if (!await AuthService.ensureLoggedIn()) {
       ref.watch(packagePurchasedProvider.notifier).state = false;
       return false;
     }
