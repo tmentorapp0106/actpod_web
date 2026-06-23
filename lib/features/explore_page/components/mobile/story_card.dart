@@ -1,5 +1,5 @@
-import 'package:actpod_web/api_manager/story_dto/get_user_stories_res.dart';
 import 'package:actpod_web/components/avatar.dart';
+import 'package:actpod_web/components/content_rating_badge.dart';
 import 'package:actpod_web/features/explore_page/dto/story_info_dto.dart';
 import 'package:actpod_web/router.dart';
 import 'package:actpod_web/utils/time_utils.dart';
@@ -15,99 +15,90 @@ class MobileStoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        myRouter.push("/story/${story.storyId}");
-      },
-      child: Container(
-        height: 160,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: const Color(0xFFEDEDED)),
-        ),
-        child: Stack(
-          children: [
-            Row(
-              children: [
-                _CoverImage(
-                  imageUrl: story.storyImageUrl,
-                  size: 122,
-                  duration: story.totalLength,
-                ),
-
-                const SizedBox(width: 12),
-
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          story.storyName,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            height: 1,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-
-                        const SizedBox(height: 6),
-
-                        _ChannelHeaderMini(story: story),
-
-                        const Spacer(),
-
-                        Text(
-                          story.storyDescription,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black54,
-                          ),
-                        ),
-
-                        const SizedBox(height: 7),
-
-                        Row(
-                          children: [
-                            _CategoryPill(text: story.spaceName),
-                            const SizedBox(width: 8),
-                            Text(
-                              TimeUtils.convertToFormat("yyyy/MM/dd", story.releaseTime),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black45,
-                              ),
+        onTap: () {
+          myRouter.push("/story/${story.storyId}");
+        },
+        child: Container(
+          height: 160,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: const Color(0xFFEDEDED)),
+          ),
+          child: Stack(
+            children: [
+              Row(
+                children: [
+                  _CoverImage(
+                    imageUrl: story.storyImageUrl,
+                    size: 122,
+                    duration: story.totalLength,
+                    contentRating: story.contentRating,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            story.storyName,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              height: 1,
+                              fontWeight: FontWeight.w700,
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                          const SizedBox(height: 6),
+                          _ChannelHeaderMini(story: story),
+                          const Spacer(),
+                          Text(
+                            story.storyDescription,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(height: 7),
+                          Row(
+                            children: [
+                              _CategoryPill(text: story.spaceName),
+                              const SizedBox(width: 8),
+                              Text(
+                                TimeUtils.convertToFormat(
+                                    "yyyy/MM/dd", story.releaseTime),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black45,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: _PlayCircleButton(
-                size: 24,
-                iconSize: 16,
+                ],
               ),
-            ),
-          ],
-        ),
-      )
-    );
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: _PlayCircleButton(
+                  size: 24,
+                  iconSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
-
 
 class _ChannelHeaderMini extends StatelessWidget {
   final StoryInfoDto story;
@@ -131,36 +122,33 @@ class _ChannelHeaderMini extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                story.channelName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Colors.black87,
-                ),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            story.channelName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Colors.black87,
+            ),
+          ),
+          Row(children: [
+            Avatar(null, story.userAvatarUrl, 14),
+            const SizedBox(
+              width: 2,
+            ),
+            Text(
+              story.username,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.black87,
               ),
-              Row(
-                children: [
-                  Avatar(null, story.userAvatarUrl, 14),
-                  const SizedBox(width: 2,),
-                  Text(
-                    story.username,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: Colors.black87,
-                    ),
-                  )
-                ] 
-              )
-            ]
-          )
-        ),
+            )
+          ])
+        ])),
       ],
     );
   }
@@ -170,11 +158,13 @@ class _CoverImage extends StatelessWidget {
   final String imageUrl;
   final double size;
   final int duration;
+  final String contentRating;
 
   const _CoverImage({
     required this.imageUrl,
     required this.size,
     required this.duration,
+    required this.contentRating,
   });
 
   @override
@@ -192,6 +182,15 @@ class _CoverImage extends StatelessWidget {
             ),
           ),
           Positioned(
+            left: 8,
+            top: 8,
+            child: ContentRatingBadge(
+              contentRating: contentRating,
+              compact: true,
+              overlay: true,
+            ),
+          ),
+          Positioned(
             right: 8,
             bottom: 8,
             child: Container(
@@ -204,7 +203,8 @@ class _CoverImage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(999),
               ),
               child: Text(
-                TimeUtils.formatDuration(Duration(milliseconds: duration), "HH:mm:ss"),
+                TimeUtils.formatDuration(
+                    Duration(milliseconds: duration), "HH:mm:ss"),
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 11,

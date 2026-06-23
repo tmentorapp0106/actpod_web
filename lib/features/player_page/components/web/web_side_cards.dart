@@ -32,17 +32,23 @@ class _WebAboutCard extends ConsumerWidget {
           ),
           if ((storyInfo?.spaceName ?? "").isNotEmpty) ...[
             const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: DesignColor.neutral100,
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Text(
-                storyInfo!.spaceName,
-                style: const TextStyle(fontSize: 13),
-              ),
-            ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: DesignColor.neutral100,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    storyInfo!.spaceName,
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                ),
+                const SizedBox(width: 4,),
+                ContentRatingBadge(contentRating: storyInfo?.contentRating?? "general", compact: true,)
+              ],
+            )
           ],
           const SizedBox(height: 12),
           Linkify(

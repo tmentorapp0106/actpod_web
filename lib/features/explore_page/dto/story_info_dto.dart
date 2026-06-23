@@ -30,8 +30,8 @@ class StoryInfoDto {
   int count;
   bool isPremium;
   int price;
+  String contentRating;
   DateTime releaseTime;
-
 
   StoryInfoDto(
       this.storyId,
@@ -63,8 +63,8 @@ class StoryInfoDto {
       this.count,
       this.isPremium,
       this.price,
-      this.releaseTime
-    );
+      this.contentRating,
+      this.releaseTime);
 
   factory StoryInfoDto.fromRecommendationItem(
     GetRecommendationResItem item,
@@ -99,6 +99,7 @@ class StoryInfoDto {
       item.count,
       item.isPremium,
       item.price,
+      item.contentRating,
       item.releaseTime,
     );
   }
@@ -106,7 +107,9 @@ class StoryInfoDto {
   static List<StoryInfoDto> fromRecommendationList(
     List<GetRecommendationResItem>? items,
   ) {
-    return items?.map((item) => StoryInfoDto.fromRecommendationItem(item))
-            .toList() ??[];
+    return items
+            ?.map((item) => StoryInfoDto.fromRecommendationItem(item))
+            .toList() ??
+        [];
   }
 }

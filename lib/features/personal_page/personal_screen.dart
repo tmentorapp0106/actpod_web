@@ -1,17 +1,13 @@
 import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/dto/user_info_dto.dart';
-import 'package:actpod_web/features/personal_page/components/story_channel_tab_view.dart';
-import 'package:actpod_web/features/personal_page/components/user_info.dart';
-import 'package:actpod_web/features/personal_page/components/web_logo.dart';
 import 'package:actpod_web/features/personal_page/controllers/channel_controller.dart';
 import 'package:actpod_web/features/personal_page/controllers/story_controller.dart';
 import 'package:actpod_web/features/personal_page/controllers/user_controller.dart';
 import 'package:actpod_web/features/personal_page/providers.dart';
-import 'package:flutter/foundation.dart';
+import 'package:actpod_web/features/personal_page/screens/desktop.dart';
+import 'package:actpod_web/features/personal_page/screens/mobile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PersonalScreen extends ConsumerStatefulWidget {
   final String userId;
@@ -22,7 +18,8 @@ class PersonalScreen extends ConsumerStatefulWidget {
   _PersonalScreenState createState() => _PersonalScreenState();
 }
 
-class _PersonalScreenState extends ConsumerState<PersonalScreen> with SingleTickerProviderStateMixin {
+class _PersonalScreenState extends ConsumerState<PersonalScreen>
+    with SingleTickerProviderStateMixin {
   TabController? _tabController;
   UserController? userController;
   StoryController? storyController;
@@ -42,26 +39,10 @@ class _PersonalScreenState extends ConsumerState<PersonalScreen> with SingleTick
     });
   }
 
-  // Future<void> checkOpenDeepLink() async {
-  //   String url;
-  //   if(kIsWeb) {
-  //     bool? goto = await showDialog<bool>(
-  //       context: context,
-  //       builder: (context) => LaunchDeepLinkDialog(),
-  //     );
-  //     if(goto != null && goto) {
-  //       await Future.delayed(const Duration(microseconds: 500));
-  //       url = "https://actpod-488af.web.app/story/link/${widget.storyId}?openExternalBrowser=1";
-  //       if (await canLaunchUrl(Uri.parse(url))) {
-  //         await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-  //       } else {
-  //         debugPrint("Could not launch $url");
-  //       }
-  //     }
-  //   }
-  // }
-
-  void initProviders() {
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,44 +50,18 @@ class _PersonalScreenState extends ConsumerState<PersonalScreen> with SingleTick
     bool isPhone = MediaQuery.of(context).size.width < 600;
     UserInfoDto? userInfo = ref.watch(userInfoProvider);
     Widget body;
-    if(userInfo == null) {
+    if (userInfo == null) {
       body = const Center(
         child: CircularProgressIndicator(),
       );
     } else {
-      body = isPhone? mobileScreen() : Center(
-        child: Text("此頁面僅支援手機瀏覽器觀看"),
-      );
+      body = isPhone
+          ? MobilePersonalScreen(tabController: _tabController!)
+          : DesktopPersonalScreen(tabController: _tabController!);
     }
     return Scaffold(
       backgroundColor: DesignColor.background,
-      body: SizedBox(
-        child: body
-      )
-    );
-  }
-
-  Widget webScreen() {
-    return Center(
-      child: Text("此頁面僅支援手機瀏覽器觀看"),
-    );
-  }
-
-  Widget mobileScreen() {
-    return Container(
-      color: Colors.white,
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(top: 4.h),
-          child: Column(
-            children:[
-              WebLogo(),
-              UserInfoWidget(),
-              StoryChannelTabView(_tabController!),
-            ]
-          )
-        )
-      )
+      body: body,
     );
   }
 }
