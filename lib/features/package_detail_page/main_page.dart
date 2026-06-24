@@ -41,11 +41,6 @@ class _PackageDetailPageState extends ConsumerState<PackageDetailPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _restoreStoredUser();
-      MetaTrackingService.instance.trackViewContent(
-        pageName: 'Yuma 夏季旅遊日文速成班',
-        contentId: widget.packageId,
-        contentType: 'package',
-      );
       packageDetailController.getPackageInfo(widget.packageId);
       await Future.delayed(const Duration(seconds: 1));
       packageDetailController.checkPurchased(widget.packageId);
