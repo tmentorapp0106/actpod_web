@@ -24,6 +24,18 @@
     }
   </script>
 
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1165023005790351');
+  </script>
+
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="ActPod web application">
@@ -40,96 +52,11 @@
 
   <title>ActPod_Web</title>
   <link rel="manifest" href="manifest.json">
-
-  <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.19.1"></script>
-  <script>
-    window.demoBridge = {
-      initTapPay: function (appId, appKey, env) {
-        TPDirect.setupSDK(appId, appKey, env);
-      },
-
-      areCardFieldsReady: function () {
-        return !!(
-          document.getElementById('card-number-input') &&
-          document.getElementById('expiry-input') &&
-          document.getElementById('ccv-input')
-        );
-      },
-
-      getCardData: function () {
-        const cardNumberEl = document.getElementById('card-number-input');
-        const expiryEl = document.getElementById('expiry-input');
-        const ccvEl = document.getElementById('ccv-input');
-
-        return JSON.stringify({
-          cardNumber: cardNumberEl ? cardNumberEl.value : '',
-          expirationDate: expiryEl ? expiryEl.value : '',
-          ccv: ccvEl ? ccvEl.value : ''
-        });
-      },
-
-      setupCardData: function () {
-        const cardNumberEl = document.getElementById('card-number-input');
-        const expiryEl = document.getElementById('expiry-input');
-        const ccvEl = document.getElementById('ccv-input');
-
-        if (!cardNumberEl || !expiryEl || !ccvEl) {
-          console.warn('TapPay card field containers are not ready yet');
-          return false;
-        }
-
-        TPDirect.card.setup({
-          fields: {
-            number: {
-              element: '#card-number-input',
-              placeholder: '1234 5678 9012 3456'
-            },
-            expirationDate: {
-              element: '#expiry-input',
-              placeholder: 'MM / YY'
-            },
-            ccv: {
-              element: '#ccv-input',
-              placeholder: 'CCV'
-            }
-          },
-          styles: {
-            input: {
-              color: '#222',
-              'font-size': '16px'
-            },
-            ':focus': {
-              color: '#000'
-            },
-            '.valid': {
-              color: 'green'
-            },
-            '.invalid': {
-              color: 'red'
-            }
-          }
-        });
-        return true;
-      },
-
-      getPrime: function (callback) {
-        TPDirect.card.getPrime(function (result) {
-          callback(result);
-        });
-      },
-
-      canGetPrime: function () {
-        const status = TPDirect.card.getTappayFieldsStatus();
-        return !!status.canGetPrime;
-      },
-
-      isTapPayLoaded: function () {
-        return typeof TPDirect !== 'undefined';
-      }
-    };
-  </script>
 </head>
 <body>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1165023005790351&ev=PageView&noscript=1"
+  /></noscript>
   <div id="loading">
     <img src="loading.gif" alt="Loading..." />
   </div>
