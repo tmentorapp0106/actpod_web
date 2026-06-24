@@ -98,6 +98,9 @@ class PackageInfoCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final twd = package.packagePrice?.twd;
     final purchased = ref.watch(packagePurchasedProvider);
+    final purchaseCount = ref.watch(
+      packagePurchaseCountProvider(package.packageId),
+    );
     final isLoggedIn = AuthService.isLoggedIn();
     final isNotForSale = twd == null || twd < 0;
     final isPurchaseLoading = purchased == null;
@@ -138,7 +141,7 @@ class PackageInfoCard extends ConsumerWidget {
               height: 1.15,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 4),
           Row(
             children: [
               Avatar(package.userId, package.avatarUrl, compact ? 15 : 18),
@@ -156,8 +159,14 @@ class PackageInfoCard extends ConsumerWidget {
               ),
             ],
           ),
+          SizedBox(height: compact ? 8 : 14),
+          _PurchaseCountRow(
+            count: purchaseCount.valueOrNull ?? 0,
+            loading: purchaseCount.isLoading,
+            compact: compact,
+          ),
           if (purchased != true) ...[
-            SizedBox(height: compact ? 16 : 24),
+            SizedBox(height: compact ? 8 : 12),
             const Text(
               "套裝價",
               style: TextStyle(
@@ -179,9 +188,9 @@ class PackageInfoCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
                 Padding(
-                  padding: EdgeInsets.only(bottom: compact ? 6 : 10),
+                  padding: EdgeInsets.only(bottom: compact ? 2 : 8),
                   child: const Text(
-                    "台幣",
+                    "新台幣",
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
@@ -202,6 +211,61 @@ class PackageInfoCard extends ConsumerWidget {
                     : null,
           ),
           const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+class _PurchaseCountRow extends StatelessWidget {
+  final int count;
+  final bool loading;
+  final bool compact;
+
+  const _PurchaseCountRow({
+    required this.count,
+    required this.loading,
+    required this.compact,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 9 : 11,
+        vertical: compact ? 7 : 8,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: packageBorder.withValues(alpha: 0.7)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.groups_outlined,
+            color: packageAccent,
+            size: compact ? 16 : 18,
+          ),
+          SizedBox(width: compact ? 5 : 6),
+          Text(
+            "目前購買人數約",
+            style: TextStyle(
+              fontSize: compact ? 12 : 13,
+              fontWeight: FontWeight.w800,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(width: compact ? 8 : 10),
+          Text(
+            loading ? "-- 人" : "$count 人",
+            style: TextStyle(
+              fontSize: compact ? 13 : 15,
+              fontWeight: FontWeight.w900,
+              color: packageAccent,
+            ),
+          ),
         ],
       ),
     );
