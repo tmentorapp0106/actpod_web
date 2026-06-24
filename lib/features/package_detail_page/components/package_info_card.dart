@@ -98,9 +98,6 @@ class PackageInfoCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final twd = package.packagePrice?.twd;
     final purchased = ref.watch(packagePurchasedProvider);
-    final purchaseCount = ref.watch(
-      packagePurchaseCountProvider(package.packageId),
-    );
     final isLoggedIn = AuthService.isLoggedIn();
     final isNotForSale = twd == null || twd < 0;
     final isPurchaseLoading = purchased == null;
@@ -160,9 +157,7 @@ class PackageInfoCard extends ConsumerWidget {
             ],
           ),
           SizedBox(height: compact ? 8 : 14),
-          _PurchaseCountRow(
-            count: purchaseCount.valueOrNull ?? 0,
-            loading: purchaseCount.isLoading,
+          _RecruitingBadge(
             compact: compact,
           ),
           if (purchased != true) ...[
@@ -217,14 +212,10 @@ class PackageInfoCard extends ConsumerWidget {
   }
 }
 
-class _PurchaseCountRow extends StatelessWidget {
-  final int count;
-  final bool loading;
+class _RecruitingBadge extends StatelessWidget {
   final bool compact;
 
-  const _PurchaseCountRow({
-    required this.count,
-    required this.loading,
+  const _RecruitingBadge({
     required this.compact,
   });
 
@@ -232,39 +223,36 @@ class _PurchaseCountRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: compact ? 9 : 11,
-        vertical: compact ? 7 : 8,
+        horizontal: compact ? 6 : 6,
+        vertical: compact ? 2 : 2,
       ),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.72),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: packageBorder.withValues(alpha: 0.7)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: packageAccent.withValues(alpha: 0.34)),
+        boxShadow: [
+          BoxShadow(
+            color: packageAccent.withValues(alpha: 0.13),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.groups_outlined,
+            Icons.local_fire_department_rounded,
             color: packageAccent,
-            size: compact ? 16 : 18,
+            size: compact ? 24 : 24,
           ),
-          SizedBox(width: compact ? 5 : 6),
+          SizedBox(width: compact ? 2 : 4),
           Text(
-            "目前購買人數約",
+            "熱烈募集中",
             style: TextStyle(
-              fontSize: compact ? 12 : 13,
-              fontWeight: FontWeight.w800,
-              color: Colors.black87,
-            ),
-          ),
-          SizedBox(width: compact ? 8 : 10),
-          Text(
-            // loading ? "-- 人" : "$count 人",
-            "32 人",
-            style: TextStyle(
-              fontSize: compact ? 13 : 15,
+              fontSize: compact ? 12 : 14,
               fontWeight: FontWeight.w900,
-              color: packageAccent,
+              color: const Color(0xFF7A3F00),
             ),
           ),
         ],
