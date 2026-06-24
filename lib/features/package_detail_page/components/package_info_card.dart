@@ -259,7 +259,8 @@ class _PurchaseCountRow extends StatelessWidget {
           ),
           SizedBox(width: compact ? 8 : 10),
           Text(
-            loading ? "-- 人" : "$count 人",
+            // loading ? "-- 人" : "$count 人",
+            "23 人",
             style: TextStyle(
               fontSize: compact ? 13 : 15,
               fontWeight: FontWeight.w900,
