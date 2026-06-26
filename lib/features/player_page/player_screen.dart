@@ -69,6 +69,15 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    unawaited(_playerController?.dispose());
+    _instantCommentTimer?.cancel();
+    _commentFocusNode.dispose();
+    _instantCommentFocusNode.dispose();
+    super.dispose();
+  }
+
   void initInstantComment() async {
     _commentController!.clearInstantQueue();
     await _commentController!.getInstantComments(widget.storyId);
@@ -100,11 +109,24 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   }
 
   void initProviders() {
+    final currentStoryInfo = ref.read(storyInfoProvider);
+    final isSameStory = currentStoryInfo?.storyId == widget.storyId;
+
     ref.watch(userInfoProvider.notifier).state = UserPrefs.getUserInfo();
     ref.watch(playContentProvider.notifier).state = PlayContent.story;
+    if (isSameStory) {
+      return;
+    }
+
     ref.watch(storyInfoProvider.notifier).state = null;
     ref.watch(storyStateProvider.notifier).state = null;
     ref.watch(isCollectedProvider.notifier).state = null;
+    ref.watch(audioLengthProvider.notifier).state = Duration.zero;
+    ref.watch(audioPositionProvider.notifier).state = Duration.zero;
+    ref.watch(playerStatusProvider.notifier).state = PlayerStatus.preparing;
+    ref.watch(interactiveMessageInfoListProvider.notifier).state = null;
+    ref.watch(interactiveMessageInfoIndexProvider.notifier).state = null;
+    ref.watch(interactiveContentUrlProvider.notifier).state = null;
   }
 
   Future<void> confirmAdultContentIfNeeded() async {

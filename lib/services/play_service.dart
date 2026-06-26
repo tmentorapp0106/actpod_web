@@ -8,37 +8,49 @@ class PlayService {
   StreamSubscription<ProcessingState>? processingStateStreamSub;
   StreamSubscription<PlayerState>? playerStateStreamSub;
   StreamSubscription<int?>? indexStreamSub;
-  ConcatenatingAudioSource _playList = ConcatenatingAudioSource(children: [], useLazyPreparation: false);
-
+  StreamSubscription<Duration?>? durationStreamSub;
+  ConcatenatingAudioSource _playList =
+      ConcatenatingAudioSource(children: [], useLazyPreparation: false);
 
   PlayService(this._audioPlayer);
 
-  void dispose() {
+  Future<void> dispose() async {
     _audioPlayer.dispose();
-    positionStreamSub?.cancel();
-    processingStateStreamSub?.cancel();
+    await positionStreamSub?.cancel();
+    await processingStateStreamSub?.cancel();
+    await playerStateStreamSub?.cancel();
+    await indexStreamSub?.cancel();
+    await durationStreamSub?.cancel();
   }
 
   Future<void> playAudio() async {
     await _audioPlayer.play();
   }
 
-  Future<Duration?> prepareFileAudio(String audioPath, Function onCursorChange, Function onComplete, {double? positionFreq}) async {
-    Duration? duration = await _audioPlayer.setAudioSource(AudioSource.file(audioPath));
+  Future<Duration?> prepareFileAudio(
+      String audioPath, Function onCursorChange, Function onComplete,
+      {double? positionFreq}) async {
+    Duration? duration =
+        await _audioPlayer.setAudioSource(AudioSource.file(audioPath));
 
-    if(positionStreamSub != null) {
+    if (positionStreamSub != null) {
       await positionStreamSub!.cancel();
       positionStreamSub = null;
     }
-    positionStreamSub = _audioPlayer.createPositionStream(minPeriod: const Duration(milliseconds: 16), maxPeriod: const Duration(milliseconds: 20)).listen((duration) async {
+    positionStreamSub = _audioPlayer
+        .createPositionStream(
+            minPeriod: const Duration(milliseconds: 16),
+            maxPeriod: const Duration(milliseconds: 20))
+        .listen((duration) async {
       onCursorChange(duration);
     });
 
-    if(processingStateStreamSub != null) {
+    if (processingStateStreamSub != null) {
       await processingStateStreamSub!.cancel();
       processingStateStreamSub = null;
     }
-    processingStateStreamSub = _audioPlayer.processingStateStream.listen((state) {
+    processingStateStreamSub =
+        _audioPlayer.processingStateStream.listen((state) {
       if (state == ProcessingState.completed) {
         onComplete();
       }
@@ -75,38 +87,39 @@ class PlayService {
     await positionStreamSub?.cancel();
     positionStreamSub = _audioPlayer
         .createPositionStream(
-          minPeriod: const Duration(milliseconds: 16),
-          maxPeriod: const Duration(milliseconds: 20),
-        )
+      minPeriod: const Duration(milliseconds: 16),
+      maxPeriod: const Duration(milliseconds: 20),
+    )
         .listen((pos) {
-          // Try to convert to "global" timeline across tracks:
-          // sum durations of previous items + current position.
-          // final seq = _audioPlayer.sequenceState?.sequence;
-          // final idx = _audioPlayer.currentIndex;
-          onCursorChange(pos);
+      // Try to convert to "global" timeline across tracks:
+      // sum durations of previous items + current position.
+      // final seq = _audioPlayer.sequenceState?.sequence;
+      // final idx = _audioPlayer.currentIndex;
+      onCursorChange(pos);
 
-          // if (seq == null || idx == null || idx <= 0) {
-          //   onCursorChange(pos);
-          //   return;
-          // }
+      // if (seq == null || idx == null || idx <= 0) {
+      //   onCursorChange(pos);
+      //   return;
+      // }
 
-          // Duration accumulated = Duration.zero;
-          // for (int i = 0; i < idx; i++) {
-          //   final d = seq[i].duration;
-          //   if (d == null) {
-          //     // If duration unknown, fallback (can't compute global reliably)
-          //     onCursorChange(pos);
-          //     return;
-          //   }
-          //   accumulated += d;
-          // }
+      // Duration accumulated = Duration.zero;
+      // for (int i = 0; i < idx; i++) {
+      //   final d = seq[i].duration;
+      //   if (d == null) {
+      //     // If duration unknown, fallback (can't compute global reliably)
+      //     onCursorChange(pos);
+      //     return;
+      //   }
+      //   accumulated += d;
+      // }
 
-          // onCursorChange(accumulated + pos);
-        });
+      // onCursorChange(accumulated + pos);
+    });
 
     // --- processing state stream ---
     await processingStateStreamSub?.cancel();
-    processingStateStreamSub = _audioPlayer.processingStateStream.listen((state) {
+    processingStateStreamSub =
+        _audioPlayer.processingStateStream.listen((state) {
       if (state == ProcessingState.completed) onComplete();
       if (state == ProcessingState.ready) onReady();
     });
@@ -121,7 +134,8 @@ class PlayService {
       }
     });
 
-    _audioPlayer.durationStream.listen((duration) {
+    await durationStreamSub?.cancel();
+    durationStreamSub = _audioPlayer.durationStream.listen((duration) {
       onDurationChange(duration);
     });
 
@@ -132,15 +146,24 @@ class PlayService {
     });
   }
 
-  Future<void> prepareConcatenatingAudioWithList(List<AudioSource> audioList, List<Duration> lengthList, Function onCursorChange, Function onComplete) async {
-    await _audioPlayer.setAudioSource(ConcatenatingAudioSource(children: audioList, useLazyPreparation: true));
+  Future<void> prepareConcatenatingAudioWithList(
+      List<AudioSource> audioList,
+      List<Duration> lengthList,
+      Function onCursorChange,
+      Function onComplete) async {
+    await _audioPlayer.setAudioSource(ConcatenatingAudioSource(
+        children: audioList, useLazyPreparation: true));
 
-    if(positionStreamSub != null) {
+    if (positionStreamSub != null) {
       await positionStreamSub!.cancel();
       positionStreamSub = null;
     }
-    positionStreamSub = _audioPlayer.createPositionStream(minPeriod: const Duration(milliseconds: 16), maxPeriod: const Duration(milliseconds: 20)).listen((duration) async {
-      if(duration == Duration.zero) {
+    positionStreamSub = _audioPlayer
+        .createPositionStream(
+            minPeriod: const Duration(milliseconds: 16),
+            maxPeriod: const Duration(milliseconds: 20))
+        .listen((duration) async {
+      if (duration == Duration.zero) {
         return;
       }
       // Accumulate duration of previous audio tracks
@@ -154,11 +177,12 @@ class PlayService {
       onCursorChange(totalDuration);
     });
 
-    if(processingStateStreamSub != null) {
+    if (processingStateStreamSub != null) {
       await processingStateStreamSub!.cancel();
       processingStateStreamSub = null;
     }
-    processingStateStreamSub = _audioPlayer.processingStateStream.listen((state) {
+    processingStateStreamSub =
+        _audioPlayer.processingStateStream.listen((state) {
       if (state == ProcessingState.completed) {
         onComplete();
       }
@@ -196,7 +220,8 @@ class PlayService {
   Future<void> backward(Duration duration) async {
     final currentPosition = _audioPlayer.position;
     final newPosition = currentPosition - Duration(seconds: 15);
-    await _audioPlayer.seek(newPosition >= Duration.zero ? newPosition : Duration.zero);
+    await _audioPlayer
+        .seek(newPosition >= Duration.zero ? newPosition : Duration.zero);
   }
 
   Future<void> restartAudio() async {
@@ -213,8 +238,9 @@ class PlayService {
   }
 
   Future<void> seekPosition(int millisecond, {int? index}) async {
-    if(index != null) {
-      await _audioPlayer.seek(Duration(milliseconds: millisecond), index: index);
+    if (index != null) {
+      await _audioPlayer.seek(Duration(milliseconds: millisecond),
+          index: index);
       return;
     }
     await _audioPlayer.seek(Duration(milliseconds: millisecond));
