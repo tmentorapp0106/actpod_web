@@ -206,6 +206,31 @@ class _StoryPurchaseSuccessView extends ConsumerWidget {
           ),
           child: const Text("使用網頁收聽"),
         ),
+        SizedBox(height: isDesktop ? 30 : 24),
+        const Text(
+          "下載後可依照下圖找到已購買內容",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: DesignColor.neutral600,
+            fontSize: 15,
+            height: 1.5,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 14),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: isDesktop ? 360 : 320,
+              maxHeight: isDesktop ? 720 : 640,
+            ),
+            child: Image.asset(
+              "assets/images/how_to_find_story.png",
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
       ],
     );
   }
