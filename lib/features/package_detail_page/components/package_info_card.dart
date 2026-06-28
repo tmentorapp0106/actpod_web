@@ -56,6 +56,7 @@ class PackageInfoCard extends ConsumerWidget {
       builder: (context) {
         return InvoiceEmailDialog(
           initialEmail: UserPrefs.getUserInfo()?.email ?? "",
+          paymentAmountTwd: package.packagePrice!.twd,
         );
       },
     );

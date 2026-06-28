@@ -48,6 +48,7 @@ Future<void> createStoryCreditCardPayment(
     builder: (context) {
       return InvoiceEmailDialog(
         initialEmail: UserPrefs.getUserInfo()?.email ?? "",
+        paymentAmountTwd: price.twd,
       );
     },
   );
