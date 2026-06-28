@@ -1,12 +1,15 @@
 import 'package:actpod_web/features/package_detail_page/components/package_detail_style.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class InvoiceEmailDialog extends StatefulWidget {
   final String initialEmail;
+  final int paymentAmountTwd;
 
   const InvoiceEmailDialog({
     super.key,
     required this.initialEmail,
+    required this.paymentAmountTwd,
   });
 
   @override
@@ -55,6 +58,9 @@ class _InvoiceEmailDialogState extends State<InvoiceEmailDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final paymentAmountText =
+        NumberFormat.decimalPattern().format(widget.paymentAmountTwd);
+
     return AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -83,6 +89,48 @@ class _InvoiceEmailDialogState extends State<InvoiceEmailDialog> {
               ),
             ),
             const SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 12,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFAEF),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: packageBorder),
+              ),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      "即將付款",
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "NT\$ $paymentAmountText",
+                        maxLines: 1,
+                        style: const TextStyle(
+                          color: packageAccent,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
             TextField(
               controller: _emailController,
               autofocus: true,
