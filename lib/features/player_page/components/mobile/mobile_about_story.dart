@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../utils/time_utils.dart';
@@ -72,22 +73,58 @@ class MobileAboutStory extends ConsumerWidget {
   Widget description(String description) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3.w),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Row(children: [
-          Flexible(
-              child: SelectableLinkify(
-            onOpen: _onOpenDescriptionLink,
-            options: const LinkifyOptions(humanize: false),
-            text: description,
-            style: TextStyle(fontSize: 14.w),
-          ))
-        ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          _DescriptionCopyButton(description: description),
+          SizedBox(height: 4.h),
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Row(children: [
+              Flexible(
+                child: SelectionArea(
+                  child: Linkify(
+                    onOpen: _onOpenDescriptionLink,
+                    options: const LinkifyOptions(humanize: false),
+                    text: description,
+                    style: TextStyle(fontSize: 14.w),
+                  ),
+                ),
+              )
+            ]),
+          ),
+        ],
       ),
     );
   }
 
   Future<void> _onOpenDescriptionLink(LinkableElement link) async {
     await launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
+  }
+}
+
+class _DescriptionCopyButton extends StatelessWidget {
+  final String description;
+
+  const _DescriptionCopyButton({required this.description});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      constraints: const BoxConstraints.tightFor(width: 32, height: 32),
+      padding: EdgeInsets.zero,
+      tooltip: "複製描述",
+      icon: const Icon(Icons.copy_rounded, size: 18),
+      onPressed: description.isEmpty
+          ? null
+          : () async {
+              await Clipboard.setData(ClipboardData(text: description));
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("已複製描述")),
+                );
+              }
+            },
+    );
   }
 }

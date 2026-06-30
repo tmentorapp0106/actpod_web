@@ -52,8 +52,9 @@ class MyApp extends StatelessWidget {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              fontFamily: 'Noto Sans CJK TC',
+              fontFamily: 'NotoSansTC',
               fontFamilyFallback: const [
+                'Noto Sans CJK TC',
                 'Noto Sans TC',
                 'Noto Sans CJK SC',
                 'Roboto',

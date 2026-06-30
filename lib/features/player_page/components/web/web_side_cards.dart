@@ -28,6 +28,10 @@ class _WebAboutCard extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              const Spacer(),
+              _WebDescriptionCopyButton(
+                description: storyInfo?.storyDescription ?? "",
+              ),
             ],
           ),
           if ((storyInfo?.spaceName ?? "").isNotEmpty) ...[
@@ -57,19 +61,21 @@ class _WebAboutCard extends ConsumerWidget {
             )
           ],
           const SizedBox(height: 12),
-          SelectableLinkify(
-            onOpen: (link) async {
-              await launchUrl(
-                Uri.parse(link.url),
-                mode: LaunchMode.inAppBrowserView,
-              );
-            },
-            options: const LinkifyOptions(humanize: false),
-            text: storyInfo?.storyDescription ?? "",
-            style: const TextStyle(
-              fontSize: 15,
-              height: 1.55,
-              color: Color(0xFF303030),
+          SelectionArea(
+            child: Linkify(
+              onOpen: (link) async {
+                await launchUrl(
+                  Uri.parse(link.url),
+                  mode: LaunchMode.inAppBrowserView,
+                );
+              },
+              options: const LinkifyOptions(humanize: false),
+              text: storyInfo?.storyDescription ?? "",
+              style: const TextStyle(
+                fontSize: 15,
+                height: 1.55,
+                color: Color(0xFF303030),
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -123,6 +129,32 @@ class _WebStatItem extends StatelessWidget {
           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
         ),
       ],
+    );
+  }
+}
+
+class _WebDescriptionCopyButton extends StatelessWidget {
+  final String description;
+
+  const _WebDescriptionCopyButton({required this.description});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      constraints: const BoxConstraints.tightFor(width: 32, height: 32),
+      padding: EdgeInsets.zero,
+      tooltip: "複製描述",
+      icon: const Icon(Icons.copy_rounded, size: 18),
+      onPressed: description.isEmpty
+          ? null
+          : () async {
+              await Clipboard.setData(ClipboardData(text: description));
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("已複製描述")),
+                );
+              }
+            },
     );
   }
 }
