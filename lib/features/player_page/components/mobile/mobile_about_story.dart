@@ -2,7 +2,6 @@ import 'package:actpod_web/components/content_rating_badge.dart';
 import 'package:actpod_web/design_system/color.dart';
 import 'package:actpod_web/features/player_page/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,18 +10,22 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../utils/time_utils.dart';
 
 class MobileAboutStory extends ConsumerWidget {
+  const MobileAboutStory({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyInfo = ref.watch(storyInfoProvider);
     return Column(
       children: [
         title(
-          storyInfo == null? DateTime.now() : storyInfo.storyUploadTime, 
-          storyInfo == null? "" : storyInfo.spaceName, 
-          storyInfo == null? "general" : storyInfo.contentRating, 
+          storyInfo == null ? DateTime.now() : storyInfo.storyUploadTime,
+          storyInfo == null ? "" : storyInfo.spaceName,
+          storyInfo == null ? "general" : storyInfo.contentRating,
         ),
-        SizedBox(height: 5.h,),
-        description(storyInfo == null? "" : storyInfo.storyDescription)
+        SizedBox(
+          height: 5.h,
+        ),
+        description(storyInfo == null ? "" : storyInfo.storyDescription)
       ],
     );
   }
@@ -33,34 +36,35 @@ class MobileAboutStory extends ConsumerWidget {
       children: [
         Text(
           "關於這則故事",
-          style: TextStyle(
-              fontSize: 16.w,
-              fontWeight: FontWeight.bold
-          ),
+          style: TextStyle(fontSize: 16.w, fontWeight: FontWeight.bold),
         ),
-        SizedBox(width: 8.w,),
+        SizedBox(
+          width: 8.w,
+        ),
         Text(
           TimeUtils.convertToFormat("yyyy/MM/dd", uploadTime),
-          style: TextStyle(
-            fontSize: 12.w
-          ),
+          style: TextStyle(fontSize: 12.w),
         ),
-        SizedBox(width: 8.w,),
+        SizedBox(
+          width: 8.w,
+        ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           decoration: BoxDecoration(
-            color: DesignColor.neutral100,
-            borderRadius: BorderRadius.circular(12)
-          ),
+              color: DesignColor.neutral100,
+              borderRadius: BorderRadius.circular(12)),
           child: Text(
             spaceName,
-            style: TextStyle(
-              fontSize: 12.w
-            ),
+            style: TextStyle(fontSize: 12.w),
           ),
         ),
-        SizedBox(width: 8.w,),
-        ContentRatingBadge(contentRating: rating, compact: true,)
+        SizedBox(
+          width: 8.w,
+        ),
+        ContentRatingBadge(
+          contentRating: rating,
+          compact: true,
+        )
       ],
     );
   }
@@ -70,28 +74,20 @@ class MobileAboutStory extends ConsumerWidget {
       padding: EdgeInsets.symmetric(horizontal: 3.w),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Row(
-          children: [
-            Flexible(
-              child: Linkify(
-                onOpen: _onOpenDescriptionLink,
-                options: const LinkifyOptions(humanize: false),
-                text: description,
-                style: TextStyle(
-                  fontSize: 14.w
-                ),
-              )
-            )
-          ]
-        ),
+        child: Row(children: [
+          Flexible(
+              child: SelectableLinkify(
+            onOpen: _onOpenDescriptionLink,
+            options: const LinkifyOptions(humanize: false),
+            text: description,
+            style: TextStyle(fontSize: 14.w),
+          ))
+        ]),
       ),
     );
   }
 
   Future<void> _onOpenDescriptionLink(LinkableElement link) async {
-    await launchUrl(
-        Uri.parse(link.url),
-        mode: LaunchMode.inAppBrowserView
-    );
+    await launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
   }
 }

@@ -47,23 +47,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      builder: (BuildContext context, Widget? child) {
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: 'NotoSansTC',
-            colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.white, primary: DesignColor.primary50),
-          ),
-          title: 'ActPod',
-          color: Colors.white,
-          // routerConfig: myRouter,
-          routerDelegate: myRouter.routerDelegate,
-          routeInformationParser: myRouter.routeInformationParser,
-          routeInformationProvider: myRouter.routeInformationProvider,
-        );
-      }
-    );
+        designSize: const Size(375, 812),
+        builder: (BuildContext context, Widget? child) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              fontFamily: 'Noto Sans CJK TC',
+              fontFamilyFallback: const [
+                'Noto Sans TC',
+                'Noto Sans CJK SC',
+                'Roboto',
+                'Arial',
+                'sans-serif',
+              ],
+              colorScheme: ColorScheme.fromSeed(
+                  seedColor: Colors.white, primary: DesignColor.primary50),
+            ),
+            title: 'ActPod',
+            color: Colors.white,
+            // routerConfig: myRouter,
+            routerDelegate: myRouter.routerDelegate,
+            routeInformationParser: myRouter.routeInformationParser,
+            routeInformationProvider: myRouter.routeInformationProvider,
+          );
+        });
   }
 }

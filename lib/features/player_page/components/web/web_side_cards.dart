@@ -35,7 +35,8 @@ class _WebAboutCard extends ConsumerWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: DesignColor.neutral100,
                     borderRadius: BorderRadius.circular(999),
@@ -45,13 +46,18 @@ class _WebAboutCard extends ConsumerWidget {
                     style: const TextStyle(fontSize: 13),
                   ),
                 ),
-                const SizedBox(width: 4,),
-                ContentRatingBadge(contentRating: storyInfo?.contentRating?? "general", compact: true,)
+                const SizedBox(
+                  width: 4,
+                ),
+                ContentRatingBadge(
+                  contentRating: storyInfo.contentRating,
+                  compact: true,
+                )
               ],
             )
           ],
           const SizedBox(height: 12),
-          Linkify(
+          SelectableLinkify(
             onOpen: (link) async {
               await launchUrl(
                 Uri.parse(link.url),
