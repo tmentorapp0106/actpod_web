@@ -28,10 +28,6 @@ class _WebAboutCard extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const Spacer(),
-              _WebDescriptionCopyButton(
-                description: storyInfo?.storyDescription ?? "",
-              ),
             ],
           ),
           if ((storyInfo?.spaceName ?? "").isNotEmpty) ...[
@@ -129,32 +125,6 @@ class _WebStatItem extends StatelessWidget {
           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
         ),
       ],
-    );
-  }
-}
-
-class _WebDescriptionCopyButton extends StatelessWidget {
-  final String description;
-
-  const _WebDescriptionCopyButton({required this.description});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      constraints: const BoxConstraints.tightFor(width: 32, height: 32),
-      padding: EdgeInsets.zero,
-      tooltip: "複製描述",
-      icon: const Icon(Icons.copy_rounded, size: 18),
-      onPressed: description.isEmpty
-          ? null
-          : () async {
-              await Clipboard.setData(ClipboardData(text: description));
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("已複製描述")),
-                );
-              }
-            },
     );
   }
 }

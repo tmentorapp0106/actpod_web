@@ -76,8 +76,6 @@ class MobileAboutStory extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          _DescriptionCopyButton(description: description),
-          SizedBox(height: 4.h),
           SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Row(children: [
@@ -100,31 +98,5 @@ class MobileAboutStory extends ConsumerWidget {
 
   Future<void> _onOpenDescriptionLink(LinkableElement link) async {
     await launchUrl(Uri.parse(link.url), mode: LaunchMode.inAppBrowserView);
-  }
-}
-
-class _DescriptionCopyButton extends StatelessWidget {
-  final String description;
-
-  const _DescriptionCopyButton({required this.description});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      constraints: const BoxConstraints.tightFor(width: 32, height: 32),
-      padding: EdgeInsets.zero,
-      tooltip: "複製描述",
-      icon: const Icon(Icons.copy_rounded, size: 18),
-      onPressed: description.isEmpty
-          ? null
-          : () async {
-              await Clipboard.setData(ClipboardData(text: description));
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("已複製描述")),
-                );
-              }
-            },
-    );
   }
 }
